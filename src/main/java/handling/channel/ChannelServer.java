@@ -328,7 +328,8 @@ public class ChannelServer implements Serializable {
         return eventSM;
     }
 
-    public final void reloadEvents() {//事件脚本启动
+    //事件脚本启动
+    public final void reloadEvents() {
         eventSM.cancel();
         eventSM = new EventScriptManager(this, ServerProperties.getProperty("ZlhssMS.Events").split(","));
         eventSM.init();

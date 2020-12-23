@@ -50,7 +50,7 @@ public abstract class AbstractScriptManager {
         InputStream fr = null;
         try {
 
-            path = "脚本/" + path;
+            path = "scripts/" + path;
             ScriptEngine engine = null;
 
             if (c != null) {

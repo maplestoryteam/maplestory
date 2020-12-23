@@ -284,14 +284,14 @@ public class NPCScriptManager extends AbstractScriptManager {
             cms.remove(c);
             if (npccm.getType() == -1) {
                 if (npccm.getwh() == 0) {
-                    c.removeScriptEngine("脚本/npc/" + npccm.getNpc() + ".js");
+                    c.removeScriptEngine("scripts/npc/" + npccm.getNpc() + ".js");
                 } else {
-                    c.removeScriptEngine("脚本/npc/" + npccm.getNpc() + "_" + npccm.getwh() + ".js");
+                    c.removeScriptEngine("scripts/npc/" + npccm.getNpc() + "_" + npccm.getwh() + ".js");
                 }
-                //  c.removeScriptEngine("脚本/npc/" + npccm.getNpc() + ".js");
-                c.removeScriptEngine("脚本/npc/notcoded.js");
+                //  c.removeScriptEngine("scripts/npc/" + npccm.getNpc() + ".js");
+                c.removeScriptEngine("scripts/npc/notcoded.js");
             } else {
-                c.removeScriptEngine("脚本/任务/" + npccm.getQuest() + ".js");
+                c.removeScriptEngine("scripts/quest/" + npccm.getQuest() + ".js");
             }
         }
         if (c.getPlayer() != null && c.getPlayer().getConversation() == 1) {

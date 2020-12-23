@@ -53,7 +53,7 @@ public class ReactorScriptManager extends AbstractScriptManager {
                 c.getPlayer().dropMessage("[系统提示]当前攻击的反应堆ID:" + reactor.getReactorId());
             }
 
-            final Invocable iv = getInvocable("反应堆/" + reactor.getReactorId() + ".js", c);
+            final Invocable iv = getInvocable("reactor/" + reactor.getReactorId() + ".js", c);
 
             if (iv == null) {
                 return;

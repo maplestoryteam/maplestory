@@ -43,7 +43,7 @@ import tools.FileoutputUtil;
 public class PortalScriptManager {
 
     private static final PortalScriptManager instance = new PortalScriptManager();
-    private final Map<String, PortalScript> scripts = new HashMap<String, PortalScript>();
+    private final Map<String, PortalScript> scripts = new HashMap<>();
     private final static ScriptEngineFactory sef = new ScriptEngineManager().getEngineByName("javascript").getFactory();
 
     public final static PortalScriptManager getInstance() {
@@ -56,7 +56,7 @@ public class PortalScriptManager {
             return scripts.get(scriptName);
         }
 
-        final File scriptFile = new File("脚本/传送点/" + scriptName + ".js");
+        final File scriptFile = new File("scripts/portal/" + scriptName + ".js");
         if (!scriptFile.exists()) {
             //scripts.put(scriptName, null);
             return null;
