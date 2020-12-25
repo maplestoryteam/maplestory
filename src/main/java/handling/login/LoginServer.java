@@ -107,7 +107,7 @@ public class LoginServer {
         IoBuffer.setUseDirectBuffer(false);
         IoBuffer.setAllocator(new SimpleBufferAllocator());
         acceptor = new NioSocketAcceptor();
-        acceptor.getFilterChain().addLast("codec", (IoFilter) new ProtocolCodecFilter(new MapleCodecFactory()));
+        acceptor.getFilterChain().addLast("codec", new ProtocolCodecFilter(new MapleCodecFactory()));
 
         acceptor.setHandler(new MapleServerHandler(-1, false));
         //acceptor.getSessionConfig().setIdleTime(IdleStatus.BOTH_IDLE, 30);

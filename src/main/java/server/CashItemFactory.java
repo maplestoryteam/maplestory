@@ -27,9 +27,9 @@ public class CashItemFactory {
     private final Map<Integer, CashItemInfo> itemStats = new HashMap<Integer, CashItemInfo>();
     private final Map<Integer, List<CashItemInfo>> itemPackage = new HashMap<Integer, List<CashItemInfo>>();
     private final Map<Integer, CashModInfo> itemMods = new HashMap<Integer, CashModInfo>();
-    private final MapleDataProvider data = MapleDataProviderFactory.getDataProvider(new File(System.getProperty("net.sf.odinms.wzpath") + "/Etc.wz"));
+    private final MapleDataProvider data = MapleDataProviderFactory.getDataProvider(new File(System.getProperty("net.sf.odinms.wzpath", "wz") + "/Etc.wz"));
     //是这个目录把，嗯
-    private final MapleDataProvider itemStringInfo = MapleDataProviderFactory.getDataProvider(new File(System.getProperty("net.sf.odinms.wzpath") + "/String.wz"));
+    private final MapleDataProvider itemStringInfo = MapleDataProviderFactory.getDataProvider(new File(System.getProperty("net.sf.odinms.wzpath", "wz") + "/String.wz"));
     private Map<Integer, Integer> idLookup = new HashMap();
     private static Map<Integer, List<CashItemInfo>> cashPackages = new HashMap();
 
@@ -135,7 +135,7 @@ public class CashItemFactory {
             return cashPackages.get(itemId);
         }
         List<CashItemInfo> packageItems = new ArrayList<CashItemInfo>();
-        MapleDataProvider dataProvider = MapleDataProviderFactory.getDataProvider(new File(System.getProperty("net.sf.odinms.wzpath") + "/" + "Etc.wz"));
+        MapleDataProvider dataProvider = MapleDataProviderFactory.getDataProvider(new File(System.getProperty("net.sf.odinms.wzpath", "wz") + "/" + "Etc.wz"));
         MapleData a = dataProvider.getData("CashPackage.img");
         for (MapleData b : a.getChildren()) {
             if (itemId == Integer.parseInt(b.getName())) {

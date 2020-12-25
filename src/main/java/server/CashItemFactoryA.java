@@ -18,7 +18,7 @@ public class CashItemFactoryA {
     private static Map<Integer, Integer> snLookup = new HashMap();
     private static Map<Integer, Integer> idLookup = new HashMap();
     private static Map<Integer, CashItemInfoA> itemStats = new HashMap();
-    private static MapleDataProvider data = MapleDataProviderFactory.getDataProvider(new File(System.getProperty("net.sf.odinms.wzpath") + "/Etc.wz"));
+    private static MapleDataProvider data = MapleDataProviderFactory.getDataProvider(new File(System.getProperty("net.sf.odinms.wzpath", "wz") + "/Etc.wz"));
     private static MapleData commodities = data.getData(StringUtil.getLeftPaddedStr("Commodity.img", '0', 11));
     private static Map<Integer, List<CashItemInfoA>> cashPackages = new HashMap();
 

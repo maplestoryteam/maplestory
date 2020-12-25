@@ -1,13 +1,7 @@
-package KinMS.PvP;
+package kinms.pvp;
 
-import client.ISkill;
 import client.MapleBuffStat;
 import client.MapleCharacter;
-import client.MapleClient;
-import client.PlayerStats;
-import client.Skill;
-import client.SkillFactory;
-import handling.channel.ChannelServer;
 import handling.channel.handler.AttackInfo;
 
 import java.awt.Point;

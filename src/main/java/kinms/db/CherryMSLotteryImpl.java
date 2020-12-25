@@ -1,4 +1,4 @@
-package KinMS.db;
+package kinms.db;
 
 import client.MapleCharacter;
 import database.DatabaseConnection;
@@ -7,12 +7,9 @@ import handling.channel.ChannelServer;
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import server.maps.MapleMap;
 import server.maps.MapleMapFactory;

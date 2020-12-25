@@ -20,9 +20,7 @@ import java.util.List;
 
 import tools.Pair;
 
-public class MapleQuestRequirement
-        implements Serializable {
-
+public class MapleQuestRequirement implements Serializable {
     private static final long serialVersionUID = 9179541993413738569L;
     private MapleQuest quest;
     private MapleQuestRequirementType type;
@@ -30,8 +28,7 @@ public class MapleQuestRequirement
     private String stringStore;
     private List<Pair<Integer, Integer>> dataStore;
 
-    public MapleQuestRequirement(MapleQuest quest, MapleQuestRequirementType type, ResultSet rse)
-            throws SQLException {
+    public MapleQuestRequirement(MapleQuest quest, MapleQuestRequirementType type, ResultSet rse) throws SQLException {
         this.type = type;
         this.quest = quest;
 

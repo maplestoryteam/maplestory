@@ -38,7 +38,7 @@ import server.MapleItemInformationProvider;
  */
 public class CashShopDumper {
 
-    private static final MapleDataProvider data = MapleDataProviderFactory.getDataProvider(new File(System.getProperty("net.sf.odinms.wzpath") + "/Etc.wz"));
+    private static final MapleDataProvider data = MapleDataProviderFactory.getDataProvider(new File(System.getProperty("net.sf.odinms.wzpath", "wz") + "/Etc.wz"));
 
     public static final CashModInfo getModInfo(int sn) {
         CashModInfo ret = null;

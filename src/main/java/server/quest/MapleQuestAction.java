@@ -30,9 +30,7 @@ import tools.MaplePacketCreator;
 import tools.Pair;
 import tools.Triple;
 
-public class MapleQuestAction
-        implements Serializable {
-
+public class MapleQuestAction implements Serializable {
     private static final long serialVersionUID = 9179541993413738569L;
     private MapleQuestActionType type;
     private MapleQuest quest;
@@ -42,8 +40,7 @@ public class MapleQuestAction
     private List<Triple<Integer, Integer, Integer>> skill = null;
     private List<Pair<Integer, Integer>> state = null;
 
-    public MapleQuestAction(MapleQuestActionType type, ResultSet rse, MapleQuest quest, PreparedStatement pss, PreparedStatement psq, PreparedStatement psi)
-            throws SQLException {
+    public MapleQuestAction(MapleQuestActionType type, ResultSet rse, MapleQuest quest, PreparedStatement pss, PreparedStatement psq, PreparedStatement psi) throws SQLException {
         this.type = type;
         this.quest = quest;
 

@@ -46,7 +46,7 @@ public class DumpMobSkills {
 
     public DumpMobSkills(boolean update) throws Exception {
         this.update = update;
-        this.skill = MapleDataProviderFactory.getDataProvider(new File(System.getProperty("net.sf.odinms.wzpath") + "/Skill.wz"));
+        this.skill = MapleDataProviderFactory.getDataProvider(new File(System.getProperty("net.sf.odinms.wzpath", "wz") + "/Skill.wz"));
         if (skill == null) {
             hadError = true;
         }

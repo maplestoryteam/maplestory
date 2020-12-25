@@ -1,4 +1,4 @@
-package KinMS.PvP;
+package kinms.pvp;
 
 import java.awt.Rectangle;
 

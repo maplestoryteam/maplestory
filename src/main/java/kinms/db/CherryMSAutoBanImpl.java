@@ -1,4 +1,4 @@
-package KinMS.db;
+package kinms.db;
 
 public class CherryMSAutoBanImpl {
 

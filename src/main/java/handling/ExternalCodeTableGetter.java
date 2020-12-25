@@ -73,15 +73,9 @@ public class ExternalCodeTableGetter {
 
     public final static <T extends Enum<? extends WritableIntValueHolder> & WritableIntValueHolder> String getOpcodeTable(T[] enumeration) {
         StringBuilder enumVals = new StringBuilder();
-        List<T> all = new ArrayList<T>(); // need a mutable list plawks
+        List<T> all = new ArrayList<>(); // need a mutable list plawks
         all.addAll(Arrays.asList(enumeration));
-        Collections.sort(all, new Comparator<WritableIntValueHolder>() {
-
-            @Override
-            public int compare(WritableIntValueHolder o1, WritableIntValueHolder o2) {
-                return Short.valueOf(o1.getValue()).compareTo(o2.getValue());
-            }
-        });
+        Collections.sort(all, (o1, o2) -> Short.valueOf(o1.getValue()).compareTo(o2.getValue()));
         for (T code : all) {
             enumVals.append(code.name());
             enumVals.append(" = ");

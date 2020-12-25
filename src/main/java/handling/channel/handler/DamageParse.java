@@ -1,6 +1,6 @@
 package handling.channel.handler;
 
-import KinMS.PvP.MaplePvp;
+import kinms.pvp.MaplePvp;
 
 import java.awt.Point;
 import java.util.ArrayList;

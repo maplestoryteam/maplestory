@@ -69,7 +69,7 @@ public class FixShopItemsPrice {
     }
 
     public static void main(String[] args) {
-        System.setProperty("net.sf.odinms.wzpath", System.getProperty("net.sf.odinms.wzpath"));
+        System.setProperty("net.sf.odinms.wzpath", System.getProperty("net.sf.odinms.wzpath", "wz"));
         FixShopItemsPrice i = new FixShopItemsPrice();
         System.out.println("正在加载道具数据......");
         // MapleItemInformationProvider.getInstance().load();

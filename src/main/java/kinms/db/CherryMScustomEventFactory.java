@@ -1,4 +1,4 @@
-package KinMS.db;
+package kinms.db;
 
 import handling.channel.ChannelServer;
 import server.maps.MapleMapFactory;

@@ -1,4 +1,4 @@
-package KinMS.db;
+package kinms.db;
 
 import client.MapleCharacter;
 import handling.channel.ChannelServer;

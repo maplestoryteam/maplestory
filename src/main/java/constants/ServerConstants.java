@@ -45,7 +45,7 @@ public class ServerConstants {
     public static final int CHANNEL_COUNT = 200;
     //服务端输出操作
     public static boolean 封包显示 = Boolean.parseBoolean(ServerProperties.getProperty("ZlhssMS.封包显示", "false"));
-    public static boolean 调试输出封包 = Boolean.parseBoolean(ServerProperties.getProperty("ZlhssMS.调试输出封包", "false"));
+    public static boolean 调试输出封包 = Boolean.parseBoolean(ServerProperties.getProperty("ZlhssMS.调试输出封包", "true"));
     public static boolean 自动注册 = false;
     public static boolean Super_password = false;
     public static String superpw = "";

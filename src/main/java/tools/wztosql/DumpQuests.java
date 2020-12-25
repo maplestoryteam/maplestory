@@ -27,7 +27,7 @@ public class DumpQuests {
 
     public DumpQuests(boolean update) throws Exception {
         this.update = update;
-        this.quest = MapleDataProviderFactory.getDataProvider(new File(System.getProperty("net.sf.odinms.wzpath") + "/Quest.wz"));
+        this.quest = MapleDataProviderFactory.getDataProvider(new File(System.getProperty("net.sf.odinms.wzpath", "wz") + "/Quest.wz"));
         if (quest == null) {
             hadError = true;
         }

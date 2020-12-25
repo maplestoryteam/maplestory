@@ -28,13 +28,13 @@ public class MapleQuest implements Serializable {
 
     private static final long serialVersionUID = 9179541993413738569L;
     private static Map<Integer, MapleQuest> quests = new LinkedHashMap();
-    protected int id;
     protected List<MapleQuestRequirement> startReqs = new LinkedList();
     protected List<MapleQuestRequirement> completeReqs = new LinkedList();
     protected List<MapleQuestAction> startActs = new LinkedList();
     protected List<MapleQuestAction> completeActs = new LinkedList();
     protected Map<String, List<Pair<String, Pair<String, Integer>>>> partyQuestInfo = new LinkedHashMap();
     protected Map<Integer, Integer> relevantMobs = new LinkedHashMap();
+    protected int id;
     private boolean autoStart = false;
     private boolean autoPreComplete = false;
     private boolean repeatable = false;
@@ -113,7 +113,7 @@ public class MapleQuest implements Serializable {
             if (!ret.partyQuestInfo.containsKey(rse.getString("rank"))) {
                 ret.partyQuestInfo.put(rse.getString("rank"), new ArrayList());
             }
-            ((List) ret.partyQuestInfo.get(rse.getString("rank"))).add(new Pair(rse.getString("mode"), new Pair(rse.getString("property"), Integer.valueOf(rse.getInt("value")))));
+            ret.partyQuestInfo.get(rse.getString("rank")).add(new Pair(rse.getString("mode"), new Pair(rse.getString("property"), Integer.valueOf(rse.getInt("value")))));
         }
         rse.close();
         return ret;
@@ -229,7 +229,7 @@ public class MapleQuest implements Serializable {
     public static void initQuests() {
         try {
             Connection con = DatabaseConnectionWZ.getConnection();
-            PreparedStatement ps = con.prepareStatement("SELECT * FROM wz_questdata");
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM wz_questdata order by questid asc");
             PreparedStatement psr = con.prepareStatement("SELECT * FROM wz_questreqdata WHERE questid = ?");
             PreparedStatement psa = con.prepareStatement("SELECT * FROM wz_questactdata WHERE questid = ?");
             PreparedStatement pss = con.prepareStatement("SELECT * FROM wz_questactskilldata WHERE uniqueid = ?");
@@ -255,7 +255,7 @@ public class MapleQuest implements Serializable {
     }
 
     /* public static void initQuests() {
-        questData = MapleDataProviderFactory.getDataProvider(new File(System.getProperty("net.sf.odinms.wzpath") + "/Quest.wz"));
+        questData = MapleDataProviderFactory.getDataProvider(new File(System.getProperty("net.sf.odinms.wzpath", "wz") + "/Quest.wz"));
         actions = questData.getData("Act.img");
         requirements = questData.getData("Check.img");
         info = questData.getData("QuestInfo.img");
