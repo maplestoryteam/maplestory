@@ -282,6 +282,7 @@ public class GameConstants {
     }
 
     public static boolean isThrowingStar(final int itemId) {
+        //2070000
         return itemId / 10000 == 207;
     }
 

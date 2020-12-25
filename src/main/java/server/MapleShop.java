@@ -25,59 +25,48 @@ import tools.MaplePacketCreator;
 
 public class MapleShop {
 
-    private static final Set<Integer> rechargeableItems = new LinkedHashSet<Integer>();
     private int id;
     private int npcId;
+    private static final Set<Integer> rechargeableItems = new LinkedHashSet<>();
     private List<MapleShopItem> items;
 
     static {
-        for (int i = 2070000; i <= 2070021; i++) {
-            rechargeableItems.add(Integer.valueOf(i));
-        }
-        for (int i = 2070023; i <= 2070026; i++) {
-            rechargeableItems.add(Integer.valueOf(i));
-        }
-        rechargeableItems.remove(Integer.valueOf(2070014));
-        rechargeableItems.remove(Integer.valueOf(2070015));
-        rechargeableItems.remove(Integer.valueOf(2070016));
-        rechargeableItems.remove(Integer.valueOf(2070017));
-        rechargeableItems.remove(Integer.valueOf(2070018));
-        rechargeableItems.remove(Integer.valueOf(2070019));
-        rechargeableItems.remove(Integer.valueOf(2070020));
-        rechargeableItems.remove(Integer.valueOf(2070021));
-        rechargeableItems.remove(Integer.valueOf(2070023));
-        rechargeableItems.remove(Integer.valueOf(2070024));
-        rechargeableItems.remove(Integer.valueOf(2070025));
-        rechargeableItems.remove(Integer.valueOf(2070026));
+        addThrowingStar();
+        addBullet();
+    }
 
+    static void addThrowingStar() {
+        rechargeableItems.add(2070000);
+        rechargeableItems.add(2070001);
+        rechargeableItems.add(2070002);
+        rechargeableItems.add(2070003);
+        rechargeableItems.add(2070004);
+        rechargeableItems.add(2070005);
+        rechargeableItems.add(2070006);
+        rechargeableItems.add(2070007);
+        rechargeableItems.add(2070008);
+        rechargeableItems.add(2070009);
+        rechargeableItems.add(2070010);
+        rechargeableItems.add(2070011);
+        rechargeableItems.add(2070012);
+        rechargeableItems.add(2070013);
+        rechargeableItems.add(2070015);
+        rechargeableItems.add(2070016);
+        rechargeableItems.add(2070019);
+        rechargeableItems.add(2070020);
+        rechargeableItems.add(2070021);
+        rechargeableItems.add(2070023);
+        rechargeableItems.add(2070024);
+        rechargeableItems.add(2070025);
+        rechargeableItems.add(2070026);
+    }
+
+    static void addBullet() {
         for (int i = 2330000; i <= 2330006; i++) {
             rechargeableItems.add(Integer.valueOf(i));
         }
         rechargeableItems.add(Integer.valueOf(2331000));
         rechargeableItems.add(Integer.valueOf(2332000));
-        /*
-         * rechargeableItems.add(2070000); rechargeableItems.add(2070001);
-         * rechargeableItems.add(2070002); rechargeableItems.add(2070003);
-         * rechargeableItems.add(2070004); rechargeableItems.add(2070005);
-         * rechargeableItems.add(2070006); rechargeableItems.add(2070007);
-         * rechargeableItems.add(2070008); rechargeableItems.add(2070009);
-         * rechargeableItems.add(2070010); rechargeableItems.add(2070011);
-         * rechargeableItems.add(2070012); rechargeableItems.add(2070013); //
-         * rechargeableItems.add(2070014); // Doesn't Exist [Devil Rain] //
-         * rechargeableItems.add(2070015); // Beginner Star //
-         * rechargeableItems.add(2070016); //	rechargeableItems.add(2070017); //
-         * Doesn't Exist // rechargeableItems.add(2070018); // Balanced Fury
-         * rechargeableItems.add(2070019); // Magic Throwing Star
-         *
-         * rechargeableItems.add(2330000); rechargeableItems.add(2330001);
-         * rechargeableItems.add(2330002); rechargeableItems.add(2330003);
-         * rechargeableItems.add(2330004); rechargeableItems.add(2330005); //
-         * rechargeableItems.add(2330006); // Beginner Bullet
-         * rechargeableItems.add(2330007);
-         *
-         * rechargeableItems.add(2331000); // Capsules
-         * rechargeableItems.add(2332000); // Capsules
-         */
     }
 
     /**
@@ -86,7 +75,7 @@ public class MapleShop {
     private MapleShop(int id, int npcId) {
         this.id = id;
         this.npcId = npcId;
-        items = new LinkedList<MapleShopItem>();
+        items = new LinkedList<>();
     }
 
     public void addItem(MapleShopItem item) {

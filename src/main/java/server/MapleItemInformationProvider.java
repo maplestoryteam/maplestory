@@ -50,7 +50,7 @@ public class MapleItemInformationProvider {
     protected final MapleData etcStringData = stringData.getData("Etc.img");
     protected final MapleData insStringData = stringData.getData("Ins.img");
     protected final MapleData petStringData = stringData.getData("Pet.img");
-    protected final Map<Integer, List<Integer>> scrollReqCache = new HashMap<Integer, List<Integer>>();
+    protected final Map<Integer, List<Integer>> scrollReqCache = new HashMap<>();
     protected final Map<Integer, Short> slotMaxCache = new HashMap<Integer, Short>();
     protected final Map<Integer, Integer> getExpCache = new HashMap();
     protected final Map<Integer, List<StructPotentialItem>> potentialCache = new HashMap<Integer, List<StructPotentialItem>>();
@@ -660,12 +660,20 @@ public class MapleItemInformationProvider {
                 if (GameConstants.getInventoryType(itemId) == MapleInventoryType.EQUIP) {
                     ret = 1;
                 } else {
-                    ret = 100;
+                    ret = 9999;
                 }
             } else {
-                ret = (short) MapleDataTool.getInt(smEntry);
+//                ret = (short) MapleDataTool.getInt(smEntry);
+//                ret = (short) MapleDataTool.getInt(smEntry);
+                ret = 9999;
             }
         }
+
+        if (GameConstants.isThrowingStar(itemId)) {
+            //镖 上限给1800
+            ret = 1800;
+        }
+
         slotMaxCache.put(itemId, ret);
         return ret;
     }
