@@ -100,17 +100,13 @@ public class SpawnPoint extends Spawns {
             mob.changeLevel(level, true);
         }
         spawnedMonsters.incrementAndGet();
-        mob.addListener(new MonsterListener() {
+        mob.addListener(() -> {
+            nextPossibleSpawn = System.currentTimeMillis();
 
-            @Override
-            public void monsterKilled() {
-                nextPossibleSpawn = System.currentTimeMillis();
-
-                if (mobTime > 0) {
-                    nextPossibleSpawn += mobTime;
-                }
-                spawnedMonsters.decrementAndGet();
+            if (mobTime > 0) {
+                nextPossibleSpawn += mobTime;
             }
+            spawnedMonsters.decrementAndGet();
         });
         map.spawnMonster(mob, -2);
         if (carnivalTeam > -1) {

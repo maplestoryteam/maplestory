@@ -2766,11 +2766,11 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
             stats.setMaxMp((short) maxmp);
             stats.setHp((short) maxhp);
             stats.setMp((short) maxmp);
-            List<Pair<MapleStat, Integer>> statup = new ArrayList<Pair<MapleStat, Integer>>(4);
-            statup.add(new Pair<MapleStat, Integer>(MapleStat.MAXHP, Integer.valueOf(maxhp)));
-            statup.add(new Pair<MapleStat, Integer>(MapleStat.MAXMP, Integer.valueOf(maxmp)));
-            statup.add(new Pair<MapleStat, Integer>(MapleStat.HP, Integer.valueOf(maxhp)));
-            statup.add(new Pair<MapleStat, Integer>(MapleStat.MP, Integer.valueOf(maxmp)));
+            List<Pair<MapleStat, Integer>> statup = new ArrayList<>(4);
+            statup.add(new Pair<>(MapleStat.MAXHP, Integer.valueOf(maxhp)));
+            statup.add(new Pair<>(MapleStat.MAXMP, Integer.valueOf(maxmp)));
+            statup.add(new Pair<>(MapleStat.HP, Integer.valueOf(maxhp)));
+            statup.add(new Pair<>(MapleStat.MP, Integer.valueOf(maxmp)));
             stats.recalcLocalStats();
             client.getSession().write(MaplePacketCreator.updatePlayerStats(statup, getJob()));
             map.broadcastMessage(this, MaplePacketCreator.showForeignEffect(getId(), 8), false);

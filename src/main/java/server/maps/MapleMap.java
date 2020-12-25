@@ -110,31 +110,33 @@ public final class MapleMap {
      */
     private final Map<MapleMapObjectType, LinkedHashMap<Integer, MapleMapObject>> mapobjects;
     private final Map<MapleMapObjectType, ReentrantReadWriteLock> mapobjectlocks;
-    private final List<MapleCharacter> characters = new ArrayList<MapleCharacter>();
+    private final List<MapleCharacter> characters = new ArrayList<>();
     private final ReentrantReadWriteLock charactersLock = new ReentrantReadWriteLock();
     private int runningOid = 100000;
     private final Lock runningOidLock = new ReentrantLock();
-    private final List<Spawns> monsterSpawn = new ArrayList<Spawns>();
+    private final List<Spawns> monsterSpawn = new ArrayList<>();
     private final AtomicInteger spawnedMonstersOnMap = new AtomicInteger(0);
-    private final Map<Integer, MaplePortal> portals = new HashMap<Integer, MaplePortal>();
+    private final Map<Integer, MaplePortal> portals = new HashMap<>();
     private MapleFootholdTree footholds = null;
     private float monsterRate, recoveryRate;
     private MapleMapEffect mapEffect;
     private byte channel;
-    private short decHP = 0, createMobInterval = 9000;
+    private short decHP = 0, createMobInterval = 9000,
+            firstCreateMobInterval = 1000;
+    private boolean respawned = false;
     private int consumeItemCoolTime = 0, protectItem = 0, decHPInterval = 10000, mapid, returnMapId, timeLimit,
             fieldLimit, maxRegularSpawn = 0, fixedMob, forcedReturnMap = 999999999,
             lvForceMove = 0, lvLimit = 0, permanentWeather = 0;
     private boolean town, clock, personalShop, everlast = false, dropsDisabled = false, gDropsDisabled = false,
             soaring = false, squadTimer = false, isSpawns = true;
     private String mapName, streetName, onUserEnter, onFirstUserEnter, speedRunLeader = "";
-    private List<Integer> dced = new ArrayList<Integer>();
+    private List<Integer> dced = new ArrayList<>();
     private ScheduledFuture<?> squadSchedule;
     private long speedRunStart = 0, lastSpawnTime = 0, lastHurtTime = 0;
     private MapleNodes nodes;
     private MapleSquadType squad;
     private int fieldType;
-    private Map<String, Integer> environment = new LinkedHashMap<String, Integer>();
+    private Map<String, Integer> environment = new LinkedHashMap<>();
 
     public MapleMap(final int mapid, final int channel, final int returnMapId, final float monsterRate) {
         this.mapid = mapid;
@@ -144,10 +146,10 @@ public final class MapleMap {
             this.returnMapId = mapid;
         }
         this.monsterRate = monsterRate;
-        EnumMap<MapleMapObjectType, LinkedHashMap<Integer, MapleMapObject>> objsMap = new EnumMap<MapleMapObjectType, LinkedHashMap<Integer, MapleMapObject>>(MapleMapObjectType.class);
-        EnumMap<MapleMapObjectType, ReentrantReadWriteLock> objlockmap = new EnumMap<MapleMapObjectType, ReentrantReadWriteLock>(MapleMapObjectType.class);
+        EnumMap<MapleMapObjectType, LinkedHashMap<Integer, MapleMapObject>> objsMap = new EnumMap<>(MapleMapObjectType.class);
+        EnumMap<MapleMapObjectType, ReentrantReadWriteLock> objlockmap = new EnumMap<>(MapleMapObjectType.class);
         for (MapleMapObjectType type : MapleMapObjectType.values()) {
-            objsMap.put(type, new LinkedHashMap<Integer, MapleMapObject>());
+            objsMap.put(type, new LinkedHashMap<>());
             objlockmap.put(type, new ReentrantReadWriteLock());
         }
         mapobjects = Collections.unmodifiableMap(objsMap);
@@ -1505,12 +1507,7 @@ public final class MapleMap {
                 c.getSession().write(MaplePacketCreator.spawnPortal(door.getTown().getId(), door.getTarget().getId(), door.getSkill(), door.getTargetPosition()));
                 c.getSession().write(MaplePacketCreator.enableActions());
             }
-        }, new SpawnCondition() {
-
-            public final boolean canSpawn(final MapleCharacter chr) {
-                return door.getTarget().getId() == chr.getMapId() || door.getOwnerId() == chr.getId() || (door.getOwner() != null && door.getOwner().getParty() != null && door.getOwner().getParty().getMemberById(chr.getId()) != null);
-            }
-        });
+        }, chr -> door.getTarget().getId() == chr.getMapId() || door.getOwnerId() == chr.getId() || (door.getOwner() != null && door.getOwner().getParty() != null && door.getOwner().getParty().getMemberById(chr.getId()) != null));
     }
 
     public final void spawnSummon(final MapleSummon summon) {
@@ -2228,43 +2225,40 @@ public final class MapleMap {
                 for (MapleMapObject m : monsterz) {
                     monsteridz.add(m.getObjectId());
                 }
-                run = new Runnable() {
-
-                    public void run() {
-                        final MapleSquad sqnow = MapleMap.this.getSquadByMap();
-                        if (MapleMap.this.getCharactersSize() > 0 && MapleMap.this.getNumMonsters() == monsterz.size() && sqnow != null && sqnow.getStatus() == 2 && sqnow.getLeaderName().equals(leaderName) && MapleMap.this.getEMByMap().getProperty("state").equals(state)) {
-                            boolean passed = monsterz.isEmpty();
-                            for (MapleMapObject m : MapleMap.this.getAllMonstersThreadsafe()) {
-                                for (int i : monsteridz) {
-                                    if (m.getObjectId() == i) {
-                                        passed = true;
-                                        break;
-                                    }
-                                }
-                                if (passed) {
+                run = () -> {
+                    final MapleSquad sqnow = MapleMap.this.getSquadByMap();
+                    if (MapleMap.this.getCharactersSize() > 0 && MapleMap.this.getNumMonsters() == monsterz.size() && sqnow != null && sqnow.getStatus() == 2 && sqnow.getLeaderName().equals(leaderName) && MapleMap.this.getEMByMap().getProperty("state").equals(state)) {
+                        boolean passed = monsterz.isEmpty();
+                        for (MapleMapObject m : MapleMap.this.getAllMonstersThreadsafe()) {
+                            for (int i : monsteridz) {
+                                if (m.getObjectId() == i) {
+                                    passed = true;
                                     break;
-                                } //even one of the monsters is the same
+                                }
                             }
                             if (passed) {
-                                //are we still the same squad? are monsters still == 0?
-                                MaplePacket packet;
-                                if (mode == 1) { //zakum
-                                    packet = MaplePacketCreator.showZakumShrine(spawned, 0);
-                                } else if (mode == 2) { //chaoszakum
-                                    packet = MaplePacketCreator.showChaosZakumShrine(spawned, 0);
-                                } else {
-                                    packet = MaplePacketCreator.showHorntailShrine(spawned, 0); //chaoshorntail message is weird
-                                }
-                                for (MapleCharacter chr : MapleMap.this.getCharactersThreadsafe()) { //warp all in map
-                                    chr.getClient().getSession().write(packet);
-                                    chr.changeMap(returnMapz, returnMapz.getPortal(0)); //hopefully event will still take care of everything once warp out
-                                }
-                                checkStates("");
-                                resetFully();
-                            }
+                                break;
+                            } //even one of the monsters is the same
                         }
-
+                        if (passed) {
+                            //are we still the same squad? are monsters still == 0?
+                            MaplePacket packet;
+                            if (mode == 1) { //zakum
+                                packet = MaplePacketCreator.showZakumShrine(spawned, 0);
+                            } else if (mode == 2) { //chaoszakum
+                                packet = MaplePacketCreator.showChaosZakumShrine(spawned, 0);
+                            } else {
+                                packet = MaplePacketCreator.showHorntailShrine(spawned, 0); //chaoshorntail message is weird
+                            }
+                            for (MapleCharacter chr : MapleMap.this.getCharactersThreadsafe()) { //warp all in map
+                                chr.getClient().getSession().write(packet);
+                                chr.changeMap(returnMapz, returnMapz.getPortal(0)); //hopefully event will still take care of everything once warp out
+                            }
+                            checkStates("");
+                            resetFully();
+                        }
                     }
+
                 };
             } else { //inforce timer to gtfo
                 run = new Runnable() {
@@ -2755,8 +2749,8 @@ public final class MapleMap {
         if (fixedMob > 0) {
             maxRegularSpawn = fixedMob;
         }
-        Collection<Spawns> newSpawn = new LinkedList<Spawns>();
-        Collection<Spawns> newBossSpawn = new LinkedList<Spawns>();
+        Collection<Spawns> newSpawn = new LinkedList<>();
+        Collection<Spawns> newBossSpawn = new LinkedList<>();
         for (final Spawns s : monsterSpawn) {
             if (s.getCarnivalTeam() >= 2) {
                 continue; // Remove carnival spawned mobs
@@ -2992,13 +2986,9 @@ public final class MapleMap {
         broadcastMessage(love.makeSpawnData());
         final MapTimer tMan = MapTimer.getInstance();
         //   TimerManager tMan = TimerManager.getInstance();
-        tMan.schedule(new Runnable() {
-
-            @Override
-            public void run() {
-                removeMapObject(love);
-                broadcastMessage(love.makeDestroyData());
-            }
+        tMan.schedule(() -> {
+            removeMapObject(love);
+            broadcastMessage(love.makeDestroyData());
         }, 1000 * 60 * 60);
     }
 
@@ -3064,13 +3054,7 @@ public final class MapleMap {
                 reactor.setTimerActive(false);
 
                 if (reactor.getDelay() > 0) {
-                    MapTimer.getInstance().schedule(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            reactor.forceHitReactor((byte) 0);
-                        }
-                    }, reactor.getDelay());
+                    MapTimer.getInstance().schedule(() -> reactor.forceHitReactor((byte) 0), reactor.getDelay());
                 }
             } else {
                 reactor.setTimerActive(false);
@@ -3079,6 +3063,7 @@ public final class MapleMap {
     }
 
     public void respawn(final boolean force) {
+        respawned = true;
         lastSpawnTime = System.currentTimeMillis();
         if (force) { //cpq quick hack
             final int numShouldSpawn = monsterSpawn.size() - spawnedMonstersOnMap.get();
@@ -3099,7 +3084,7 @@ public final class MapleMap {
             if (numShouldSpawn > 0) {
                 int spawned = 0;
 
-                final List<Spawns> randomSpawn = new ArrayList<Spawns>(monsterSpawn);
+                final List<Spawns> randomSpawn = new ArrayList<>(monsterSpawn);
                 Collections.shuffle(randomSpawn);
 
                 for (Spawns spawnPoint : randomSpawn) {
@@ -3569,6 +3554,12 @@ public final class MapleMap {
     }
 
     public final boolean canSpawn() {
+        //1、第一次的時候 刷怪时间为1s
+        //2、其他时候 刷新时间为9s
+        if (!respawned) {
+            //说明此地图还没有刷过怪，使用第一次的间隔时间刷怪
+            return lastSpawnTime + firstCreateMobInterval < System.currentTimeMillis();
+        }
         return lastSpawnTime > 0 && isSpawns && lastSpawnTime + createMobInterval < System.currentTimeMillis();
     }
 
@@ -3582,7 +3573,7 @@ public final class MapleMap {
 
     public List<Integer> getAllUniqueMonsters() {
         ArrayList ret = new ArrayList();
-        ((ReentrantReadWriteLock) this.mapobjectlocks.get(MapleMapObjectType.MONSTER)).readLock().lock();
+        this.mapobjectlocks.get(MapleMapObjectType.MONSTER).readLock().lock();
         try {
             for (MapleMapObject mmo : mapobjects.get(MapleMapObjectType.MONSTER).values()) {
                 int theId = ((MapleMonster) mmo).getId();

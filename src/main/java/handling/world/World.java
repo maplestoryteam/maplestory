@@ -1440,36 +1440,32 @@ public class World {
     }
 
     public static void scheduleRateDelay(final String type, long delay) {
-        WorldTimer.getInstance().schedule(new Runnable() {
+        WorldTimer.getInstance().schedule(() -> {
+            final String rate = type;
 
-            @Override
-            public void run() {
-                final String rate = type;
-
-                if (rate.equals("经验")) {
-                    for (ChannelServer cservs : ChannelServer.getAllInstances()) {
-                        cservs.setExpRate(1);
-                    }
-                } else if (rate.equals("爆率")) {
-                    for (ChannelServer cservs : ChannelServer.getAllInstances()) {
-                        cservs.setDropRate(1);
-                    }
-                } else if (rate.equals("金币")) {
-                    for (ChannelServer cservs : ChannelServer.getAllInstances()) {
-                        cservs.setMesoRate(1);
-                    }
-                } else if (rate.equalsIgnoreCase("boss爆率")) {
-                    for (ChannelServer cservs : ChannelServer.getAllInstances()) {
-                        cservs.setBossDropRate(1);
-                    }
-                } else if (rate.equals("宠物经验")) {
+            if (rate.equals("经验")) {
+                for (ChannelServer cservs : ChannelServer.getAllInstances()) {
+                    cservs.setExpRate(1);
+                }
+            } else if (rate.equals("爆率")) {
+                for (ChannelServer cservs : ChannelServer.getAllInstances()) {
+                    cservs.setDropRate(1);
+                }
+            } else if (rate.equals("金币")) {
+                for (ChannelServer cservs : ChannelServer.getAllInstances()) {
+                    cservs.setMesoRate(1);
+                }
+            } else if (rate.equalsIgnoreCase("boss爆率")) {
+                for (ChannelServer cservs : ChannelServer.getAllInstances()) {
+                    cservs.setBossDropRate(1);
+                }
+            } else if (rate.equals("宠物经验")) {
 //                    for (ChannelServer cservs : ChannelServer.getAllInstances()) {
 //                        cservs.setPetExpRate(1);
 //                    }
-                }
-                for (ChannelServer cservs : ChannelServer.getAllInstances()) {
-                    cservs.broadcastPacket(MaplePacketCreator.serverNotice(6, " 系统双倍活动已经结束。系统已成功自动切换为正常游戏模式！"));
-                }
+            }
+            for (ChannelServer cservs : ChannelServer.getAllInstances()) {
+                cservs.broadcastPacket(MaplePacketCreator.serverNotice(6, " 系统双倍活动已经结束。系统已成功自动切换为正常游戏模式！"));
             }
         }, delay * 1000);
     }

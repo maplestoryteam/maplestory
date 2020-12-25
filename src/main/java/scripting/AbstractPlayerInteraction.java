@@ -1446,13 +1446,9 @@ public abstract class AbstractPlayerInteraction {
                 @Override
                 public void run() {
                     chr.getClient().getSession().write(MaplePacketCreator.showAriantScoreBoard());
-                    MapTimer.getInstance().schedule(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            chr.changeMap(980010010, 0);
-                            chr.resetAriantScore();
-                        }
+                    MapTimer.getInstance().schedule(() -> {
+                        chr.changeMap(980010010, 0);
+                        chr.resetAriantScore();
                     }, 9000);
                 }
             }, (8 * 60) * 1000);
