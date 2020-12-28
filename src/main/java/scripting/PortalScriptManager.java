@@ -71,7 +71,8 @@ public class PortalScriptManager {
 //            BufferedReader bf = new BufferedReader(new InputStreamReader(fr, EncodingDetect.getJavaEncode(scriptFile)));
 
             //jdk8 添加 try{load("nashorn:mozilla_compat.js");}catch (e){}
-            List<String> readLines = IOUtils.readLines(fr, "GBK");
+            String encoding = EncodingDetect.getJavaEncode(scriptFile);
+            List<String> readLines = IOUtils.readLines(fr, encoding);
             String scrhead = "try{load(\"nashorn:mozilla_compat.js\");}catch(e){};";
             StringBuffer buffer = new StringBuffer();
             buffer.append(scrhead);
