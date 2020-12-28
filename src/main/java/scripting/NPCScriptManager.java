@@ -225,7 +225,7 @@ public class NPCScriptManager extends AbstractScriptManager {
         lock.lock();
         try {
             if (!cms.containsKey(c)) {
-                final Invocable iv = getInvocable("任务/" + quest + ".js", c, true);
+                final Invocable iv = getInvocable("quest/" + quest + ".js", c, true);
                 if (iv == null) {
                     dispose(c);
                     return;

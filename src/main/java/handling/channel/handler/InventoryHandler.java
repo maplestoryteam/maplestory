@@ -153,7 +153,7 @@ public class InventoryHandler {
         }
         c.getSession().write(MaplePacketCreator.finishedSort(pInvType.getType()));
         c.getSession().write(MaplePacketCreator.enableActions());//防止假死
-        c.getSession().write(MaplePacketCreator.serverNotice(1, "道具集合完毕!"));
+//        c.getSession().write(MaplePacketCreator.serverNotice(1, "道具集合完毕!"));
     }
 
     public static final void ItemGather(final SeekableLittleEndianAccessor slea, final MapleClient c) {
@@ -185,17 +185,17 @@ public class InventoryHandler {
         c.getSession().write(MaplePacketCreator.enableActions());
         itemMap.clear();
         sortedItems.clear();
-        c.getSession().write(MaplePacketCreator.serverNotice(1, "以种类排序完毕!"));
+//        c.getSession().write(MaplePacketCreator.serverNotice(1, "以种类排序完毕!"));
     }
 
     private static final List<IItem> sortItems(final List<IItem> passedMap) {
-        final List<Integer> itemIds = new ArrayList<Integer>(); // empty list.
+        final List<Integer> itemIds = new ArrayList<>(); // empty list.
         for (IItem item : passedMap) {
             itemIds.add(item.getItemId()); // adds all item ids to the empty list to be sorted.
         }
         Collections.sort(itemIds); // sorts item ids
 
-        final List<IItem> sortedList = new LinkedList<IItem>(); // ordered list pl0x <3.
+        final List<IItem> sortedList = new LinkedList<>(); // ordered list pl0x <3.
 
         for (Integer val : itemIds) {
             for (IItem item : passedMap) {

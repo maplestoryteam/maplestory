@@ -63,7 +63,7 @@ public class EventManager {
     private static int[] eventChannel = new int[2];
     private Invocable iv;
     private int channel;
-    private Map<String, EventInstanceManager> instances = new WeakHashMap<String, EventInstanceManager>();
+    private Map<String, EventInstanceManager> instances = new WeakHashMap<>();
     private Properties props = new Properties();
     private String name;
 

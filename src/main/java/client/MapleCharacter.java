@@ -5227,8 +5227,8 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
             ps.setString(2, bossid);
             ps.executeUpdate();
             ps.close();
-        } catch (Exception Ex) {
-            //   log.error("Error while insert bosslog.", Ex);
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
 

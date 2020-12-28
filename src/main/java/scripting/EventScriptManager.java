@@ -58,7 +58,7 @@ public class EventScriptManager extends AbstractScriptManager {
         super();
         for (final String script : scripts) {
             if (!script.equals("")) {
-                final Invocable iv = getInvocable("events/" + script + ".js", null);
+                final Invocable iv = getInvocable("event/" + script + ".js", null);
 
                 if (iv != null) {
                     events.put(script, new EventEntry(script, iv, new EventManager(cserv, iv, script)));
