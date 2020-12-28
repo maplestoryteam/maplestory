@@ -31,7 +31,12 @@ import javax.script.ScriptEngineManager;
 import client.MapleClient;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.util.Arrays;
+import java.util.List;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.mina.core.IoUtil;
 import tools.FileoutputUtil;
 import tools.MaplePacketCreator;
 
@@ -67,9 +72,18 @@ public abstract class AbstractScriptManager {
                     c.setScriptEngine(path, engine);
                 }
                 fr = new FileInputStream(scriptFile);
-                BufferedReader bf = new BufferedReader(new InputStreamReader(fr, EncodingDetect.getJavaEncode(scriptFile)));
-
-                engine.eval(bf);
+//                InputStreamReader reader = new InputStreamReader(fr, EncodingDetect.getJavaEncode(scriptFile));
+//                BufferedReader bf = new BufferedReader(reader);
+                //jdk8 添加 try{load("nashorn:mozilla_compat.js");}catch (e){}
+                List<String> readLines = IOUtils.readLines(fr, "GBK");
+                String scrhead = "try{load(\"nashorn:mozilla_compat.js\");}catch(e){};";
+                StringBuffer buffer = new StringBuffer();
+                buffer.append(scrhead);
+                readLines.stream().forEach(s -> {
+                    buffer.append("\r\n");
+                    buffer.append(s);
+                });
+                engine.eval(buffer.toString());
             } else if (c != null && npc) {
                 NPCScriptManager.getInstance().dispose(c);
                 c.getSession().write(MaplePacketCreator.enableActions());

@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.script.Compilable;
@@ -37,6 +38,7 @@ import client.MapleClient;
 
 import java.io.*;
 
+import org.apache.commons.io.IOUtils;
 import server.MaplePortal;
 import tools.FileoutputUtil;
 
@@ -66,8 +68,19 @@ public class PortalScriptManager {
         final ScriptEngine portal = sef.getScriptEngine();
         try {
             fr = new FileInputStream(scriptFile);
-            BufferedReader bf = new BufferedReader(new InputStreamReader(fr, EncodingDetect.getJavaEncode(scriptFile)));
-            CompiledScript compiled = ((Compilable) portal).compile(bf);
+//            BufferedReader bf = new BufferedReader(new InputStreamReader(fr, EncodingDetect.getJavaEncode(scriptFile)));
+
+            //jdk8 添加 try{load("nashorn:mozilla_compat.js");}catch (e){}
+            List<String> readLines = IOUtils.readLines(fr, "GBK");
+            String scrhead = "try{load(\"nashorn:mozilla_compat.js\");}catch(e){};";
+            StringBuffer buffer = new StringBuffer();
+            buffer.append(scrhead);
+            readLines.stream().forEach(s -> {
+                buffer.append("\r\n");
+                buffer.append(s);
+            });
+
+            CompiledScript compiled = ((Compilable) portal).compile(buffer.toString());
             compiled.eval();
         } catch (final Exception e) {
             System.err.println("Error executing Portalscript: " + scriptName + ":" + e);

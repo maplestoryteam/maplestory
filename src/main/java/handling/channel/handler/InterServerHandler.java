@@ -88,7 +88,8 @@ public class InterServerHandler {
         //c.getSession().write(MaplePacketCreator.getChannelChange(InetAddress.getByName(socket[0]), Integer.parseInt(CashShopServer.getIP().split(":")[1])));
         chr.saveToDB(false, false);
         chr.getMap().removePlayer(chr);
-        c.getSession().write(MaplePacketCreator.getChannelChange(c, Integer.parseInt(CashShopServer.getIP().split(":")[1])));
+        MaplePacket maplePacket = MaplePacketCreator.getChannelChange(c, CashShopServer.getPort());
+        c.getSession().write(maplePacket);
         c.getPlayer().expirationTask(true, false);
         c.setPlayer(null);
         c.setReceiving(false);

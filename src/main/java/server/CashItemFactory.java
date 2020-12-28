@@ -42,7 +42,7 @@ public class CashItemFactory {
 
     public void initialize() {
         //System.out.println("商城 :::");
-        final List<Integer> itemids = new ArrayList<Integer>();
+        final List<Integer> itemids = new ArrayList<>();
         for (MapleData field : data.getData("Commodity.img").getChildren()) {
             final int SN = MapleDataTool.getIntConvert("SN", field, 0);
             final int itemId = MapleDataTool.getIntConvert("ItemId", field, 0);

@@ -93,10 +93,10 @@ public class ChannelServer implements Serializable {
     private IoAcceptor acceptor;
     private final MapleMapFactory mapFactory;
     private EventScriptManager eventSM;
-    private static final Map<Integer, ChannelServer> instances = new HashMap<Integer, ChannelServer>();
-    private final Map<MapleSquadType, MapleSquad> mapleSquads = new ConcurrentEnumMap<MapleSquadType, MapleSquad>(MapleSquadType.class);
-    private final Map<Integer, HiredMerchant> merchants = new HashMap<Integer, HiredMerchant>();
-    private final Map<Integer, PlayerNPC> playerNPCs = new HashMap<Integer, PlayerNPC>();
+    private static final Map<Integer, ChannelServer> instances = new HashMap<>();
+    private final Map<MapleSquadType, MapleSquad> mapleSquads = new ConcurrentEnumMap<>(MapleSquadType.class);
+    private final Map<Integer, HiredMerchant> merchants = new HashMap<>();
+    private final Map<Integer, PlayerNPC> playerNPCs = new HashMap<>();
     private final ReentrantReadWriteLock merchLock = new ReentrantReadWriteLock(); //merchant
     private final ReentrantReadWriteLock squadLock = new ReentrantReadWriteLock(); //squad
     private int eventmap = -1;

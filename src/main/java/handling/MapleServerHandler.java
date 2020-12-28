@@ -70,8 +70,8 @@ public class MapleServerHandler extends IoHandlerAdapter implements MapleServerH
     public static final boolean Log_Packets = true;
     private int channel = -1;
     private boolean cs;
-    private final List<String> BlockedIP = new ArrayList<String>();
-    private final Map<String, Pair<Long, Byte>> tracker = new ConcurrentHashMap<String, Pair<Long, Byte>>();
+    private final List<String> BlockedIP = new ArrayList<>();
+    private final Map<String, Pair<Long, Byte>> tracker = new ConcurrentHashMap<>();
     //Screw locking. Doesn't matter.
 //    private static final ReentrantReadWriteLock IPLoggingLock = new ReentrantReadWriteLock();
     private static final String nl = System.getProperty("line.separator");
@@ -134,7 +134,7 @@ public class MapleServerHandler extends IoHandlerAdapter implements MapleServerH
 
     // <editor-fold defaultstate="collapsed" desc="Packet Log Implementation">
     private static final int Log_Size = 10000;
-    private static final ArrayList<LoggedPacket> Packet_Log = new ArrayList<LoggedPacket>(Log_Size);
+    private static final ArrayList<LoggedPacket> Packet_Log = new ArrayList<>(Log_Size);
     private static final ReentrantReadWriteLock Packet_Log_Lock = new ReentrantReadWriteLock();
     private static final File Packet_Log_Output = new File("PacketLog.txt");
 
@@ -292,7 +292,7 @@ public class MapleServerHandler extends IoHandlerAdapter implements MapleServerH
                 return;
             }
         }
-        tracker.put(address, new Pair<Long, Byte>(System.currentTimeMillis(), count));
+        tracker.put(address, new Pair<>(System.currentTimeMillis(), count));
         String IP = address.substring(address.indexOf('/') + 1, address.length());
         // End of IP checking.
 
@@ -430,6 +430,7 @@ public class MapleServerHandler extends IoHandlerAdapter implements MapleServerH
                     if (Log_Packets) {
                         log(slea, recv, c, session);
                     }
+
                     handlePacket(recv, slea, c, cs);
 
                     //Log after the packet is handle. You'll see why =]
@@ -458,11 +459,11 @@ public class MapleServerHandler extends IoHandlerAdapter implements MapleServerH
                 System.out.println(sb.toString());
             }
         } catch (RejectedExecutionException ex) {
+            ex.printStackTrace();
         } catch (Exception e) {
             FileoutputUtil.outputFileError(FileoutputUtil.PacketEx_Log, e);
             e.printStackTrace();
         }
-
     }
 
     @Override
@@ -483,7 +484,6 @@ public class MapleServerHandler extends IoHandlerAdapter implements MapleServerH
     }
 
     public static void handlePacket(final RecvPacketOpcode header, final SeekableLittleEndianAccessor slea, final MapleClient c, final boolean cs) throws Exception {
-        //System.out.println(header);
         switch (header) {
             case PONG:
                 c.pongReceived();

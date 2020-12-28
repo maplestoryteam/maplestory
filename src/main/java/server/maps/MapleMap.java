@@ -2517,7 +2517,7 @@ public final class MapleMap {
         chr.checkFollow();
         broadcastMessage(MaplePacketCreator.removePlayerFromMap(chr.getId()));
         if (!chr.isClone()) {
-            final List<MapleMonster> update = new ArrayList<MapleMonster>();
+            final List<MapleMonster> update = new ArrayList<>();
             final Iterator<MapleMonster> controlled = chr.getControlled().iterator();
 
             while (controlled.hasNext()) {

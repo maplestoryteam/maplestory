@@ -41,18 +41,18 @@ import server.ServerProperties;
 public class CashShopServer {
 
     private static String ip;
-    private final static int PORT = 8600;//商城端口读取配置里面的端口
+    private static int port;
     private static IoAcceptor acceptor;
     private static PlayerStorage players, playersMTS;
     private static boolean finishedShutdown = false;
 
     public static void run_startup_configurations() {
-        ip = ServerProperties.getProperty("ZlhssMS.IP") + ":" + PORT;
-
+        ip = ServerProperties.getProperty("ZlhssMS.IP");
+        port = Integer.valueOf(ServerProperties.getProperty("ZlhssMS.SCPort"));
         IoBuffer.setUseDirectBuffer(false);
         IoBuffer.setAllocator(new SimpleBufferAllocator());
         acceptor = new NioSocketAcceptor();
-        acceptor.getFilterChain().addLast("codec", (IoFilter) new ProtocolCodecFilter(new MapleCodecFactory()));
+        acceptor.getFilterChain().addLast("codec", new ProtocolCodecFilter(new MapleCodecFactory()));
 
         ((SocketSessionConfig) acceptor.getSessionConfig()).setTcpNoDelay(true);
         players = new PlayerStorage(-10);
@@ -60,18 +60,21 @@ public class CashShopServer {
 
         try {
             acceptor.setHandler(new MapleServerHandler(-1, true));
-            acceptor.bind(new InetSocketAddress(PORT));
-            System.out.println("商城服务器绑定端口: " + PORT);
-
+            acceptor.bind(new InetSocketAddress(port));
+            System.out.println("商城服务器绑定端口: " + port);
         } catch (final Exception e) {
-            System.err.println("Binding to port " + PORT + " failed");
             e.printStackTrace();
+            System.err.println("Binding to port " + port + " failed");
             throw new RuntimeException("Binding failed.", e);
         }
     }
 
     public static final String getIP() {
         return ip;
+    }
+
+    public static final int getPort() {
+        return port;
     }
 
     public static final PlayerStorage getPlayerStorage() {

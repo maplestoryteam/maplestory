@@ -72,7 +72,7 @@ public class LoginServer {
     }
 
     public static Triple<String, String, Integer> getLoginAuth(int chrid) {
-        return (Triple) loginAuth.remove(Integer.valueOf(chrid));
+        return loginAuth.remove(Integer.valueOf(chrid));
     }
 
     public static boolean containsIPAuth(String ip) {

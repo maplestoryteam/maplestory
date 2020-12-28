@@ -108,7 +108,7 @@ public class MaplePacketCreator {
             //System.out.println("[getServerIP] " +ServerProperties.getProperty("ZlhssMS.IP"));
             //mplew.write(InetAddress.getByName(ServerConstants.Gateway_IP_String).getAddress());
         } catch (UnknownHostException e) {
-            //System.out.println("登录服务器IP：" + e);
+            System.out.println("登录服务器IP：" + e);
             //mplew.write(ServerConstants.Gateway_IP);
         }
         mplew.writeShort(port);
@@ -134,7 +134,7 @@ public class MaplePacketCreator {
             //   System.out.println(InetAddress.getByName(ServerProperties.getProperty("ZlhssMS.IP")).getAddress());
             //mplew.write(InetAddress.getByName(ServerConstants.Gateway_IP_String).getAddress());
         } catch (UnknownHostException e) {
-            //  System.out.println("频道服务器IP："+e);
+              System.out.println("频道服务器IP："+e);
             //mplew.write(ServerConstants.Gateway_IP);
         }
         mplew.writeShort(port);

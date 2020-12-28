@@ -53,10 +53,10 @@ import tools.packet.UIPacket;
 
 public class EventInstanceManager {
 
-    private List<MapleCharacter> chars = new LinkedList<MapleCharacter>(); //this is messy
-    private List<Integer> dced = new LinkedList<Integer>();
-    private List<MapleMonster> mobs = new LinkedList<MapleMonster>();
-    private Map<Integer, Integer> killCount = new HashMap<Integer, Integer>();
+    private List<MapleCharacter> chars = new LinkedList<>(); //this is messy
+    private List<Integer> dced = new LinkedList<>();
+    private List<MapleMonster> mobs = new LinkedList<>();
+    private Map<Integer, Integer> killCount = new HashMap<>();
     private EventManager em;
     private int channel;
     private String name;

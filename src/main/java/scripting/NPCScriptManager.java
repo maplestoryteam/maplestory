@@ -35,7 +35,7 @@ import tools.MaplePacketCreator;
 
 public class NPCScriptManager extends AbstractScriptManager {
 
-    private final Map<MapleClient, NPCConversationManager> cms = new WeakHashMap<MapleClient, NPCConversationManager>();
+    private final Map<MapleClient, NPCConversationManager> cms = new WeakHashMap<>();
     private static final NPCScriptManager instance = new NPCScriptManager();
 
     public static final NPCScriptManager getInstance() {
