@@ -4049,11 +4049,11 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
 
     //Find lowest fullness pet
     public final MaplePet getPet() {
-        return pets.parallelStream()
+        Optional<MaplePet> optionalMaplePet = pets.parallelStream()
                 .filter(MaplePet::getSummoned)
                 .sorted(Comparator.comparingInt(MaplePet::getFullness))
-                .findFirst()
-                .get();
+                .findFirst();
+        return optionalMaplePet.isPresent() ? optionalMaplePet.get() : null;
     }
 
     public void removePetCS(MaplePet pet) {

@@ -66,7 +66,6 @@ public class PetHandler {
         byte slot = slea.readByte();
         slea.readByte();
         chr.spawnPet(slot, slea.readByte() > 0);
-
     }
 
     public static final void Pet_AutoPotion(final SeekableLittleEndianAccessor slea, final MapleClient c, final MapleCharacter chr) {
@@ -140,6 +139,59 @@ public class PetHandler {
         //chr.getMap().broadcastMessage(chr, PetPacket.commandResponse(chr.getId(), command, petIndex, success, false), true);
     }
 
+    public static final void PetFood2(final SeekableLittleEndianAccessor slea, final MapleClient c, final MapleCharacter chr) {
+        if (c.getPlayer().getNoPets() == 0) {
+            c.getSession().write(MaplePacketCreator.enableActions());
+            return;
+        }
+//        int slot = 0;
+//        List<MaplePet> pets = c.getPlayer().getPets();
+//        for (MaplePet pet : pets) {
+//            if (pet.getFullness() < 100) {
+//                slot = c.getPlayer().getPetSlot(pet);
+//            }
+//        }
+        slea.readInt();
+        slea.readShort();
+        int itemId = slea.readInt();
+        MaplePet pet = c.getPlayer().getPet();
+        boolean petUpdated = false;
+        if (pet != null) {
+//        MaplePet pet = c.getPlayer().getPet(slot);
+            int slot = c.getPlayer().getPetSlot(pet);
+            if (pet.getFullness() < 100) {
+                //随机增加亲密度
+                if (Randomizer.nextInt(101) > 50) {
+                    int newCloseness = Math.min(pet.getCloseness() + 1, 30000);
+                    pet.setCloseness(newCloseness);
+                    if (newCloseness > ExpTable.getClosenessNeededForLevel(pet.getLevel() + 1)) {
+                        pet.setLevel(pet.getLevel() + 1);
+                    }
+                }
+                pet.setFullness(Math.min(pet.getFullness() + 30, 100));
+                petUpdated = true;
+            } else {
+                //继续喂食物 则随机减少亲密度
+                if (Randomizer.nextInt(101) > 50) {
+                    int newCloseness = Math.min(pet.getCloseness() - 1, 1);
+                    pet.setCloseness(newCloseness);
+                    if (pet.getCloseness() - 1 <= 0) {
+                        pet.setCloseness(ExpTable.getClosenessNeededForLevel(pet.getLevel() - 1));
+                        pet.setLevel(pet.getLevel() - 1);
+                    }
+                    petUpdated = true;
+                }
+            }
+            if (petUpdated) {
+//                c.getSession().write(PetPacket.updatePet(pet, c.getPlayer().getInventory(MapleInventoryType.CASH).getItem((byte) pet.getInventoryPosition()), true));
+//                c.getPlayer().getMap().broadcastMessage(c.getPlayer(), PetPacket.commandResponse(c.getPlayer().getId(), slot, 1, true), true);
+            } else {
+//                c.getPlayer().getMap().broadcastMessage(c.getPlayer(), PetPacket.commandResponse(c.getPlayer().getId(), slot, 1, false), true);
+            }
+        }
+        MapleInventoryManipulator.removeById(c, MapleInventoryType.USE, itemId, 1, true, false);
+    }
+
     public static final void PetFood(final SeekableLittleEndianAccessor slea, final MapleClient c, final MapleCharacter chr) {
         if (c.getPlayer().getNoPets() == 0) {
             c.getSession().write(MaplePacketCreator.enableActions());
@@ -165,7 +217,7 @@ public class PetHandler {
                 gainCloseness = true;
             }
             if (pet.getFullness() < 100) {
-                pet.setFullness(Math.min(pet.getFullness() + 30, 100));
+                pet.setFullness(Math.max(pet.getFullness() + 30, 100));
                 if ((gainCloseness) && (pet.getCloseness() < 30000)) {
                     int newCloseness = pet.getCloseness() + 1;
                     if (newCloseness > 30000) {
