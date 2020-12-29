@@ -89,17 +89,17 @@ public class ServerConstants {
         return 0;
     }
 
-    public static enum PlayerGMRank {
+    public enum PlayerGMRank {
 
         NORMAL('@', 0),
         INTERN('!', 1),
         GM('!', 2),
         ADMIN('!', 3);
         //SUPERADMIN('!', 3);
-        private char commandPrefix;
-        private int level;
+        private final char commandPrefix;
+        private final int level;
 
-        private PlayerGMRank(char ch, int level) {
+        PlayerGMRank(char ch, int level) {
             commandPrefix = ch;
             this.level = level;
         }
@@ -113,13 +113,13 @@ public class ServerConstants {
         }
     }
 
-    public static enum CommandType {
+    public enum CommandType {
 
         NORMAL(0),
         TRADE(1);
-        private int level;
+        private final int level;
 
-        private CommandType(int level) {
+        CommandType(int level) {
             this.level = level;
         }
 

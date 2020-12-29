@@ -81,7 +81,7 @@ public class ChatHandler {
     public static final void Others(final SeekableLittleEndianAccessor slea, final MapleClient c, final MapleCharacter chr) {
         final int type = slea.readByte();
         final byte numRecipients = slea.readByte();
-        int recipients[] = new int[numRecipients];
+        int[] recipients = new int[numRecipients];
 
         for (byte i = 0; i < numRecipients; i++) {
             recipients[i] = slea.readInt();

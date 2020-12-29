@@ -15,12 +15,12 @@ import tools.StringUtil;
 
 public class CashItemFactoryA {
 
-    private static Map<Integer, Integer> snLookup = new HashMap();
-    private static Map<Integer, Integer> idLookup = new HashMap();
-    private static Map<Integer, CashItemInfoA> itemStats = new HashMap();
-    private static MapleDataProvider data = MapleDataProviderFactory.getDataProvider(new File(System.getProperty("net.sf.odinms.wzpath", "wz") + "/Etc.wz"));
-    private static MapleData commodities = data.getData(StringUtil.getLeftPaddedStr("Commodity.img", '0', 11));
-    private static Map<Integer, List<CashItemInfoA>> cashPackages = new HashMap();
+    private static final Map<Integer, Integer> snLookup = new HashMap();
+    private static final Map<Integer, Integer> idLookup = new HashMap();
+    private static final Map<Integer, CashItemInfoA> itemStats = new HashMap();
+    private static final MapleDataProvider data = MapleDataProviderFactory.getDataProvider(new File(System.getProperty("net.sf.odinms.wzpath", "wz") + "/Etc.wz"));
+    private static final MapleData commodities = data.getData(StringUtil.getLeftPaddedStr("Commodity.img", '0', 11));
+    private static final Map<Integer, List<CashItemInfoA>> cashPackages = new HashMap();
 
     public static CashItemInfoA getItem(int sn) {
         CashItemInfoA stats = itemStats.get(sn);
@@ -105,7 +105,7 @@ public class CashItemFactoryA {
             }
             cid = curr;
         } else {
-            cid = ((Integer) idLookup.get(Integer.valueOf(id))).intValue();
+            cid = idLookup.get(Integer.valueOf(id)).intValue();
         }
         return MapleDataTool.getIntConvert(cid + "/SN", commodities);
     }

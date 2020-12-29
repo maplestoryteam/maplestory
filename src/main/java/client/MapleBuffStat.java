@@ -163,19 +163,19 @@ public enum MapleBuffStat implements Serializable {
     private final long maskPos;
     private final boolean first;
 
-    private MapleBuffStat(long buffstat) {
+    MapleBuffStat(long buffstat) {
         this.buffstat = buffstat;
         this.maskPos = 4L;
         first = false;
     }
 
-    private MapleBuffStat(long buffstat, long maskPos) {
+    MapleBuffStat(long buffstat, long maskPos) {
         this.buffstat = buffstat;
         this.maskPos = maskPos;
         this.first = false;
     }
 
-    private MapleBuffStat(long buffstat, boolean first) {
+    MapleBuffStat(long buffstat, boolean first) {
         this.buffstat = buffstat;
         this.maskPos = 4L;
         this.first = first;

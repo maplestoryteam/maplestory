@@ -77,7 +77,7 @@ public class MapleServerHandler extends IoHandlerAdapter implements MapleServerH
     private static final String nl = System.getProperty("line.separator");
     private static final File loggedIPs = new File("日志/logs/LogIPs.txt");
     private static final HashMap<String, FileWriter> logIPMap = new HashMap<>();
-    private static boolean debugMode = Boolean.parseBoolean(ServerProperties.getProperty("ZlhssMS.Debug", "false"));
+    private static final boolean debugMode = Boolean.parseBoolean(ServerProperties.getProperty("ZlhssMS.Debug", "false"));
     //Note to Zero: Use an enumset. Don't iterate through an array.
     private static final EnumSet<RecvPacketOpcode> blocked = EnumSet.noneOf(RecvPacketOpcode.class);
 
@@ -293,7 +293,7 @@ public class MapleServerHandler extends IoHandlerAdapter implements MapleServerH
             }
         }
         tracker.put(address, new Pair<>(System.currentTimeMillis(), count));
-        String IP = address.substring(address.indexOf('/') + 1, address.length());
+        String IP = address.substring(address.indexOf('/') + 1);
         // End of IP checking.
 
         if (channel > -1) {
@@ -319,10 +319,10 @@ public class MapleServerHandler extends IoHandlerAdapter implements MapleServerH
             return;
         }
         LoginServer.removeIPAuth(IP);
-        final byte serverRecv[] = new byte[]{70, 114, 122, (byte) Randomizer.nextInt(255)};
-        final byte serverSend[] = new byte[]{82, 48, 120, (byte) Randomizer.nextInt(255)};
-        final byte ivRecv[] = ServerConstants.Use_Fixed_IV ? new byte[]{9, 0, 0x5, 0x5F} : serverRecv;
-        final byte ivSend[] = ServerConstants.Use_Fixed_IV ? new byte[]{1, 0x5F, 4, 0x3F} : serverSend;
+        final byte[] serverRecv = new byte[]{70, 114, 122, (byte) Randomizer.nextInt(255)};
+        final byte[] serverSend = new byte[]{82, 48, 120, (byte) Randomizer.nextInt(255)};
+        final byte[] ivRecv = ServerConstants.Use_Fixed_IV ? new byte[]{9, 0, 0x5, 0x5F} : serverRecv;
+        final byte[] ivSend = ServerConstants.Use_Fixed_IV ? new byte[]{1, 0x5F, 4, 0x3F} : serverSend;
 
         final MapleClient client = new MapleClient(
                 new MapleAESOFB(ivSend, (short) (0xFFFF - ServerConstants.MAPLE_VERSION)), // Sent Cypher
@@ -404,7 +404,7 @@ public class MapleServerHandler extends IoHandlerAdapter implements MapleServerH
                 if (recv.getValue() == header_num) {
 
                     if (debugMode) {//&& !RecvPacketOpcode.isSpamHeader(recv)
-                        final StringBuilder sb = new StringBuilder("Received data 已處理 :" + String.valueOf(recv) + "\n");
+                        final StringBuilder sb = new StringBuilder("Received data 已處理 :" + recv + "\n");
                         sb.append(tools.HexTool.toString((byte[]) message)).append("\n").append(tools.HexTool.toStringFromAscii((byte[]) message));
                         System.out.println(sb.toString());
                     }
@@ -419,7 +419,7 @@ public class MapleServerHandler extends IoHandlerAdapter implements MapleServerH
                     }
                     if (c.getPlayer() != null && c.isMonitored()) {
                         if (!blocked.contains(recv)) {
-                            FileoutputUtil.log("日志/logs/Monitored/" + c.getPlayer().getName() + ".txt", String.valueOf(recv) + " (" + Integer.toHexString(header_num) + ") Handled: \r\n" + slea.toString() + "\r\n");
+                            FileoutputUtil.log("日志/logs/Monitored/" + c.getPlayer().getName() + ".txt", recv + " (" + Integer.toHexString(header_num) + ") Handled: \r\n" + slea.toString() + "\r\n");
 
 //                            FileWriter fw = new FileWriter(new File("日志/logs/MonitorLogs/" + c.getPlayer().getName() + "_log.txt"), true);
 //                            fw.write(String.valueOf(recv) + " (" + Integer.toHexString(header_num) + ") Handled: \r\n" + slea.toString() + "\r\n");

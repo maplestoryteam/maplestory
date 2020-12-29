@@ -57,9 +57,9 @@ public class EventInstanceManager {
     private List<Integer> dced = new LinkedList<>();
     private List<MapleMonster> mobs = new LinkedList<>();
     private Map<Integer, Integer> killCount = new HashMap<>();
-    private EventManager em;
-    private int channel;
-    private String name;
+    private final EventManager em;
+    private final int channel;
+    private final String name;
     private Properties props = new Properties();
     private long timeStarted = 0;
     private long eventTime = 0;

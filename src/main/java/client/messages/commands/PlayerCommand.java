@@ -123,7 +123,7 @@ public class PlayerCommand {
 
         public int execute(MapleClient c, String[] splitted) {
             MapleMonster mob = null;
-            for (MapleMapObject monstermo : c.getPlayer().getMap().getMapObjectsInRange(c.getPlayer().getPosition(), 100000.0D, Arrays.asList(new MapleMapObjectType[]{MapleMapObjectType.MONSTER}))) {
+            for (MapleMapObject monstermo : c.getPlayer().getMap().getMapObjectsInRange(c.getPlayer().getPosition(), 100000.0D, Arrays.asList(MapleMapObjectType.MONSTER))) {
                 mob = (MapleMonster) monstermo;
                 if (mob.isAlive()) {
                     c.getPlayer().dropMessage(6, "怪物: " + mob.toString());

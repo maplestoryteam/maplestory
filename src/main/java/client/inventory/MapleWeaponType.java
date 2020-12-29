@@ -42,11 +42,11 @@ public enum MapleWeaponType {
     KATARA(4.0f);
     private final float damageMultiplier;
 
-    private MapleWeaponType(final float maxDamageMultiplier) {
+    MapleWeaponType(final float maxDamageMultiplier) {
         this.damageMultiplier = maxDamageMultiplier;
     }
 
     public final float getMaxDamageMultiplier() {
         return damageMultiplier;
     }
-};
+}

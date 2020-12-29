@@ -34,7 +34,7 @@ import tools.MaplePacketCreator;
 
 public class MapleSnowball extends MapleEvent {
 
-    private MapleSnowballs[] balls = new MapleSnowballs[2];
+    private final MapleSnowballs[] balls = new MapleSnowballs[2];
 
     public MapleSnowball(final int channel, final int[] mapid) {
         super(channel, mapid);

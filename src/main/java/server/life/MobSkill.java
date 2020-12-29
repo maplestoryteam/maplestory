@@ -42,7 +42,13 @@ import server.maps.MapleMist;
 
 public class MobSkill {
 
-    private int skillId, skillLevel, mpCon, spawnEffect, hp, x, y;
+    private final int skillId;
+    private final int skillLevel;
+    private int mpCon;
+    private int spawnEffect;
+    private int hp;
+    private int x;
+    private int y;
     private long duration, cooltime;
     private float prop;
     //    private short effect_delay;

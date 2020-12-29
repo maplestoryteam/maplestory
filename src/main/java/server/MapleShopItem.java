@@ -2,9 +2,9 @@ package server;
 
 public class MapleShopItem {
 
-    private short buyable;
-    private int itemId;
-    private int price;
+    private final short buyable;
+    private final int itemId;
+    private final int price;
 
     public MapleShopItem(short buyable, int itemId, int price) {
         this.buyable = buyable;

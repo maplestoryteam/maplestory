@@ -30,8 +30,8 @@ public class CashItemFactory {
     private final MapleDataProvider data = MapleDataProviderFactory.getDataProvider(new File(System.getProperty("net.sf.odinms.wzpath", "wz") + "/Etc.wz"));
     //是这个目录把，嗯
     private final MapleDataProvider itemStringInfo = MapleDataProviderFactory.getDataProvider(new File(System.getProperty("net.sf.odinms.wzpath", "wz") + "/String.wz"));
-    private Map<Integer, Integer> idLookup = new HashMap();
-    private static Map<Integer, List<CashItemInfo>> cashPackages = new HashMap();
+    private final Map<Integer, Integer> idLookup = new HashMap();
+    private static final Map<Integer, List<CashItemInfo>> cashPackages = new HashMap();
 
     public static final CashItemFactory getInstance() {
         return instance;

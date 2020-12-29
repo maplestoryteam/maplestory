@@ -111,8 +111,8 @@ public class GenericLittleEndianAccessor implements LittleEndianAccessor {
         final int byte7 = bs.readByte();
         final int byte8 = bs.readByte();
 
-        return (long) ((byte8 << 56) + (byte7 << 48) + (byte6 << 40) + (byte5 << 32) + (byte4 << 24) + (byte3 << 16)
-                + (byte2 << 8) + byte1);
+        return (byte8 << 56) + (byte7 << 48) + (byte6 << 40) + (byte5 << 32) + (byte4 << 24) + (byte3 << 16)
+                + (byte2 << 8) + byte1;
     }
 
     /**
@@ -144,9 +144,9 @@ public class GenericLittleEndianAccessor implements LittleEndianAccessor {
     @Override
     public final String readAsciiString(int n) {
 //char ret[] = new char[n];
-        byte ret[] = new byte[n];
+        byte[] ret = new byte[n];
         for (int x = 0; x < n; x++) {
-            ret[x] = (byte) readByte();
+            ret[x] = readByte();
         }
         try {
             String str = new String(ret, "gbk");//勿改

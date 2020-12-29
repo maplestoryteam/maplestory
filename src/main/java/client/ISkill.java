@@ -33,29 +33,29 @@ public interface ISkill {
 
     int getAnimationTime();
 
-    public boolean canBeLearnedBy(int job);
+    boolean canBeLearnedBy(int job);
 
-    public boolean isFourthJob();
+    boolean isFourthJob();
 
-    public boolean getAction();
+    boolean getAction();
 
-    public boolean isTimeLimited();
+    boolean isTimeLimited();
 
-    public int getMasterLevel();
+    int getMasterLevel();
 
-    public Element getElement();
+    Element getElement();
 
-    public boolean isBeginnerSkill();
+    boolean isBeginnerSkill();
 
-    public boolean hasRequiredSkill();
+    boolean hasRequiredSkill();
 
-    public boolean isInvisible();
+    boolean isInvisible();
 
-    public boolean isChargeSkill();
+    boolean isChargeSkill();
 
-    public int getRequiredSkillLevel();
+    int getRequiredSkillLevel();
 
-    public int getRequiredSkillId();
+    int getRequiredSkillId();
 
-    public String getName();
+    String getName();
 }

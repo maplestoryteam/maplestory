@@ -32,7 +32,7 @@ import org.apache.mina.core.buffer.IoBuffer;
  */
 public class ByteBufferOutputstream implements ByteOutputStream {
 
-    private IoBuffer bb;
+    private final IoBuffer bb;
 
     /**
      * Class constructor - Wraps this instance around ByteBuffer <code>bb</code>

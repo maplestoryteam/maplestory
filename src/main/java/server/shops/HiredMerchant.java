@@ -45,9 +45,9 @@ import tools.packet.PlayerShopPacket;
 public class HiredMerchant extends AbstractPlayerStore {
 
     public ScheduledFuture<?> schedule;
-    private List<String> blacklist;
+    private final List<String> blacklist;
     private int storeid;
-    private long start;
+    private final long start;
 
     public HiredMerchant(MapleCharacter owner, int itemId, String desc) {
         super(owner, itemId, desc, "", 3);
@@ -90,7 +90,7 @@ public class HiredMerchant extends AbstractPlayerStore {
 
     @Override
     public void buy(MapleClient c, int item, short quantity) {
-        MaplePlayerShopItem pItem = (MaplePlayerShopItem) this.items.get(item);
+        MaplePlayerShopItem pItem = this.items.get(item);
         IItem shopItem = pItem.item;
         IItem newItem = shopItem.copy();
         short perbundle = newItem.getQuantity();

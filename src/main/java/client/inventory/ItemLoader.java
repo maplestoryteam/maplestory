@@ -53,11 +53,12 @@ public enum ItemLoader {
     MTS_TRANSFER("mtstransfer", "mtstransferequipment", 9, "characterid"),
     CASHSHOP_DB("csitems", "csequipment", 10, "accountid"),
     CASHSHOP_RESIST("csitems", "csequipment", 11, "accountid");
-    private int value;
-    private String table, table_equip;
-    private List<String> arg;
+    private final int value;
+    private final String table;
+    private final String table_equip;
+    private final List<String> arg;
 
-    private ItemLoader(String table, String table_equip, int value, String... arg) {
+    ItemLoader(String table, String table_equip, int value, String... arg) {
         this.table = table;
         this.table_equip = table_equip;
         this.value = value;

@@ -32,10 +32,10 @@ import tools.Triple;
 
 public class MapleQuestAction implements Serializable {
     private static final long serialVersionUID = 9179541993413738569L;
-    private MapleQuestActionType type;
-    private MapleQuest quest;
+    private final MapleQuestActionType type;
+    private final MapleQuest quest;
     private int intStore = 0;
-    private List<Integer> applicableJobs = new ArrayList();
+    private final List<Integer> applicableJobs = new ArrayList();
     private List<QuestItem> items = null;
     private List<Triple<Integer, Integer, Integer>> skill = null;
     private List<Pair<Integer, Integer>> state = null;

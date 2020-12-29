@@ -23,7 +23,7 @@ public enum MapleStat {
     PET(0x200008);
     private final int i;
 
-    private MapleStat(int i) {
+    MapleStat(int i) {
         this.i = i;
     }
 
@@ -40,7 +40,7 @@ public enum MapleStat {
         return null;
     }
 
-    public static enum Temp {
+    public enum Temp {
 
         STR(0x1),
         DEX(0x2),
@@ -56,7 +56,7 @@ public enum MapleStat {
         JUMP(0x800);
         private final int i;
 
-        private Temp(int i) {
+        Temp(int i) {
             this.i = i;
         }
 

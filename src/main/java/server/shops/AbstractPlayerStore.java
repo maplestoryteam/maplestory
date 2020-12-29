@@ -56,7 +56,7 @@ public abstract class AbstractPlayerStore extends AbstractMapleMapObject impleme
     protected String ownerName, des, pass;
     protected int ownerId, owneraccount, itemId, channel, map;
     protected AtomicInteger meso = new AtomicInteger(0);
-    protected WeakReference<MapleCharacter> chrs[];
+    protected WeakReference<MapleCharacter>[] chrs;
     protected List<String> visitors = new LinkedList<String>();
     protected List<BoughtItem> bought = new LinkedList<BoughtItem>();
     protected List<MaplePlayerShopItem> items = new LinkedList<MaplePlayerShopItem>();

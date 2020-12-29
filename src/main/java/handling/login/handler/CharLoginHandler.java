@@ -50,10 +50,7 @@ public class CharLoginHandler {
 
     private static final boolean loginFailCount(final MapleClient c) {
         c.loginAttempt++;
-        if (c.loginAttempt > 5) {
-            return true;
-        }
-        return false;
+        return c.loginAttempt > 5;
     }
 
     public static final void Welcome(final MapleClient c) {
@@ -450,7 +447,7 @@ public class CharLoginHandler {
             c.getIdleTask().cancel(true);
         }
         String ip = c.getSessionIPAddress();
-        LoginServer.putLoginAuth(charId, ip.substring(ip.indexOf('/') + 1, ip.length()), c.getTempIP(), c.getChannel());
+        LoginServer.putLoginAuth(charId, ip.substring(ip.indexOf('/') + 1), c.getTempIP(), c.getChannel());
         // c.updateLoginState(MapleClient.LOGIN_SERVER_TRANSITION, ip);
         /*
          * if (c.getLoginState() == 2) { c.updateLoginState(2, ip);

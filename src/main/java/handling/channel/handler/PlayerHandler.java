@@ -308,7 +308,7 @@ public class PlayerHandler {
                 final int bouncedam_ = (Randomizer.nextInt(100) < chr.getStat().DAMreflect_rate ? chr.getStat().DAMreflect : 0) + (type == -1 && chr.getBuffedValue(MapleBuffStat.伤害反击) != null ? chr.getBuffedValue(MapleBuffStat.伤害反击) : 0) + (type == -1 && chr.getBuffedValue(MapleBuffStat.PERFECT_ARMOR) != null ? chr.getBuffedValue(MapleBuffStat.PERFECT_ARMOR) : 0);
                 // final boolean bouncedam_A = chr.getBuffedValue(MapleBuffStat.BODY_PRESSURE) != null;
                 if (bouncedam_ > 0 && attacker != null) {
-                    long bouncedamage = (long) (damage * bouncedam_ / 100);
+                    long bouncedamage = damage * bouncedam_ / 100;
                     bouncedamage = Math.min(bouncedamage, attacker.getMobMaxHp() / 10);
                     attacker.damage(chr, bouncedamage, true);
                     damage -= bouncedamage;
@@ -902,7 +902,7 @@ public class PlayerHandler {
             case 4121007: // Triple Throw
             case 14001004: // Lucky seven
             case 14111005: // Triple Throw
-                basedamage = (float) ((float) ((statst.getTotalLuk() * 5.0f) * (statst.getTotalWatk() + projectileWatk)) / 100);
+                basedamage = ((statst.getTotalLuk() * 5.0f) * (statst.getTotalWatk() + projectileWatk)) / 100;
                 break;
             case 4111004: // Shadow Meso
 //		basedamage = ((effect.getMoneyCon() * 10) / 100) * effect.getProb(); // Not sure
@@ -1073,7 +1073,7 @@ public class PlayerHandler {
                     check_hp += 150;
                 }
                 if (healHP > check_hp * 2 && healHP > 20) {
-                    chr.getCheatTracker().registerOffense(CheatingOffense.回复过多HP, String.valueOf(healHP) + " 服务器:" + check_hp);
+                    chr.getCheatTracker().registerOffense(CheatingOffense.回复过多HP, healHP + " 服务器:" + check_hp);
                     //  healHP = check_hp;
                 }
                 chr.addHP(healHP);
@@ -1082,7 +1082,7 @@ public class PlayerHandler {
         if (chr.canMP()) {
             if (healMP != 0) {
                 if (healMP > check_mp * 2 && healMP > 20) {
-                    chr.getCheatTracker().registerOffense(CheatingOffense.回复过多MP, String.valueOf(healMP) + "服务器:" + check_mp);
+                    chr.getCheatTracker().registerOffense(CheatingOffense.回复过多MP, healMP + "服务器:" + check_mp);
                     //  healMP = check_mp;
                 }
                 chr.addMP(healMP);
@@ -1425,7 +1425,7 @@ public class PlayerHandler {
         int attackto = slea.readInt();
         MapleMonster mob = c.getPlayer().getMap().getMonsterByOid(attackto);
         if (mob != null && mob.getHp() > 0) {
-            mob.damage(c.getPlayer(), (long) damage, true);
+            mob.damage(c.getPlayer(), damage, true);
         }
     }
     /*

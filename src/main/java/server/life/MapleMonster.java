@@ -253,7 +253,7 @@ public class MapleMonster extends AbstractLoadedMapleLife {
                     sponge.get().hp -= rDamage;
 
                     if (sponge.get().hp <= 0) {
-                        map.broadcastMessage(MobPacket.showBossHP(((MapleMonster) this.sponge.get()).getId(), -1L, ((MapleMonster) this.sponge.get()).getMobMaxHp()));
+                        map.broadcastMessage(MobPacket.showBossHP(this.sponge.get().getId(), -1L, this.sponge.get().getMobMaxHp()));
                         map.killMonster(sponge.get(), from, true, false, (byte) 1, lastSkill);
                     } else {
                         map.broadcastMessage(MobPacket.showBossHP(sponge.get()));
@@ -366,7 +366,7 @@ public class MapleMonster extends AbstractLoadedMapleLife {
                 exp /= 2;
             }
             exp *= attacker.getEXPMod() * (int) (attacker.getStat().expBuff / 100.0);
-            exp = (int) Math.min(Integer.MAX_VALUE, exp * (attacker.getLevel() < 10 ? GameConstants.getExpRate_Below10(attacker.getJob()) : ChannelServer.getInstance(map.getChannel()).getExpRate()));
+            exp = Math.min(Integer.MAX_VALUE, exp * (attacker.getLevel() < 10 ? GameConstants.getExpRate_Below10(attacker.getJob()) : ChannelServer.getInstance(map.getChannel()).getExpRate()));
             //do this last just incase someone has a 2x exp card and its set to max value
             int Class_Bonus_EXP = 0;
             if (Class_Bonus_EXP_PERCENT > 0) {
@@ -1300,7 +1300,7 @@ public class MapleMonster extends AbstractLoadedMapleLife {
 
     private static class AttackingMapleCharacter {
 
-        private MapleCharacter attacker;
+        private final MapleCharacter attacker;
         private long lastAttackTime;
 
         public AttackingMapleCharacter(final MapleCharacter attacker, final long lastAttackTime) {
@@ -1326,21 +1326,21 @@ public class MapleMonster extends AbstractLoadedMapleLife {
 
         List<AttackingMapleCharacter> getAttackers();
 
-        public void addDamage(MapleCharacter from, long damage, boolean updateAttackTime);
+        void addDamage(MapleCharacter from, long damage, boolean updateAttackTime);
 
-        public long getDamage();
+        long getDamage();
 
-        public boolean contains(MapleCharacter chr);
+        boolean contains(MapleCharacter chr);
 
-        public void killedMob(MapleMap map, int baseExp, boolean mostDamage, int lastSkill);
+        void killedMob(MapleMap map, int baseExp, boolean mostDamage, int lastSkill);
     }
 
     private final class SingleAttackerEntry implements AttackerEntry {
 
         private long damage = 0;
-        private int chrid;
+        private final int chrid;
         private long lastAttackTime;
-        private int channel;
+        private final int channel;
 
         public SingleAttackerEntry(final MapleCharacter from, final int cserv) {
             this.chrid = from.getId();
@@ -1440,8 +1440,8 @@ public class MapleMonster extends AbstractLoadedMapleLife {
 
         private long totDamage;
         private final Map<Integer, OnePartyAttacker> attackers = new HashMap<Integer, OnePartyAttacker>(6);
-        private int partyid;
-        private int channel;
+        private final int partyid;
+        private final int channel;
 
         public PartyAttackerEntry(final int partyid, final int cserv) {
             this.partyid = partyid;
@@ -1600,7 +1600,7 @@ public class MapleMonster extends AbstractLoadedMapleLife {
             ExpMap expmap;
             for (final Entry<MapleCharacter, ExpMap> expReceiver : expMap.entrySet()) {
                 expmap = expReceiver.getValue();
-                giveExpToCharacter(expReceiver.getKey(), expmap.exp, mostDamage ? expReceiver.getKey() == highest : false, expMap.size(), expmap.ptysize, expmap.Class_Bonus_EXP, expmap.Premium_Bonus_EXP, lastSkill);
+                giveExpToCharacter(expReceiver.getKey(), expmap.exp, mostDamage && expReceiver.getKey() == highest, expMap.size(), expmap.ptysize, expmap.Class_Bonus_EXP, expmap.Premium_Bonus_EXP, lastSkill);
             }
         }
 
@@ -1624,10 +1624,7 @@ public class MapleMonster extends AbstractLoadedMapleLife {
                 return false;
             }
             final PartyAttackerEntry other = (PartyAttackerEntry) obj;
-            if (partyid != other.partyid) {
-                return false;
-            }
-            return true;
+            return partyid == other.partyid;
         }
     }
 

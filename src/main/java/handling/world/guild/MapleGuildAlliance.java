@@ -37,7 +37,7 @@ import tools.MaplePacketCreator;
 
 public class MapleGuildAlliance implements java.io.Serializable {
 
-    private static enum GAOp {
+    private enum GAOp {
 
         NONE, DISBAND, NEWGUILD
     }
@@ -47,7 +47,7 @@ public class MapleGuildAlliance implements java.io.Serializable {
     private final int[] guilds = new int[5];
     private int allianceid, leaderid, capacity; //make SQL for this auto-increment
     private String name, notice;
-    private String ranks[] = new String[5];
+    private String[] ranks = new String[5];
 
     public MapleGuildAlliance(final int id) {
         super();

@@ -49,7 +49,7 @@ public class MapScriptMethods {
             "我做你的倡导坚韧！但不要把你的勇气与鲁莽!",
             "如果你想一步一步地走到失败的道路上，用一切方法去做!"};
 
-    private static enum onFirstUserEnter {
+    private enum onFirstUserEnter {
 
         pepeking_effect,
         dojang_Eff,
@@ -85,9 +85,7 @@ public class MapScriptMethods {
         }
     }
 
-    ;
-
-    private static enum onUserEnter {
+    private enum onUserEnter {
 
         babyPigMap,
         crash_Dragon,
@@ -177,8 +175,6 @@ public class MapScriptMethods {
         }
     }
 
-    ;
-
     public static void startScript_FirstUser(MapleClient c, String scriptName) {
         if (c.getPlayer() == null) {
             return;
@@ -241,7 +237,7 @@ public class MapScriptMethods {
             }
             case dojang_Eff: {
                 int temp = (c.getPlayer().getMapId() - 925000000) / 100;
-                int stage = (int) (temp - ((temp / 100) * 100));
+                int stage = temp - ((temp / 100) * 100);
 
                 sendDojoClock(c, getTiming(stage) * 60);
                 sendDojoStart(c, stage - getDojoStageDec(stage));
@@ -737,14 +733,14 @@ public class MapScriptMethods {
                         boolean changed = false;
                         try {
                             if (c.getPlayer().getMapId() == m.maps[i]) {
-                                if (quest.substring(i + 6, i + 7).equals("0")) {
+                                if (quest.charAt(i + 6) == '0') {
                                     sb.append("1");
                                     changed = true;
                                     changedd = true;
                                 }
                             }
                             if (!changed) {
-                                sb.append(quest.substring(i + 6, i + 7));
+                                sb.append(quest.charAt(i + 6));
                             }
                         } catch (Exception ex) {
                         }
@@ -754,8 +750,8 @@ public class MapScriptMethods {
                         c.getPlayer().updateInfoQuest(m.questid - 2005, sb.toString());
                         MapleQuest.getInstance(m.questid - 1995).forceStart(c.getPlayer(), 0, String.valueOf(number));
                         c.getPlayer().dropMessage(5, "访问 " + number + "/" + m.maps.length + " 个地区.");
-                        c.getPlayer().dropMessage(5, "称号 " + String.valueOf(m) + " 已完成了");
-                        c.getSession().write(MaplePacketCreator.showQuestMsg("称号 " + String.valueOf(m) + " 已完成访问 " + number + "/" + m.maps.length + " 个地区"));
+                        c.getPlayer().dropMessage(5, "称号 " + m + " 已完成了");
+                        c.getSession().write(MaplePacketCreator.showQuestMsg("称号 " + m + " 已完成访问 " + number + "/" + m.maps.length + " 个地区"));
                     }
                 }
                 break;

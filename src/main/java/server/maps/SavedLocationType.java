@@ -44,9 +44,9 @@ public enum SavedLocationType {
     ARIANT(19),
     ARIANT_PQ(20),
     WEDDING(21);
-    private int index;
+    private final int index;
 
-    private SavedLocationType(int index) {
+    SavedLocationType(int index) {
         this.index = index;
     }
 

@@ -45,7 +45,7 @@ import tools.data.input.GenericLittleEndianAccessor;
 public class MaplePacketDecoder extends CumulativeProtocolDecoder {
 
     public static final String DECODER_STATE_KEY = MaplePacketDecoder.class.getName() + ".STATE";
-    private static Logger log = LoggerFactory.getLogger(MaplePacketDecoder.class);
+    private static final Logger log = LoggerFactory.getLogger(MaplePacketDecoder.class);
 
     public static class DecoderState {
 

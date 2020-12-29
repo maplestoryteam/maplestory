@@ -27,5 +27,5 @@ public interface MonsterListener {
      * @param highestDamageChar The char that did the highest damage to the
      *                          monster. Can be null if that char is offline.
      */
-    public void monsterKilled();
+    void monsterKilled();
 }

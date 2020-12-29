@@ -898,7 +898,7 @@ public class InventoryHandler {
                 c.getPlayer().dropMessage(5, "你已经拥有了这个技能.");
             } else if (expiration_days > 0) {
                 MapleInventoryManipulator.removeFromSlot(c, MapleInventoryType.USE, slot, (byte) 1, false);
-                c.getPlayer().changeSkillLevel(SkillFactory.getSkill(mountid), (byte) 1, (byte) 1, System.currentTimeMillis() + (long) (expiration_days * 24 * 60 * 60 * 1000));
+                c.getPlayer().changeSkillLevel(SkillFactory.getSkill(mountid), (byte) 1, (byte) 1, System.currentTimeMillis() + (expiration_days * 24 * 60 * 60 * 1000));
                 c.getPlayer().dropMessage(5, "已经达到的技能.");
             }
         }
@@ -1889,7 +1889,6 @@ public class InventoryHandler {
                     sb.append(message);
                     final boolean ear = slea.readByte() != 0;
                     if (c.getPlayer().isPlayer() && message.indexOf("幹") != -1 || message.indexOf("豬") != -1 || message.indexOf("笨") != -1 || message.indexOf("靠") != -1 || message.indexOf("腦包") != -1 || message.indexOf("腦") != -1 || message.indexOf("智障") != -1 || message.indexOf("白目") != -1 || message.indexOf("白吃") != -1) {
-                        ;
                         c.getPlayer().dropMessage("說髒話是不禮貌的，請勿說髒話。");
                         c.getSession().write(MaplePacketCreator.enableActions());
                         return;
@@ -2007,7 +2006,6 @@ public class InventoryHandler {
                     final StringBuilder sb = new StringBuilder();
                     addMedalString(c.getPlayer(), sb);
                     sb.append(c.getPlayer().getName());
-                    sb.append("");
                     sb.append(message);
                     final boolean ear = slea.readByte() != 0;
                     if (c.getPlayer().isPlayer() && message.indexOf("幹") != -1 || message.indexOf("豬") != -1 || message.indexOf("笨") != -1 || message.indexOf("靠") != -1 || message.indexOf("腦包") != -1 || message.indexOf("腦") != -1 || message.indexOf("智障") != -1 || message.indexOf("白目") != -1 || message.indexOf("白吃") != -1) {
@@ -2739,7 +2737,7 @@ public class InventoryHandler {
         if (chr == null) {
             return;
         }
-        final byte petz = (byte) c.getPlayer().getPetIndex((int) slea.readLong());
+        final byte petz = c.getPlayer().getPetIndex((int) slea.readLong());
         final MaplePet pet = chr.getPet(petz);
         slea.skip(1); // [4] Zero, [4] Seems to be tickcount, [1] Always zero
         chr.updateTick(slea.readInt());

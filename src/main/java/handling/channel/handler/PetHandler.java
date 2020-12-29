@@ -117,7 +117,7 @@ public class PetHandler {
         }
         slea.skip(5);
         final byte command = slea.readByte();
-        final PetCommand petCommand = PetDataFactory.getPetCommand(pet.getPetItemId(), (int) command);
+        final PetCommand petCommand = PetDataFactory.getPetCommand(pet.getPetItemId(), command);
 
         boolean success = false;
         if (Randomizer.nextInt(99) <= petCommand.getProbability()) {

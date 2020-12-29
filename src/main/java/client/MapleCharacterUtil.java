@@ -39,10 +39,7 @@ public class MapleCharacterUtil {
     private static final Pattern petPattern = Pattern.compile("[a-zA-Z0-9_-]{4,12}");
 
     public static final boolean canCreateChar(final String name) {
-        if (getIdByName(name) != -1 || !isEligibleCharName(name)) {
-            return false;
-        }
-        return true;
+        return getIdByName(name) == -1 && isEligibleCharName(name);
     }
 
     public static final boolean isEligibleCharName(final String name) {
@@ -114,7 +111,7 @@ public class MapleCharacterUtil {
             ps.setInt(1, accountid);
 
             rs = ps.executeQuery();
-            prompt = rs.next() ? false : true;
+            prompt = !rs.next();
         } catch (SQLException e) {
         } finally {
             try {
@@ -218,10 +215,7 @@ public class MapleCharacterUtil {
             return true;
         } else if (salt == null && LoginCrypto.checkSha1Hash(passhash, pwd)) {
             return true;
-        } else if (LoginCrypto.checkSaltedSha512Hash(passhash, pwd, salt)) {
-            return true;
-        }
-        return false;
+        } else return LoginCrypto.checkSaltedSha512Hash(passhash, pwd, salt);
     }
 
     //id accountid gender

@@ -30,7 +30,7 @@ public class MapleParty implements Serializable {
 
     private static final long serialVersionUID = 9179541993413738569L;
     private MaplePartyCharacter leader;
-    private List<MaplePartyCharacter> members = new LinkedList<MaplePartyCharacter>();
+    private final List<MaplePartyCharacter> members = new LinkedList<MaplePartyCharacter>();
     private int id;
 
     public MapleParty(int id, MaplePartyCharacter chrfor) {
@@ -113,9 +113,6 @@ public class MapleParty implements Serializable {
             return false;
         }
         final MapleParty other = (MapleParty) obj;
-        if (id != other.id) {
-            return false;
-        }
-        return true;
+        return id == other.id;
     }
 }

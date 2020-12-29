@@ -407,7 +407,7 @@ public class PlayerInteractionHandler {
             }
             case SET_ITEMS: {
                 OtherSettings item_id = new OtherSettings();
-                String itemgy_id[] = item_id.getItempb_id();
+                String[] itemgy_id = item_id.getItempb_id();
                 final MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
                 final MapleInventoryType ivType = MapleInventoryType.getByType(slea.readByte());
                 final IItem item = chr.getInventory(ivType).getItem((byte) slea.readShort());
@@ -720,7 +720,7 @@ public class PlayerInteractionHandler {
             case EXPEL: {
                 final IMaplePlayerShop ips = chr.getPlayerShop();
                 if (ips != null && ips instanceof MapleMiniGame) {
-                    if (!((MapleMiniGame) ips).isOpen()) {
+                    if (!ips.isOpen()) {
                         break;
                     }
                     ips.removeAllVisitors(3, 1); //no msg

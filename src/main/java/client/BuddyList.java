@@ -24,7 +24,7 @@ public class BuddyList implements Serializable {
     /**
      * 好友名單操作
      */
-    public static enum BuddyOperation {
+    public enum BuddyOperation {
 
         ADDED, DELETED
     }
@@ -32,7 +32,7 @@ public class BuddyList implements Serializable {
     /**
      * 好友名單操作結果
      */
-    public static enum BuddyAddResult {
+    public enum BuddyAddResult {
 
         BUDDYLIST_FULL, ALREADY_ON_LIST, OK
     }

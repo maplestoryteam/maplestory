@@ -36,11 +36,13 @@ import tools.MaplePacketCreator;
 public class MapleMount implements Serializable {
 
     private static final long serialVersionUID = 9179541993413738569L;
-    private int itemid, skillid, exp;
+    private int itemid;
+    private final int skillid;
+    private int exp;
     private byte fatigue, level;
     private transient boolean changed = false;
     private long lastFatigue = 0;
-    private transient WeakReference<MapleCharacter> owner;
+    private final transient WeakReference<MapleCharacter> owner;
 
     public MapleMount(MapleCharacter owner, int id, int skillid, byte fatigue, byte level, int exp) {
         this.itemid = id;

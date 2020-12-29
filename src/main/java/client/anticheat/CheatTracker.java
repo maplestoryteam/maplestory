@@ -73,7 +73,7 @@ public class CheatTracker {
     private int gm_message = 50;
     private int lastTickCount = 0, tickSame = 0;
     private long lastASmegaTime = 0;
-    private long[] lastTime = new long[6];
+    private final long[] lastTime = new long[6];
     private long lastSaveTime = 0L;
 
     public CheatTracker(final MapleCharacter chr) {

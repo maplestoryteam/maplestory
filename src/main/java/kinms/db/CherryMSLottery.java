@@ -7,35 +7,35 @@ import java.util.Collection;
 
 import server.maps.MapleMapFactory;
 
-public abstract interface CherryMSLottery {
+public interface CherryMSLottery {
 
-    public abstract void addChar(MapleCharacter paramMapleCharacter);
+    void addChar(MapleCharacter paramMapleCharacter);
 
-    public abstract void doLottery();
+    void doLottery();
 
-    public abstract void drawalottery();
+    void drawalottery();
 
-    public abstract long getAllpeichu();
+    long getAllpeichu();
 
-    public abstract long getAlltouzhu();
+    long getAlltouzhu();
 
-    public abstract ChannelServer getChannelServer();
+    ChannelServer getChannelServer();
 
-    public abstract Collection<MapleCharacter> getCharacters();
+    Collection<MapleCharacter> getCharacters();
 
-    public abstract MapleMapFactory getMapleMapFactory();
+    MapleMapFactory getMapleMapFactory();
 
-    public abstract int getTouNumbyType(int paramInt);
+    int getTouNumbyType(int paramInt);
 
-    public abstract int getZjNum();
+    int getZjNum();
 
-    public abstract void setAllpeichu(long paramLong);
+    void setAllpeichu(long paramLong);
 
-    public abstract void setAlltouzhu(long paramLong);
+    void setAlltouzhu(long paramLong);
 
-    public abstract void setCharacters(Collection<MapleCharacter> paramCollection);
+    void setCharacters(Collection<MapleCharacter> paramCollection);
 
-    public abstract void setZjNum(int paramInt);
+    void setZjNum(int paramInt);
 
-    public abstract void warp(int paramInt, MapleCharacter paramMapleCharacter);
+    void warp(int paramInt, MapleCharacter paramMapleCharacter);
 }

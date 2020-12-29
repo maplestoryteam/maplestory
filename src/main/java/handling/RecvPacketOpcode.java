@@ -208,13 +208,13 @@ public enum RecvPacketOpcode implements WritableIntValueHolder {
         return code;
     }
 
-    private boolean CheckState;
+    private final boolean CheckState;
 
-    private RecvPacketOpcode() {
+    RecvPacketOpcode() {
         this.CheckState = true;
     }
 
-    private RecvPacketOpcode(final boolean CheckState) {
+    RecvPacketOpcode(final boolean CheckState) {
         this.CheckState = CheckState;
     }
 
@@ -222,7 +222,7 @@ public enum RecvPacketOpcode implements WritableIntValueHolder {
         return CheckState;
     }
 
-    public static Properties getDefaultProperties() throws FileNotFoundException, IOException {
+    public static Properties getDefaultProperties() throws IOException {
         Properties props = new Properties();
         try (FileInputStream fileInputStream = new FileInputStream("recvops.properties")) {
             props.load(fileInputStream);

@@ -51,9 +51,10 @@ import tools.data.output.MaplePacketLittleEndianWriter;
 public class PlayerStats implements Serializable {
 
     private static final long serialVersionUID = -679541993413738569L;
-    private transient WeakReference<MapleCharacter> chr;
-    private Map<Integer, Integer> setHandling = new HashMap<Integer, Integer>();
-    private List<Equip> durabilityHandling = new ArrayList<Equip>(), equipLevelHandling = new ArrayList<Equip>();
+    private final transient WeakReference<MapleCharacter> chr;
+    private final Map<Integer, Integer> setHandling = new HashMap<Integer, Integer>();
+    private final List<Equip> durabilityHandling = new ArrayList<Equip>();
+    private final List<Equip> equipLevelHandling = new ArrayList<Equip>();
     private transient float shouldHealHP, shouldHealMP;
     public short str, dex, luk, int_, hp, maxhp, mp, maxmp;
     private transient short passive_sharpeye_percent, localmaxhp, localmaxmp;
@@ -68,7 +69,6 @@ public class PlayerStats implements Serializable {
     public transient double dam_r, bossdam_r;
     public transient int recoverHP, recoverMP, mpconReduce, incMesoProp, incRewardProp, DAMreflect, DAMreflect_rate, mpRestore,
             hpRecover, hpRecoverProp, mpRecover, mpRecoverProp, RecoveryUP, incAllskill;
-    ;
     private transient float speedMod, jumpMod, localmaxbasedamage;
     // Elemental properties
     public transient int def, element_ice, element_fire, element_light, element_psn;
@@ -421,9 +421,9 @@ public class PlayerStats implements Serializable {
                             added_sharpeye_rate += pot.incCr;
                             added_sharpeye_dmg += pot.incCr;
                             if (!pot.boss) {
-                                dam_r = (double) Math.max(pot.incDAMr, dam_r);
+                                dam_r = Math.max(pot.incDAMr, dam_r);
                             } else {
-                                bossdam_r = (double) Math.max(pot.incDAMr, bossdam_r); //SET, not add
+                                bossdam_r = Math.max(pot.incDAMr, bossdam_r); //SET, not add
                             }
                             recoverHP += pot.RecoveryHP;
                             recoverMP += pot.RecoveryMP;
@@ -1193,7 +1193,7 @@ public class PlayerStats implements Serializable {
         shouldHealMP = 3 + mpRestore + recoverMP; // i think
 
         if (GameConstants.isJobFamily(200, playerjob)) { // Improving MP recovery
-            shouldHealMP += ((float) ((float) chra.getSkillLevel(SkillFactory.getSkill(2000000)) / 10) * chra.getLevel());
+            shouldHealMP += (((float) chra.getSkillLevel(SkillFactory.getSkill(2000000)) / 10) * chra.getLevel());
 
         } else if (GameConstants.isJobFamily(111, playerjob)) {
             final ISkill effect = SkillFactory.getSkill(1110000); // Improving MP Recovery

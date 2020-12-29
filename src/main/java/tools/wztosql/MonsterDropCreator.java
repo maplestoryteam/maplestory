@@ -30,7 +30,7 @@ public class MonsterDropCreator {
     private static final int SUPER_BOSS_ITEM_RATE = 300000;
     private static final int POTION_RATE = 20000;
     private static final int ARROWS_RATE = 25000;
-    private static int lastmonstercardid = 2388070;
+    private static final int lastmonstercardid = 2388070;
     private static boolean addFlagData = false;
     protected static String monsterQueryData = "drop_data";
     protected static List<Pair<Integer, String>> itemNameCache = new ArrayList();
@@ -39,7 +39,7 @@ public class MonsterDropCreator {
     protected static final MapleDataProvider data = MapleDataProviderFactory.getDataProvider(new File(System.getProperty("net.sf.odinms.wzpath", "wz") + "/String.wz"));
     protected static final MapleDataProvider mobData = MapleDataProviderFactory.getDataProvider(new File(System.getProperty("net.sf.odinms.wzpath", "wz") + "/Mob.wz"));
 
-    public static void main(String[] args) throws FileNotFoundException, IOException, NotBoundException, InstanceAlreadyExistsException, MBeanRegistrationException, NotCompliantMBeanException, MalformedObjectNameException {
+    public static void main(String[] args) throws IOException, NotBoundException, InstanceAlreadyExistsException, MBeanRegistrationException, NotCompliantMBeanException, MalformedObjectNameException {
         //  MapleData data = MapleDataProviderFactory.getDataProvider(new File(new StringBuilder().append(System.getProperty("net.sf.odinms.wzpath", "wz")).append("String.wz").toString())).getData("MonsterBook.img");
         System.out.println("準備提取數據!");
         System.out.println("按任意鍵繼續...");
@@ -850,7 +850,7 @@ public class MonsterDropCreator {
         for (MapleData itemFolder : mob.getChildren()) {
             int id = Integer.parseInt(itemFolder.getName());
             try {
-                MapleData monsterData = mobData.getData(StringUtil.getLeftPaddedStr(new StringBuilder().append(Integer.toString(id)).append(".img").toString(), '0', 11));
+                MapleData monsterData = mobData.getData(StringUtil.getLeftPaddedStr(new StringBuilder().append(id).append(".img").toString(), '0', 11));
                 int boss = id == 8810018 ? 1 : MapleDataTool.getIntConvert("boss", monsterData.getChildByPath("info"), 0);
 
                 if (boss > 0) {

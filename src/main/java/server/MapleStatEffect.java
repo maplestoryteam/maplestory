@@ -1021,7 +1021,6 @@ public class MapleStatEffect implements Serializable {
 
     private final void removeMonsterBuff(final MapleCharacter applyfrom) {
         List<MonsterStatus> cancel = new ArrayList<MonsterStatus>();
-        ;
         switch (sourceid) {
             case 1111007:
                 cancel.add(MonsterStatus.物防);
@@ -1303,7 +1302,6 @@ public class MapleStatEffect implements Serializable {
                     int mountid2 = parseMountInfo_Pure(applyto, sourceid);
                     if (sourceid == 1013 && applyto.getMountId() != 0) {
                         mountid = applyto.getMountId();
-                        ;
                         mountid2 = applyto.getMountId();
                     }
                     if (mountid != 0 && mountid2 != 0) {

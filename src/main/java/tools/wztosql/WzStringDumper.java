@@ -14,7 +14,7 @@ import provider.MapleDataProviderFactory;
 public class WzStringDumper {
 
     public static void main(String[] args)
-            throws FileNotFoundException, IOException {
+            throws IOException {
         File stringFile = MapleDataProviderFactory.fileInWZPath("string.wz");
         MapleDataProvider stringProvider = MapleDataProviderFactory.getDataProvider(stringFile);
 

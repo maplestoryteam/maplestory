@@ -15,7 +15,7 @@ import tools.StringUtil;
 
 public class SpeedRunner {
 
-    private static SpeedRunner instance = new SpeedRunner();
+    private static final SpeedRunner instance = new SpeedRunner();
     private final Map<SpeedRunType, Pair<String, Map<Integer, String>>> speedRunData;
 
     private SpeedRunner() {

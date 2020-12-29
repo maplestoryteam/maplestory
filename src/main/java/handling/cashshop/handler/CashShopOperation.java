@@ -49,7 +49,7 @@ public class CashShopOperation {
         CashShopServer.getPlayerStorage().deregisterPlayer(chr);
         c.updateLoginState(MapleClient.LOGIN_SERVER_TRANSITION, c.getSessionIPAddress());
         String s = c.getSessionIPAddress();
-        LoginServer.addIPAuth(s.substring(s.indexOf('/') + 1, s.length()));
+        LoginServer.addIPAuth(s.substring(s.indexOf('/') + 1));
         c.getSession().write(MaplePacketCreator.getChannelChange(c, Integer.parseInt(toch.getIP().split(":")[1]))); //发送更换频道的封包信息
         chr.saveToDB(false, true);
         c.setPlayer(null);
@@ -190,8 +190,8 @@ public class CashShopOperation {
 
     public static void BuyCashItem(final SeekableLittleEndianAccessor slea, final MapleClient c, final MapleCharacter chr) {
         OtherSettings item_id = new OtherSettings();
-        String itembp_id[] = item_id.getItempb_id();
-        String itemjy_id[] = item_id.getItemjy_id();
+        String[] itembp_id = item_id.getItempb_id();
+        String[] itemjy_id = item_id.getItemjy_id();
 
         final int action = slea.readByte();
         /*
@@ -372,7 +372,7 @@ public class CashShopOperation {
                             types = 5;
                             break;
                     }
-                    MapleInventoryType type = MapleInventoryType.getByType((byte) types);
+                    MapleInventoryType type = MapleInventoryType.getByType(types);
                     /*if (chr.isGM()) {
                         System.out.println("增加道具栏  snCS " + snCS + " 扩充: " + types);
                     }*/
@@ -594,7 +594,7 @@ public class CashShopOperation {
                 }
                 List<CashItemInfo> ccc = null;
                 if (item != null) {
-                    ccc = CashItemFactory.getInstance().getPackageItems(item.getId());
+                    ccc = CashItemFactory.getPackageItems(item.getId());
 
                     /*if (item == null || ccc == null || c.getPlayer().getCSPoints(type) < item.getPrice()) {
                     chr.dropMessage(1, "购买礼包错误：\r\n你没有足够的点卷或者该物品不存在。");

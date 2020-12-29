@@ -42,13 +42,16 @@ import tools.Pair;
 public class MTSCart implements Serializable {
 
     private static final long serialVersionUID = 231541893513373578L;
-    private int characterId, tab = 1, type = 0, page = 0;
+    private final int characterId;
+    private int tab = 1;
+    private int type = 0;
+    private int page = 0;
     //tab; 1 = buy now, 2 = wanted, 3 = auction, 4 = cart
     //type = inventorytype; 0 = anything
     //page = whatever
-    private List<IItem> transfer = new ArrayList<IItem>();
-    private List<Integer> cart = new ArrayList<Integer>();
-    private List<Integer> notYetSold = new ArrayList<Integer>(10);
+    private final List<IItem> transfer = new ArrayList<IItem>();
+    private final List<Integer> cart = new ArrayList<Integer>();
+    private final List<Integer> notYetSold = new ArrayList<Integer>(10);
     private int owedNX = 0;
 
     public MTSCart(int characterId) throws SQLException {

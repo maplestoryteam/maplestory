@@ -95,9 +95,9 @@ public class BeanGame {
 
     public class Beans {
 
-        private int number;
-        private int type;
-        private int pos;
+        private final int number;
+        private final int type;
+        private final int pos;
 
         public Beans(int pos, int type, int number) {
             this.pos = pos;

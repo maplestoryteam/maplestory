@@ -31,8 +31,8 @@ import provider.MapleDataProvider;
 
 public class XMLWZFile implements MapleDataProvider {
 
-    private File root;
-    private WZDirectoryEntry rootForNavigation;
+    private final File root;
+    private final WZDirectoryEntry rootForNavigation;
 
     public XMLWZFile(File fileIn) {
         root = fileIn;

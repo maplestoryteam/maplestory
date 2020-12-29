@@ -14,15 +14,15 @@ public class CommandObject {
     /**
      * the command
      */
-    private String command;
+    private final String command;
     /**
      * what {@link MapleCharacter#gm} level is required to use this command
      */
-    private int gmLevelReq;
+    private final int gmLevelReq;
     /**
      * what gets done when this command is used
      */
-    private CommandExecute exe;
+    private final CommandExecute exe;
 
     public CommandObject(String com, CommandExecute c, int gmLevel) {
         command = com;

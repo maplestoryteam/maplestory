@@ -31,10 +31,10 @@ import java.util.Comparator;
 public class MapleRing implements Serializable {
 
     private static final long serialVersionUID = 9179541993413738579L;
-    private int ringId;
-    private int ringId2;
-    private int partnerId;
-    private int itemId;
+    private final int ringId;
+    private final int ringId2;
+    private final int partnerId;
+    private final int itemId;
     private String partnerName;
     private boolean equipped = false;
 

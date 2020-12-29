@@ -85,7 +85,9 @@ public class ChannelServer implements Serializable {
     private int doubleDrop = 1;
     private short port = 7574;
     private static final short DEFAULT_PORT = 7574;
-    private int channel, running_MerchantID = 0, flags = 0;
+    private final int channel;
+    private int running_MerchantID = 0;
+    private int flags = 0;
     private String serverMessage, key, ip, serverName;
     private boolean shutdown = false, finishedShutdown = false, MegaphoneMuteState = false, adminOnly = false;
     private PlayerStorage players;
@@ -101,7 +103,7 @@ public class ChannelServer implements Serializable {
     private final ReentrantReadWriteLock squadLock = new ReentrantReadWriteLock(); //squad
     private int eventmap = -1;
     private final Map<MapleEventType, MapleEvent> events = new EnumMap<MapleEventType, MapleEvent>(MapleEventType.class);
-    private boolean debugMode = false;
+    private final boolean debugMode = false;
     private int instanceId = 0;
 
     //    private ChannelServer(final String key, final int channel) {
@@ -162,7 +164,7 @@ public class ChannelServer implements Serializable {
         IoBuffer.setUseDirectBuffer(false);
         IoBuffer.setAllocator(new SimpleBufferAllocator());
         acceptor = new NioSocketAcceptor();
-        acceptor.getFilterChain().addLast("codec", (IoFilter) new ProtocolCodecFilter(new MapleCodecFactory()));
+        acceptor.getFilterChain().addLast("codec", new ProtocolCodecFilter(new MapleCodecFactory()));
         players = new PlayerStorage(channel);
         loadEvents();
         Timer tMan = Timer.TimerManager.getInstance();

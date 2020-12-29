@@ -18,10 +18,10 @@ import tools.MaplePacketCreator;
  */
 public class MapleCarnivalParty {
 
-    private List<Integer> members = new LinkedList<Integer>();
-    private WeakReference<MapleCharacter> leader;
-    private byte team;
-    private int channel;
+    private final List<Integer> members = new LinkedList<Integer>();
+    private final WeakReference<MapleCharacter> leader;
+    private final byte team;
+    private final int channel;
     private short availableCP = 0, totalCP = 0;
     private boolean winner = false;
 

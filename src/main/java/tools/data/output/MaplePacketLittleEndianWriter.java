@@ -37,7 +37,7 @@ import tools.HexTool;
 public class MaplePacketLittleEndianWriter extends GenericLittleEndianWriter {
 
     private final ByteArrayOutputStream baos;
-    private static boolean debugMode = Boolean.parseBoolean(ServerProperties.getProperty("ZlhssMS.Debug", "false"));
+    private static final boolean debugMode = Boolean.parseBoolean(ServerProperties.getProperty("ZlhssMS.Debug", "false"));
 
     /**
      * Constructor - initializes this stream with a default size.

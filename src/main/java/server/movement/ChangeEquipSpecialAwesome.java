@@ -26,7 +26,8 @@ import tools.data.output.LittleEndianWriter;
 
 public class ChangeEquipSpecialAwesome implements LifeMovementFragment {
 
-    private int type, wui;
+    private final int type;
+    private final int wui;
 
     public ChangeEquipSpecialAwesome(int type, int wui) {
         this.type = type;

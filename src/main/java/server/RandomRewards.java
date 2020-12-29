@@ -17,7 +17,7 @@ public class RandomRewards {
     private List<Integer> compiledEventC = null;
     private List<Integer> compiledEventB = null;
     private List<Integer> compiledEventA = null;
-    private static List<Integer> tenPercent = null;
+    private static final List<Integer> tenPercent = null;
 
     public static List<Integer> getTenPercent() {
         return tenPercent;

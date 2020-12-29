@@ -121,7 +121,7 @@ public class NPCScriptManager extends AbstractScriptManager {
     }
 
     public void action(final MapleClient c, final byte mode, final byte type, final int selection) {
-        action(c, (byte) mode, (byte) type, selection, 0);
+        action(c, mode, type, selection, 0);
     }
 
     public final void action(final MapleClient c, final byte mode, final byte type, final int selection, int wh) {

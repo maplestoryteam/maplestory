@@ -24,8 +24,8 @@ import java.lang.ref.WeakReference;
 
 public class SummonAttackEntry {
 
-    private WeakReference<MapleMonster> mob;
-    private int damage;
+    private final WeakReference<MapleMonster> mob;
+    private final int damage;
 
     public SummonAttackEntry(MapleMonster mob, int damage) {
         super();

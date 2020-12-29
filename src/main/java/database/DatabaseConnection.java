@@ -14,7 +14,7 @@ public class DatabaseConnection {
     private static String dbUser;
     private static String dbPass;
     private static boolean propsInited = false;
-    private static Properties dbProps = new Properties();
+    private static final Properties dbProps = new Properties();
     private static long connectionTimeOut = 300000;
     public static final int CLOSE_CURRENT_RESULT = 1;
     public static final int KEEP_CURRENT_RESULT = 2;

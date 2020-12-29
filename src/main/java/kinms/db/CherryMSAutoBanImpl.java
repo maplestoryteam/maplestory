@@ -2,5 +2,5 @@ package kinms.db;
 
 public class CherryMSAutoBanImpl {
 
-    private static CherryMSAutoBanImpl instance = null;
+    private static final CherryMSAutoBanImpl instance = null;
 }

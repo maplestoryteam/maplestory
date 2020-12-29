@@ -175,12 +175,12 @@ public enum MapleStatInfo {
     private final boolean special;
 
 
-    private MapleStatInfo(final int def) {
+    MapleStatInfo(final int def) {
         this.def = def;
         this.special = false;
     }
 
-    private MapleStatInfo(final int def, final boolean special) {
+    MapleStatInfo(final int def, final boolean special) {
         this.def = def;
         this.special = special;
     }

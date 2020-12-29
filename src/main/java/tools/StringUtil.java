@@ -79,7 +79,7 @@ public class StringUtil {
      * @param start Starting from which string.
      * @return The joined strings.
      */
-    public static final String joinStringFrom(final String arr[], final int start) {
+    public static final String joinStringFrom(final String[] arr, final int start) {
         return joinStringFrom(arr, start, " ");
     }
 
@@ -91,7 +91,7 @@ public class StringUtil {
      * @param start Starting from which string.
      * @return The joined strings.
      */
-    public static final String joinStringFrom(final String arr[], final int start, final String sep) {
+    public static final String joinStringFrom(final String[] arr, final int start, final String sep) {
         StringBuilder builder = new StringBuilder();
         for (int i = start; i < arr.length; i++) {
             builder.append(arr[i]);

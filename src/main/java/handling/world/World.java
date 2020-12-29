@@ -163,7 +163,7 @@ public class World {
 
     public static class Party {
 
-        private static Map<Integer, MapleParty> parties = new HashMap<Integer, MapleParty>();
+        private static final Map<Integer, MapleParty> parties = new HashMap<Integer, MapleParty>();
         private static final AtomicInteger runningPartyId = new AtomicInteger();
 
         static {
@@ -386,7 +386,7 @@ public class World {
 
     public static class Messenger {
 
-        private static Map<Integer, MapleMessenger> messengers = new HashMap<Integer, MapleMessenger>();
+        private static final Map<Integer, MapleMessenger> messengers = new HashMap<Integer, MapleMessenger>();
         private static final AtomicInteger runningMessengerId = new AtomicInteger();
 
         static {
@@ -930,9 +930,9 @@ public class World {
 
     public static class Find {
 
-        private static ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-        private static HashMap<Integer, Integer> idToChannel = new HashMap<Integer, Integer>();
-        private static HashMap<String, Integer> nameToChannel = new HashMap<String, Integer>();
+        private static final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
+        private static final HashMap<Integer, Integer> idToChannel = new HashMap<Integer, Integer>();
+        private static final HashMap<String, Integer> nameToChannel = new HashMap<String, Integer>();
 
         public static void register(int id, String name, int channel) {
             lock.writeLock().lock();

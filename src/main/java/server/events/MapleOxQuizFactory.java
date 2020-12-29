@@ -38,8 +38,8 @@ import tools.Pair;
 public class MapleOxQuizFactory {
 
     private boolean initialized = false;
-    private Map<Pair<Integer, Integer>, MapleOxQuizEntry> questionCache;
-    private static MapleOxQuizFactory instance = new MapleOxQuizFactory();
+    private final Map<Pair<Integer, Integer>, MapleOxQuizEntry> questionCache;
+    private static final MapleOxQuizFactory instance = new MapleOxQuizFactory();
 
     public MapleOxQuizFactory() {
         questionCache = new HashMap<Pair<Integer, Integer>, MapleOxQuizEntry>();
@@ -138,8 +138,11 @@ public class MapleOxQuizFactory {
 
     public static class MapleOxQuizEntry {
 
-        private String question, answerText;
-        private int answer, questionset, questionid;
+        private final String question;
+        private final String answerText;
+        private final int answer;
+        private final int questionset;
+        private final int questionid;
 
         public MapleOxQuizEntry(String question, String answerText, int answer, int questionset, int questionid) {
             this.question = question;

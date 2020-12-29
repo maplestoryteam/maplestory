@@ -37,7 +37,10 @@ public class Skill implements ISkill {
     private final List<MapleStatEffect> effects = new ArrayList<MapleStatEffect>();
     private Element element;
     private byte level;
-    private int id, animationTime, requiredSkill, masterLevel;
+    private final int id;
+    private int animationTime;
+    private int requiredSkill;
+    private int masterLevel;
     private boolean action, invisible, chargeskill, timeLimited;
 
     public Skill(final int id) {
@@ -288,12 +291,10 @@ public class Skill implements ISkill {
             return false;
         } else if (GameConstants.isResist(skillForJob) && !GameConstants.isResist(job)) {
             return false;
-        } else if ((skillForJob / 10) % 10 > (jid / 10) % 10) { // wrong 2nd job
+        } else // wrong 3rd/4th job
+            if ((skillForJob / 10) % 10 > (jid / 10) % 10) { // wrong 2nd job
             return false;
-        } else if (skillForJob % 10 > jid % 10) { // wrong 3rd/4th job
-            return false;
-        }
-        return true;
+        } else return skillForJob % 10 <= jid % 10;
     }
 
     @Override

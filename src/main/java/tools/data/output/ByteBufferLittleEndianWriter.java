@@ -33,7 +33,7 @@ import org.apache.mina.core.buffer.IoBuffer;
  */
 public class ByteBufferLittleEndianWriter extends GenericLittleEndianWriter {
 
-    private IoBuffer bb;
+    private final IoBuffer bb;
 
     /**
      * Constructor - Constructs this object as fixed at the default size.

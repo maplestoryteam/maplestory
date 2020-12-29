@@ -35,7 +35,7 @@ import server.quest.MapleQuest;
 public class MapleQuestStatus implements Serializable {
 
     private static final long serialVersionUID = 91795419934134L;
-    private transient MapleQuest quest;
+    private final transient MapleQuest quest;
     private byte status;
     private Map<Integer, Integer> killedMobs = null;
     private int npc;

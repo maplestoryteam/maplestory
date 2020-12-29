@@ -45,7 +45,7 @@ public class BuddyListHandler {
 
     private static final class CharacterIdNameBuddyCapacity extends CharacterNameAndId {
 
-        private int buddyCapacity;
+        private final int buddyCapacity;
 
         public CharacterIdNameBuddyCapacity(int id, String name, int level, int job, String group, int buddyCapacity) {
             super(id, name, level, job, group);

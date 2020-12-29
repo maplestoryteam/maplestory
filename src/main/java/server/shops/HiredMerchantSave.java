@@ -51,17 +51,17 @@ public class HiredMerchantSave {
     private static class HiredMerchantSaveRunnable
             implements Runnable {
 
-        private static AtomicInteger RunningThreadID = new AtomicInteger(0);
-        private int ThreadID = RunningThreadID.incrementAndGet();
+        private static final AtomicInteger RunningThreadID = new AtomicInteger(0);
+        private final int ThreadID = RunningThreadID.incrementAndGet();
         private long TimeTaken = 0L;
         private int ShopsSaved = 0;
         private Object ToNotify;
-        private ArrayBlockingQueue<HiredMerchant> Queue = new ArrayBlockingQueue(500);
+        private final ArrayBlockingQueue<HiredMerchant> Queue = new ArrayBlockingQueue(500);
 
         public void run() {
             try {
                 while (!this.Queue.isEmpty()) {
-                    HiredMerchant next = (HiredMerchant) this.Queue.take();
+                    HiredMerchant next = this.Queue.take();
                     long Start = System.currentTimeMillis();
                     next.closeShop(true, false);
                     this.TimeTaken += System.currentTimeMillis() - Start;

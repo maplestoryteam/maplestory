@@ -25,10 +25,10 @@ import tools.MaplePacketCreator;
 
 public class MapleShop {
 
-    private int id;
-    private int npcId;
+    private final int id;
+    private final int npcId;
     private static final Set<Integer> rechargeableItems = new LinkedHashSet<>();
-    private List<MapleShopItem> items;
+    private final List<MapleShopItem> items;
 
     static {
         addThrowingStar();
@@ -206,7 +206,7 @@ public class MapleShop {
             final int price = (int) Math.round(ii.getPrice(item.getItemId()) * (slotMax - item.getQuantity()));
             if (c.getPlayer().getMeso() >= price) {
                 item.setQuantity(slotMax);
-                c.getSession().write(MaplePacketCreator.updateInventorySlot(MapleInventoryType.USE, (Item) item, false));
+                c.getSession().write(MaplePacketCreator.updateInventorySlot(MapleInventoryType.USE, item, false));
                 c.getPlayer().gainMeso(-price, false, true, false);
                 c.getSession().write(MaplePacketCreator.confirmShopTransaction((byte) 0x8));
             }

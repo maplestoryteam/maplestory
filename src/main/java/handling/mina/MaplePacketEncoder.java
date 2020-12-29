@@ -47,7 +47,7 @@ import tools.data.input.GenericLittleEndianAccessor;
 
 public class MaplePacketEncoder implements ProtocolEncoder {
 
-    private static Logger log = LoggerFactory.getLogger(MaplePacketEncoder.class);
+    private static final Logger log = LoggerFactory.getLogger(MaplePacketEncoder.class);
 
     @Override
     public void encode(final IoSession session, final Object message, final ProtocolEncoderOutput out) throws Exception {

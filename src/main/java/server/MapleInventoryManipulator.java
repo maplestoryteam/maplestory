@@ -240,7 +240,7 @@ public class MapleInventoryManipulator {
                     Iterator<IItem> i = existing.iterator();
                     while (quantity > 0) {
                         if (i.hasNext()) {
-                            nItem = (Item) i.next();
+                            nItem = i.next();
                             short oldQ = nItem.getQuantity();
 
                             if (oldQ < slotMax) {
@@ -654,7 +654,7 @@ public class MapleInventoryManipulator {
     }
 
     private static int rand(int min, int max) {
-        return Math.abs((int) Randomizer.rand(min, max));
+        return Math.abs(Randomizer.rand(min, max));
     }
 
     public static boolean checkSpace(final MapleClient c, final int itemid, int quantity, final String owner) {
@@ -716,7 +716,7 @@ public class MapleInventoryManipulator {
             if (item.getQuantity() == 0 && !allowZero) {
                 c.getSession().write(MaplePacketCreator.clearInventoryItem(type, item.getPosition(), fromDrop));
             } else {
-                c.getSession().write(MaplePacketCreator.updateInventorySlot(type, (Item) item, fromDrop));
+                c.getSession().write(MaplePacketCreator.updateInventorySlot(type, item, fromDrop));
             }
         }
     }
@@ -763,7 +763,7 @@ public class MapleInventoryManipulator {
             if ((olddstQ + oldsrcQ) > slotMax) {
                 c.getSession().write(MaplePacketCreator.moveAndMergeWithRestInventoryItem(type, src, dst, (short) ((olddstQ + oldsrcQ) - slotMax), slotMax));
             } else {
-                c.getSession().write(MaplePacketCreator.moveAndMergeInventoryItem(type, src, dst, ((Item) c.getPlayer().getInventory(type).getItem(dst)).getQuantity()));
+                c.getSession().write(MaplePacketCreator.moveAndMergeInventoryItem(type, src, dst, c.getPlayer().getInventory(type).getItem(dst).getQuantity()));
             }
         } else {
             c.getSession().write(MaplePacketCreator.moveInventoryItem(type, src, dst));

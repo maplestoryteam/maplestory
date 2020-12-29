@@ -55,10 +55,11 @@ import tools.Pair;
 public class CashShop implements Serializable {
 
     private static final long serialVersionUID = 231541893513373579L;
-    private int accountId, characterId;
-    private ItemLoader factory;
-    private List<IItem> inventory = new ArrayList<IItem>();
-    private List<Integer> uniqueids = new ArrayList<Integer>();
+    private final int accountId;
+    private final int characterId;
+    private final ItemLoader factory;
+    private final List<IItem> inventory = new ArrayList<IItem>();
+    private final List<Integer> uniqueids = new ArrayList<Integer>();
 
     public CashShop(int accountId, int characterId, int jobType) throws SQLException {
         this.accountId = accountId;
@@ -141,7 +142,7 @@ public class CashShop implements Serializable {
         if (GameConstants.getInventoryType(cItem.getId()) == MapleInventoryType.EQUIP) {
             Equip eq = (Equip) MapleItemInformationProvider.getInstance().getEquipById(cItem.getId());
             eq.setUniqueId(uniqueid);
-            eq.setExpiration((long) (System.currentTimeMillis() + (long) (period * 24 * 60 * 60 * 1000)));
+            eq.setExpiration(System.currentTimeMillis() + (period * 24 * 60 * 60 * 1000));
             eq.setGiftFrom(gift);
             if (GameConstants.isEffectRing(cItem.getId()) && uniqueid > 0) {
                 MapleRing ring = MapleRing.loadFromDb(uniqueid);
@@ -152,7 +153,7 @@ public class CashShop implements Serializable {
             ret = eq.copy();
         } else {
             Item item = new Item(cItem.getId(), (byte) 0, (short) cItem.getCount(), (byte) 0, uniqueid);
-            item.setExpiration((long) (System.currentTimeMillis() + (long) (period * 24 * 60 * 60 * 1000)));
+            item.setExpiration(System.currentTimeMillis() + (period * 24 * 60 * 60 * 1000));
             item.setGiftFrom(gift);
             if (GameConstants.isPet(cItem.getId())) {
                 final MaplePet pet = MaplePet.createPet(cItem.getId(), uniqueid);
@@ -193,7 +194,7 @@ public class CashShop implements Serializable {
             Equip eq = (Equip) MapleItemInformationProvider.getInstance().getEquipById(cItem.getId());
             eq.setUniqueId(uniqueid);
             if (GameConstants.isPet(cItem.getId()) || period > 0) {
-                eq.setExpiration((long) (System.currentTimeMillis() + (long) (period * 24 * 60 * 60 * 1000)));
+                eq.setExpiration(System.currentTimeMillis() + (period * 24 * 60 * 60 * 1000));
             }
             // eq.setExpiration((long) (System.currentTimeMillis() + (long) (period * 24 * 60 * 60 * 1000)));
             eq.setGiftFrom(gift);
@@ -207,10 +208,10 @@ public class CashShop implements Serializable {
         } else {
             Item item = new Item(cItem.getId(), (byte) 0, (short) cItem.getCount(), (byte) 0, uniqueid);
             if (period > 0) {
-                item.setExpiration((long) (System.currentTimeMillis() + (long) (period * 24 * 60 * 60 * 1000)));
+                item.setExpiration(System.currentTimeMillis() + (period * 24 * 60 * 60 * 1000));
             }
             if (cItem.getId() == 5211047 || cItem.getId() == 5360014) {
-                item.setExpiration((long) (System.currentTimeMillis() + (long) (3 * 60 * 60 * 1000)));
+                item.setExpiration(System.currentTimeMillis() + (long) (3 * 60 * 60 * 1000));
             }
             //  System.out.println(new Date(System.currentTimeMillis() + (long) (3 * 60 * 60 * 1000)));
             //item.setExpiration((long) (System.currentTimeMillis() + (long) (period * 24 * 60 * 60 * 1000)));
@@ -266,7 +267,7 @@ public class CashShop implements Serializable {
                 IItem item = toItem(cItem, rs.getInt("uniqueid"), rs.getString("from"));
                 gifts.add(new Pair<IItem, String>(item, rs.getString("message")));
                 uniqueids.add(item.getUniqueId());
-                List<CashItemInfo> packages = CashItemFactory.getInstance().getPackageItems(cItem.getId());
+                List<CashItemInfo> packages = CashItemFactory.getPackageItems(cItem.getId());
                 if (packages != null && packages.size() > 0) {
                     for (CashItemInfo packageItem : packages) {
                         addToInventory(toItem(packageItem, rs.getString("from")));

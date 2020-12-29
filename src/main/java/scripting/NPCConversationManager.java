@@ -81,13 +81,14 @@ import tools.StringUtil;
 
 public class NPCConversationManager extends AbstractPlayerInteraction {
 
-    private MapleClient c;
-    private int npc, questid;
+    private final MapleClient c;
+    private final int npc;
+    private final int questid;
     private String getText;
-    private byte type; // -1 = NPC, 0 = start quest, 1 = end quest
+    private final byte type; // -1 = NPC, 0 = start quest, 1 = end quest
     private byte lastMsg = -1;
     public boolean pendingDisposal = false;
-    private Invocable iv;
+    private final Invocable iv;
     private int wh = 0;
 
     /*
@@ -345,11 +346,11 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
             sendNextS(text, type);
             return;
         }
-        c.getSession().write(MaplePacketCreator.getNPCTalk(npc, (byte) 4, text, "", (byte) type));
+        c.getSession().write(MaplePacketCreator.getNPCTalk(npc, (byte) 4, text, "", type));
         lastMsg = 4;
     }
 
-    public void sendStyle(String text, int caid, int styles[]) {
+    public void sendStyle(String text, int caid, int[] styles) {
         if (lastMsg > -1) {
             return;
         }
@@ -833,10 +834,7 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
     }
 
     public boolean isPlayerInstance() {
-        if (c.getPlayer().getEventInstance() != null) {
-            return true;
-        }
-        return false;
+        return c.getPlayer().getEventInstance() != null;
     }
 
     public void changeStat(byte slot, int type, short amount) {
@@ -962,7 +960,7 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
     }
 
     public void dc() {
-        MapleCharacter victim = c.getChannelServer().getPlayerStorage().getCharacterByName(c.getPlayer().getName().toString());
+        MapleCharacter victim = c.getChannelServer().getPlayerStorage().getCharacterByName(c.getPlayer().getName());
         victim.getClient().getSession().close();
         victim.getClient().disconnect(true, false);
 
@@ -1265,7 +1263,7 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
             } else if (type.equalsIgnoreCase("ItemEXP")) {
                 eq.setItemEXP(eq.getItemEXP() + offset);
             } else if (type.equalsIgnoreCase("Expiration")) {
-                eq.setExpiration((long) (eq.getExpiration() + offset));
+                eq.setExpiration(eq.getExpiration() + offset);
             } else if (type.equalsIgnoreCase("Flag")) {
                 eq.setFlag((byte) (eq.getFlag() + offset));
             }
@@ -1871,7 +1869,7 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
 
             this.c.getPlayer().modifyCSPoints(1, nx + nx / 100 * meso);
             this.c.getPlayer().dropMessage(-1, new StringBuilder().append("成功中奖：").append(meso).append("0%倍\r\n成功中奖：").append(meso).append("0%倍\r\n成功中奖：").append(meso).append("0%倍").toString());
-            this.c.getPlayer().dropMessage(5, new StringBuilder().append(nx / 100 * meso * 10).append("").toString());
+            this.c.getPlayer().dropMessage(5, new StringBuilder().append(nx / 100 * meso * 10).toString());
             msg = new StringBuilder().append(nx).append("倍游戏机！成功中奖：").append(meso).append("0%倍").toString();
 
             World.Broadcast.broadcastSmega(MaplePacketCreator.serverNotice(11, this.c.getChannel(), new StringBuilder().append("[游戏机喇叭]").append(this.c.getPlayer().getName()).append(" : ").append(msg).toString()).getBytes());
@@ -1881,7 +1879,7 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
             showEffect(false, new StringBuilder().append("miro/RR2/").append(彩色).toString());
             showEffect(false, new StringBuilder().append("miro/RR3/").append(倍率).toString());
             this.c.getPlayer().dropMessage(-1, "很抱歉，您没中奖！");
-            this.c.getPlayer().dropMessage(5, new StringBuilder().append(-nx).append("").toString());
+            this.c.getPlayer().dropMessage(5, new StringBuilder().append(-nx).toString());
             this.c.getPlayer().modifyCSPoints(1, -nx);
             msg = new StringBuilder().append(nx).append("倍游戏机！未中奖！").toString();
 

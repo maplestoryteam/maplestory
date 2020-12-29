@@ -93,7 +93,7 @@ public class ShutdownServer implements Runnable {
                 cs.setFinishShutdown();
                 cs.shutdown();
             } catch (Exception e) {
-                System.out.println("频道" + String.valueOf(channel) + " 关闭错误.");
+                System.out.println("频道" + channel + " 关闭错误.");
             }
         }
 

@@ -49,7 +49,7 @@ public class PlayerStorage {
     private final Map<String, MapleCharacter> nameToChar = new HashMap<String, MapleCharacter>();
     private final Map<Integer, MapleCharacter> idToChar = new HashMap<Integer, MapleCharacter>();
     private final Map<Integer, CharacterTransfer> PendingCharacter = new HashMap<Integer, CharacterTransfer>();
-    private int channel;
+    private final int channel;
 
     public PlayerStorage(int channel) {
         this.channel = channel;

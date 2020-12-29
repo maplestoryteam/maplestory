@@ -19,11 +19,11 @@ import tools.Pair;
 
 public class DumpQuests {
 
-    private MapleDataProvider quest;
+    private final MapleDataProvider quest;
     protected boolean hadError = false;
     protected boolean update = false;
     protected int id = 0;
-    private Connection con = DatabaseConnection.getConnection();
+    private final Connection con = DatabaseConnection.getConnection();
 
     public DumpQuests(boolean update) throws Exception {
         this.update = update;

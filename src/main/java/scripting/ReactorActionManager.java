@@ -46,7 +46,7 @@ import server.maps.MapleMap;
 
 public class ReactorActionManager extends AbstractPlayerInteraction {
 
-    private MapleReactor reactor;
+    private final MapleReactor reactor;
 
     public ReactorActionManager(MapleClient c, MapleReactor reactor) {
         super(c);
@@ -77,7 +77,7 @@ public class ReactorActionManager extends AbstractPlayerInteraction {
         final Iterator<ReactorDropEntry> iter = chances.iterator();
         // for (DropEntry d : chances) {
         while (iter.hasNext()) {
-            ReactorDropEntry d = (ReactorDropEntry) iter.next();
+            ReactorDropEntry d = iter.next();
             double count = (1.0 / d.chance);
             if (Math.random() < (1.0 / (double) d.chance) && (d.questid <= 0 || getPlayer().getQuestStatus(d.questid) == 1)) {
                 numItems++;

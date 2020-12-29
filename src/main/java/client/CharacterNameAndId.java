@@ -22,8 +22,11 @@ package client;
 
 public class CharacterNameAndId {
 
-    private int id, level, job;
-    private String name, group;
+    private final int id;
+    private final int level;
+    private final int job;
+    private final String name;
+    private final String group;
 
     public CharacterNameAndId(int id, String name, int level, int job, String group) {
         super();

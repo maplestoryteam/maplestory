@@ -42,7 +42,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 
 public class StatsHandling {
 
-    private static Logger log = LoggerFactory.getLogger(StatsHandling.class);
+    private static final Logger log = LoggerFactory.getLogger(StatsHandling.class);
 
     public static final void DistributeAP(final SeekableLittleEndianAccessor slea, final MapleClient c, final MapleCharacter chr) {
         final List<Pair<MapleStat, Integer>> statupdate = new ArrayList<Pair<MapleStat, Integer>>(2);

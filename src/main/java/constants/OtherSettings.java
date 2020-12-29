@@ -15,12 +15,12 @@ public class OtherSettings {
 
     private static OtherSettings instance = null;
     private static boolean CANLOG;
-    private Properties itempb_cfg;
-    private String itempb_id[];
-    private String itemjy_id[];
-    private String itemgy_id[];
-    private String mappb_id[];
-    private static Logger log = LoggerFactory.getLogger(OtherSettings.class);
+    private final Properties itempb_cfg;
+    private String[] itempb_id;
+    private String[] itemjy_id;
+    private String[] itemgy_id;
+    private String[] mappb_id;
+    private static final Logger log = LoggerFactory.getLogger(OtherSettings.class);
 
     public OtherSettings() {
         itempb_cfg = new Properties();

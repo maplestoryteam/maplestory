@@ -35,12 +35,12 @@ import tools.packet.PlayerShopPacket;
 public class MapleMiniGame extends AbstractPlayerStore {
 
     private final static int slots = 2; //change?!
-    private boolean[] exitAfter;
-    private boolean[] ready;
-    private int[] points;
+    private final boolean[] exitAfter;
+    private final boolean[] ready;
+    private final int[] points;
     private int GameType = 0;
     private int[][] piece = new int[15][15];
-    private List<Integer> matchcards = new ArrayList<Integer>();
+    private final List<Integer> matchcards = new ArrayList<Integer>();
     int loser = 0;
     int turn = 1;
     int piecetype = 0;

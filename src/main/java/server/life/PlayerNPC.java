@@ -47,9 +47,12 @@ import tools.MaplePacketCreator;
 public class PlayerNPC extends MapleNPC {
 
     private Map<Byte, Integer> equips = new HashMap<Byte, Integer>();
-    private int mapid, face, hair, charId;
+    private final int mapid;
+    private int face;
+    private int hair;
+    private final int charId;
     private byte skin, gender;
-    private int[] pets = new int[3];
+    private final int[] pets = new int[3];
 
     public PlayerNPC(ResultSet rs) throws Exception {
         super(rs.getInt("ScriptId"), rs.getString("name"));
@@ -143,7 +146,7 @@ public class PlayerNPC extends MapleNPC {
         setName(chr.getName());
         setHair(chr.getHair());
         setFace(chr.getFace());
-        setSkin((byte) (chr.getSkinColor()));
+        setSkin(chr.getSkinColor());
         setGender(chr.getGender());
         setPets(chr.getPets());
 

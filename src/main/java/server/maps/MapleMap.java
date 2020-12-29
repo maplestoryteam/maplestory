@@ -118,25 +118,37 @@ public final class MapleMap {
     private final AtomicInteger spawnedMonstersOnMap = new AtomicInteger(0);
     private final Map<Integer, MaplePortal> portals = new HashMap<>();
     private MapleFootholdTree footholds = null;
-    private float monsterRate, recoveryRate;
+    private final float monsterRate;
+    private float recoveryRate;
     private MapleMapEffect mapEffect;
-    private byte channel;
-    private short decHP = 0, createMobInterval = 9000,
-            firstCreateMobInterval = 1000;
+    private final byte channel;
+    private short decHP = 0;
+    private short createMobInterval = 9000;
+    private final short firstCreateMobInterval = 1000;
     private boolean respawned = false;
-    private int consumeItemCoolTime = 0, protectItem = 0, decHPInterval = 10000, mapid, returnMapId, timeLimit,
-            fieldLimit, maxRegularSpawn = 0, fixedMob, forcedReturnMap = 999999999,
-            lvForceMove = 0, lvLimit = 0, permanentWeather = 0;
+    private int consumeItemCoolTime = 0;
+    private int protectItem = 0;
+    private int decHPInterval = 10000;
+    private final int mapid;
+    private int returnMapId;
+    private int timeLimit;
+    private int fieldLimit;
+    private int maxRegularSpawn = 0;
+    private int fixedMob;
+    private int forcedReturnMap = 999999999;
+    private int lvForceMove = 0;
+    private int lvLimit = 0;
+    private int permanentWeather = 0;
     private boolean town, clock, personalShop, everlast = false, dropsDisabled = false, gDropsDisabled = false,
             soaring = false, squadTimer = false, isSpawns = true;
     private String mapName, streetName, onUserEnter, onFirstUserEnter, speedRunLeader = "";
-    private List<Integer> dced = new ArrayList<>();
+    private final List<Integer> dced = new ArrayList<>();
     private ScheduledFuture<?> squadSchedule;
     private long speedRunStart = 0, lastSpawnTime = 0, lastHurtTime = 0;
     private MapleNodes nodes;
     private MapleSquadType squad;
     private int fieldType;
-    private Map<String, Integer> environment = new LinkedHashMap<>();
+    private final Map<String, Integer> environment = new LinkedHashMap<>();
 
     public MapleMap(final int mapid, final int channel, final int returnMapId, final float monsterRate) {
         this.mapid = mapid;
@@ -520,7 +532,7 @@ public final class MapleMap {
 
         final List<MonsterGlobalDropEntry> globalEntry = new ArrayList<MonsterGlobalDropEntry>(mi.getGlobalDrop());
         Collections.shuffle(globalEntry);
-        final int cashz = (int) ((mob.getStats().isBoss() && mob.getStats().getHPDisplayType() == 0 ? 20 : 1) * caServerrate);
+        final int cashz = (mob.getStats().isBoss() && mob.getStats().getHPDisplayType() == 0 ? 20 : 1) * caServerrate;
         final int cashModifier = (int) ((mob.getStats().isBoss() ? 0 : (mob.getMobExp() / 1000 + mob.getMobMaxHp() / 10000))); //no rate
         // Global Drops
         for (final MonsterGlobalDropEntry de : globalEntry) {
@@ -1034,7 +1046,7 @@ public final class MapleMap {
         mapobjectlocks.get(MapleMapObjectType.REACTOR).readLock().lock();
         try {
             for (MapleMapObject obj : mapobjects.get(MapleMapObjectType.REACTOR).values()) {
-                ((MapleReactor) obj).forceHitReactor((byte) state);
+                ((MapleReactor) obj).forceHitReactor(state);
             }
         } finally {
             mapobjectlocks.get(MapleMapObjectType.REACTOR).readLock().unlock();
@@ -1386,7 +1398,7 @@ public final class MapleMap {
     }
 
     public int getMobsSize() {
-        return ((LinkedHashMap) this.mapobjects.get(MapleMapObjectType.MONSTER)).size();
+        return this.mapobjects.get(MapleMapObjectType.MONSTER).size();
     }
 
     private void checkRemoveAfter(final MapleMonster monster) {
@@ -1892,7 +1904,7 @@ public final class MapleMap {
             for (final MaplePet pet : chr.getPets()) {
                 if (pet.getSummoned()) {
                     pet.setPos(chr.getTruePosition());//设置宠物坐标。
-                    chr.getClient().getSession().write(PetPacket.updatePet(pet, chr.getInventory(MapleInventoryType.CASH).getItem((short) (byte) pet.getInventoryPosition()), true));
+                    chr.getClient().getSession().write(PetPacket.updatePet(pet, chr.getInventory(MapleInventoryType.CASH).getItem((byte) pet.getInventoryPosition()), true));
                     broadcastMessage(chr, PetPacket.showPet(chr, pet, false, false), false);
                     //broadcastMessage(chr, PetPacket.showPet(chr, pet, false, false), false);
                     if (ServerConstants.封包显示 || 进入地图开启显示数据) {
@@ -1952,7 +1964,7 @@ public final class MapleMap {
         for (MaplePet pet : chr.getPets()) {
             if (pet.getSummoned()) {
                 pet.setPos(pet.getPos());//设置宠物坐标。.getTruePosition()
-                chr.getClient().getSession().write(PetPacket.updatePet(pet, chr.getInventory(MapleInventoryType.CASH).getItem((short) (byte) pet.getInventoryPosition()), true));
+                chr.getClient().getSession().write(PetPacket.updatePet(pet, chr.getInventory(MapleInventoryType.CASH).getItem((byte) pet.getInventoryPosition()), true));
                 broadcastMessage(chr, PetPacket.showPet(chr, pet, false, false), false);
             }
         }
@@ -3032,9 +3044,9 @@ public final class MapleMap {
 
     private class ActivateItemReactor implements Runnable {
 
-        private MapleMapItem mapitem;
-        private MapleReactor reactor;
-        private MapleClient c;
+        private final MapleMapItem mapitem;
+        private final MapleReactor reactor;
+        private final MapleClient c;
 
         public ActivateItemReactor(MapleMapItem mapitem, MapleReactor reactor, MapleClient c) {
             this.mapitem = mapitem;
@@ -3103,12 +3115,12 @@ public final class MapleMap {
         }
     }
 
-    private static interface DelayedPacketCreation {
+    private interface DelayedPacketCreation {
 
         void sendPackets(MapleClient c);
     }
 
-    private static interface SpawnCondition {
+    private interface SpawnCondition {
 
         boolean canSpawn(MapleCharacter chr);
     }
@@ -3582,7 +3594,7 @@ public final class MapleMap {
                 }
             }
         } finally {
-            ((ReentrantReadWriteLock) this.mapobjectlocks.get(MapleMapObjectType.MONSTER)).readLock().unlock();
+            this.mapobjectlocks.get(MapleMapObjectType.MONSTER).readLock().unlock();
         }
         return ret;
     }

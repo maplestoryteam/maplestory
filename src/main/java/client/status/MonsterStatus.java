@@ -62,12 +62,12 @@ public enum MonsterStatus implements Serializable {
     private final long i;
     private final boolean first;
 
-    private MonsterStatus(long i) {
+    MonsterStatus(long i) {
         this.i = i;
         first = false;
     }
 
-    private MonsterStatus(int i, boolean first) {
+    MonsterStatus(int i, boolean first) {
         this.i = i;
         this.first = first;
     }

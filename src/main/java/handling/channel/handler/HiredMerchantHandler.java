@@ -262,14 +262,11 @@ public class HiredMerchantHandler {
          * chr.getInventory(MapleInventoryType.CASH).getNumFreeSlot() < cash) {
          * return false; }
          */
-        if (chr.getInventory(MapleInventoryType.EQUIP).getNumFreeSlot() <= eq
-                || chr.getInventory(MapleInventoryType.USE).getNumFreeSlot() <= use
-                || chr.getInventory(MapleInventoryType.SETUP).getNumFreeSlot() <= setup
-                || chr.getInventory(MapleInventoryType.ETC).getNumFreeSlot() <= etc
-                || chr.getInventory(MapleInventoryType.CASH).getNumFreeSlot() <= cash) {
-            return false;
-        }
-        return true;
+        return chr.getInventory(MapleInventoryType.EQUIP).getNumFreeSlot() > eq
+                && chr.getInventory(MapleInventoryType.USE).getNumFreeSlot() > use
+                && chr.getInventory(MapleInventoryType.SETUP).getNumFreeSlot() > setup
+                && chr.getInventory(MapleInventoryType.ETC).getNumFreeSlot() > etc
+                && chr.getInventory(MapleInventoryType.CASH).getNumFreeSlot() > cash;
     }
 
     private static final boolean deletePackage(final int charid, final int accid, final int packageid) {

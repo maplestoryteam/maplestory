@@ -46,10 +46,7 @@ public class GuildHandler {
         if (name.length() > 15) {
             return false;
         }
-        if (name.length() < 3) {
-            return false;
-        }
-        return true;
+        return name.length() >= 3;
     }
 
     private static void respawnPlayer(final MapleCharacter mc) {
@@ -211,7 +208,7 @@ public class GuildHandler {
                 if (c.getPlayer().getGuildId() <= 0 || c.getPlayer().getGuildRank() != 1) {
                     return;
                 }
-                String ranks[] = new String[5];
+                String[] ranks = new String[5];
                 for (int i = 0; i < 5; i++) {
                     ranks[i] = slea.readMapleAsciiString();
                 }

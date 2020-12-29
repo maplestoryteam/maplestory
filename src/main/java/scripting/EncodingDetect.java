@@ -28,13 +28,13 @@ public class EncodingDetect {
 
 class BytesEncodingDetect extends Encoding {
 
-    int GBFreq[][];
-    int GBKFreq[][];
-    int Big5Freq[][];
-    int Big5PFreq[][];
-    int EUC_TWFreq[][];
-    int KRFreq[][];
-    int JPFreq[][];
+    int[][] GBFreq;
+    int[][] GBKFreq;
+    int[][] Big5Freq;
+    int[][] Big5PFreq;
+    int[][] EUC_TWFreq;
+    int[][] KRFreq;
+    int[][] JPFreq;
     public boolean debug;
 
     public BytesEncodingDetect() {
@@ -51,7 +51,7 @@ class BytesEncodingDetect extends Encoding {
         initialize_frequencies();
     }
 
-    public static void main(String argc[]) {
+    public static void main(String[] argc) {
         BytesEncodingDetect sinodetector;
         int result = OTHER;
         int i;
@@ -90,7 +90,6 @@ class BytesEncodingDetect extends Encoding {
             while ((bytesread = chinesestream.read(rawtext, byteoffset, rawtext.length - byteoffset)) > 0) {
                 byteoffset += bytesread;
             }
-            ;
             chinesestream.close();
             guess = detectEncoding(rawtext);
         } catch (Exception e) {

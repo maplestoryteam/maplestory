@@ -43,7 +43,7 @@ public class SkillFactory {
     private static final Map<Integer, List<Integer>> skillsByJob = new HashMap<Integer, List<Integer>>();
     private static final Map<Integer, SummonSkillEntry> SummonSkillInformation = new HashMap<Integer, SummonSkillEntry>();
     private final static MapleData stringData = MapleDataProviderFactory.getDataProvider(new File(System.getProperty("net.sf.odinms.wzpath", "wz") + "/String.wz")).getData("Skill.img");
-    private static MapleDataProvider datasource = MapleDataProviderFactory.getDataProvider(new File(System.getProperty("net.sf.odinms.wzpath", "wz") + "/Skill.wz"));
+    private static final MapleDataProvider datasource = MapleDataProviderFactory.getDataProvider(new File(System.getProperty("net.sf.odinms.wzpath", "wz") + "/Skill.wz"));
 
     public static final ISkill getSkill(final int id) {
         if (skills.size() != 0) {
@@ -94,12 +94,12 @@ public class SkillFactory {
     }
 
     public static ISkill getSkill1(int id) {
-        ISkill ret = (ISkill) skills.get(Integer.valueOf(id));
+        ISkill ret = skills.get(Integer.valueOf(id));
         if (ret != null) {
             return ret;
         }
         synchronized (skills) {
-            ret = (ISkill) skills.get(Integer.valueOf(id));
+            ret = skills.get(Integer.valueOf(id));
             if (ret == null) {
                 int job = id / 10000;
                 MapleData skillroot = datasource.getData(StringUtil.getLeftPaddedStr(String.valueOf(job), '0', 3) + ".img");

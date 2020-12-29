@@ -64,8 +64,9 @@ public class MapleClient implements Serializable {
     //ZlhssMS.MaxCharacters
     public static final int DEFAULT_CHARSLOT = Integer.parseInt(ServerProperties.getProperty("ZlhssMS.MaxCharacters"));//最大角色数量
     public static final String CLIENT_KEY = "CLIENT";
-    private transient MapleAESOFB send, receive;
-    private transient IoSession session;
+    private final transient MapleAESOFB send;
+    private final transient MapleAESOFB receive;
+    private final transient IoSession session;
     private MapleCharacter player;
     private int channel = 1, accId = 1, world, birthday;
     private int charslots = DEFAULT_CHARSLOT;
@@ -77,9 +78,9 @@ public class MapleClient implements Serializable {
     public boolean gm;
     private byte greason = 1, gender = -1;
     public transient short loginAttempt = 0;
-    private transient List<Integer> allowedChar = new LinkedList<Integer>();
-    private transient Set<String> macs = new HashSet<String>();
-    private transient Map<String, ScriptEngine> engines = new HashMap<String, ScriptEngine>();
+    private final transient List<Integer> allowedChar = new LinkedList<Integer>();
+    private final transient Set<String> macs = new HashSet<String>();
+    private final transient Map<String, ScriptEngine> engines = new HashMap<String, ScriptEngine>();
     private transient ScheduledFuture<?> idleTask = null;
     private transient String secondPassword, salt2; // To be used only on login
     private final transient Lock mutex = new ReentrantLock(true);
@@ -797,11 +798,7 @@ public class MapleClient implements Serializable {
             }
             rs.close();
             ps.close();
-            if (state == MapleClient.LOGIN_LOGGEDIN) {
-                loggedIn = true;
-            } else {
-                loggedIn = false;
-            }
+            loggedIn = state == MapleClient.LOGIN_LOGGEDIN;
             return state;
         } catch (SQLException e) {
             loggedIn = false;

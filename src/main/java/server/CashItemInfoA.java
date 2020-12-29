@@ -4,13 +4,13 @@ import client.inventory.MapleInventoryType;
 
 public class CashItemInfoA {
 
-    private int SN;
-    private int itemId;
-    private int count;
-    private int price;
-    private int period;
-    private int gender;
-    private boolean onSale;
+    private final int SN;
+    private final int itemId;
+    private final int count;
+    private final int price;
+    private final int period;
+    private final int gender;
+    private final boolean onSale;
 
     public CashItemInfoA(int SN, int itemId, int count, int price, int period, int gender, boolean onSale) {
         this.SN = SN;

@@ -38,7 +38,7 @@ import java.util.logging.Logger;
  */
 public class Main extends javax.swing.JFrame {
 
-    private static Main instance = new Main();
+    private static final Main instance = new Main();
 
     /**
      * Creates new form KinMS
@@ -917,7 +917,6 @@ public class Main extends javax.swing.JFrame {
                             return;
                         }
                         World.Broadcast.broadcastMessage(MaplePacketCreator.serverNotice(0, "服务器將在 " + minutesLeft + "分钟后关闭. 请尽快关闭雇佣商人安全下线.").getBytes());
-                        ;
                         System.out.println("服务器將在 " + minutesLeft + "分钟后关闭.");
                         minutesLeft--;
                     }
@@ -1302,7 +1301,7 @@ public class Main extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         /*
          * Set the Nimbus look and feel
          */

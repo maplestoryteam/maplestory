@@ -31,14 +31,16 @@ import tools.MaplePacketCreator;
 
 public class SpawnPoint extends Spawns {
 
-    private MapleMonster monster;
-    private Point pos;
+    private final MapleMonster monster;
+    private final Point pos;
     private long nextPossibleSpawn;
-    private int mobTime, carnival = -1, level = -1;
-    private AtomicInteger spawnedMonsters = new AtomicInteger(0);
-    private boolean immobile;
-    private String msg;
-    private byte carnivalTeam;
+    private final int mobTime;
+    private int carnival = -1;
+    private int level = -1;
+    private final AtomicInteger spawnedMonsters = new AtomicInteger(0);
+    private final boolean immobile;
+    private final String msg;
+    private final byte carnivalTeam;
 
     public SpawnPoint(final MapleMonster monster, final Point pos, final int mobTime, final byte carnivalTeam, final String msg) {
         this.monster = monster;

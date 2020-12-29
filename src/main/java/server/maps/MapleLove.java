@@ -11,11 +11,11 @@ import tools.MaplePacketCreator;
 
 public class MapleLove extends AbstractMapleMapObject {
 
-    private Point pos;
-    private MapleCharacter owner;
-    private String text;
-    private int ft;
-    private int itemid;
+    private final Point pos;
+    private final MapleCharacter owner;
+    private final String text;
+    private final int ft;
+    private final int itemid;
 
     public MapleLove(MapleCharacter owner, Point pos, int ft, String text, int itemid) {
         this.owner = owner;

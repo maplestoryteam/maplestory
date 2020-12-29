@@ -22,8 +22,9 @@ package server.life;
 
 public class BanishInfo {
 
-    private int map;
-    private String portal, msg;
+    private final int map;
+    private final String portal;
+    private final String msg;
 
     public BanishInfo(String msg, int map, String portal) {
         this.msg = msg;

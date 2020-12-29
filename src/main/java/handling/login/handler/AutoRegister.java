@@ -26,7 +26,6 @@ public class AutoRegister {
                 accountExists = true;
             }
             rs.close();
-            ;
             ps.close();
         } catch (SQLException ex) {
             System.out.println(ex);

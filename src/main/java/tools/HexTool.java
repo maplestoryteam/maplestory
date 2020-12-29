@@ -57,7 +57,7 @@ public class HexTool {
      */
     public static final String toString(final IoBuffer buf) {
         buf.flip();
-        final byte arr[] = new byte[buf.remaining()];
+        final byte[] arr = new byte[buf.remaining()];
         buf.get(arr);
         String ret = toString(arr);
         buf.flip();

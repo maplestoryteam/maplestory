@@ -676,7 +676,7 @@ public class DamageParse {
         // Max damage = (MAX before defense) - MDEF*.5
         elemMaxDamagePerMob -= mobstats.getMagicDefense() * 0.5;
         // Calculate Sharp eye bonus
-        elemMaxDamagePerMob += ((double) elemMaxDamagePerMob / 100) * sharpEye;
+        elemMaxDamagePerMob += (elemMaxDamagePerMob / 100) * sharpEye;
 //	if (skill.isChargeSkill()) {
 //	    elemMaxDamagePerMob = (float) ((90 * ((System.currentTimeMillis() - chr.getKeyDownSkill_Time()) / 1000) + 10) * elemMaxDamagePerMob * 0.01);
 //	}
@@ -866,7 +866,7 @@ public class DamageParse {
         elementalMaxDamagePerMonster = elementalMaxDamagePerMonster * (1 - 0.01 * d) - monster.getStats().getPhysicalDefense() * 0.5;
 
         // Calculate passive bonuses + Sharp Eye
-        elementalMaxDamagePerMonster += ((double) elementalMaxDamagePerMonster / 100.0) * CriticalDamagePercent;
+        elementalMaxDamagePerMonster += (elementalMaxDamagePerMonster / 100.0) * CriticalDamagePercent;
 
 //	if (theSkill.isChargeSkill()) {
 //	    elementalMaxDamagePerMonster = (double) (90 * (System.currentTimeMillis() - player.getKeyDownSkill_Time()) / 2000 + 10) * elementalMaxDamagePerMonster * 0.01;

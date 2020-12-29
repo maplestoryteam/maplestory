@@ -193,10 +193,10 @@ public class PlayersHandler {
             ReactorScriptManager.getInstance().act(c, reactor);
         } else if ((reactor.getTouch() == 1) && (!reactor.isTimerActive())) {
             if (reactor.getReactorType() == 100) {
-                int itemid = GameConstants.getCustomReactItem(reactor.getReactorId(), ((Integer) reactor.getReactItem().getLeft()).intValue());
-                if (c.getPlayer().haveItem(itemid, ((Integer) reactor.getReactItem().getRight()).intValue())) {
+                int itemid = GameConstants.getCustomReactItem(reactor.getReactorId(), reactor.getReactItem().getLeft().intValue());
+                if (c.getPlayer().haveItem(itemid, reactor.getReactItem().getRight().intValue())) {
                     if (reactor.getArea().contains(c.getPlayer().getTruePosition())) {
-                        MapleInventoryManipulator.removeById(c, GameConstants.getInventoryType(itemid), itemid, ((Integer) reactor.getReactItem().getRight()).intValue(), true, false);
+                        MapleInventoryManipulator.removeById(c, GameConstants.getInventoryType(itemid), itemid, reactor.getReactItem().getRight().intValue(), true, false);
                         reactor.hitReactor(c);
                     } else {
                         c.getPlayer().dropMessage(5, "距离太远。请靠近后重新尝试。");

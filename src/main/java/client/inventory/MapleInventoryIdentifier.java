@@ -39,10 +39,11 @@ import java.io.Serializable;
 public class MapleInventoryIdentifier implements Serializable {
 
     private static final long serialVersionUID = 21830921831301L;
-    private AtomicInteger runningUID;
-    private ReentrantReadWriteLock rwl = new ReentrantReadWriteLock();
-    private Lock readLock = rwl.readLock(), writeLock = rwl.writeLock();
-    private static MapleInventoryIdentifier instance = new MapleInventoryIdentifier();
+    private final AtomicInteger runningUID;
+    private final ReentrantReadWriteLock rwl = new ReentrantReadWriteLock();
+    private final Lock readLock = rwl.readLock();
+    private final Lock writeLock = rwl.writeLock();
+    private static final MapleInventoryIdentifier instance = new MapleInventoryIdentifier();
 
     public MapleInventoryIdentifier() {
         this.runningUID = new AtomicInteger(0);

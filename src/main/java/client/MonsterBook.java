@@ -42,7 +42,7 @@ public class MonsterBook implements Serializable {
     private static final long serialVersionUID = 7179541993413738569L;
     private boolean changed = false;
     private int SpecialCard = 0, NormalCard = 0, BookLevel = 1;
-    private Map<Integer, Integer> cards;
+    private final Map<Integer, Integer> cards;
 
     public MonsterBook(Map<Integer, Integer> cards) {
         this.cards = cards;

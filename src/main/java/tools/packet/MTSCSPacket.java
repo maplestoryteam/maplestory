@@ -4013,7 +4013,7 @@ public class MTSCSPacket {
             mplew.writeShort(0);
         }
         if ((flags & 0x10000) != 0) {
-            List<CashItemInfo> pack = CashItemFactory.getInstance().getPackageItems(item.sn);
+            List<CashItemInfo> pack = CashItemFactory.getPackageItems(item.sn);
             if (pack == null) {
                 mplew.write(0);
             } else {

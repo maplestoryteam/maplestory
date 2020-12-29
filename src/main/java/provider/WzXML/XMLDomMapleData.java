@@ -45,7 +45,7 @@ import tools.FileoutputUtil;
 
 public class XMLDomMapleData implements MapleData, Serializable {
 
-    private Node node;
+    private final Node node;
     private File imageDataDir;
 
     private XMLDomMapleData(final Node node) {
@@ -71,7 +71,7 @@ public class XMLDomMapleData implements MapleData, Serializable {
 
     @Override
     public MapleData getChildByPath(final String path) {
-        final String segments[] = path.split("/");
+        final String[] segments = path.split("/");
         if (segments[0].equals("..")) {
             return ((MapleData) getParent()).getChildByPath(path.substring(path.indexOf("/") + 1));
         }

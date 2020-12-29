@@ -122,7 +122,7 @@ public class MobHandler {
                 int reduce_y = 0;
                 for (LifeMovementFragment move : res) {
                     if ((move instanceof AbstractLifeMovement)) {
-                        endPos = ((LifeMovement) move).getPosition();
+                        endPos = move.getPosition();
                         try {
                             reduce_x = Math.abs(startPos.x - endPos.x);
                             reduce_y = Math.abs(startPos.y - endPos.y);

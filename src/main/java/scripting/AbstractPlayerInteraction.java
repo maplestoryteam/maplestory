@@ -66,7 +66,7 @@ import server.life.OverrideMonsterStats;
 
 public abstract class AbstractPlayerInteraction {
 
-    private MapleClient c;
+    private final MapleClient c;
 
     public AbstractPlayerInteraction(final MapleClient c) {
         this.c = c;
@@ -531,7 +531,7 @@ public abstract class AbstractPlayerInteraction {
     }
 
     public final void gainItem(final int id, final short quantity, final long period, byte Flag) {
-        gainItem(id, quantity, false, period, -1, "", (byte) Flag);
+        gainItem(id, quantity, false, period, -1, "", Flag);
     }
 
     public final void gainItem(final int id, final short quantity, final boolean randomStats) {
@@ -1402,10 +1402,7 @@ public abstract class AbstractPlayerInteraction {
         if (this.c.getPlayer().getInventory(MapleInventoryType.ETC).getNextFreeSlot() > -1 && A == 4) {
             return true;
         }
-        if (this.c.getPlayer().getInventory(MapleInventoryType.CASH).getNextFreeSlot() > -1 && A == 5) {
-            return true;
-        }
-        return false;
+        return this.c.getPlayer().getInventory(MapleInventoryType.CASH).getNextFreeSlot() > -1 && A == 5;
     }
 
     public boolean beibao(int A, int kw) {
@@ -1421,10 +1418,7 @@ public abstract class AbstractPlayerInteraction {
         if (this.c.getPlayer().getInventory(MapleInventoryType.ETC).getNextFreeSlot() > kw && A == 4) {
             return true;
         }
-        if (this.c.getPlayer().getInventory(MapleInventoryType.CASH).getNextFreeSlot() > kw && A == 5) {
-            return true;
-        }
-        return false;
+        return this.c.getPlayer().getInventory(MapleInventoryType.CASH).getNextFreeSlot() > kw && A == 5;
     }
 
     public final void startAriantPQ(int mapid) {
@@ -1808,7 +1802,7 @@ public abstract class AbstractPlayerInteraction {
     }
 
     public void equipqh(byte slot, boolean 攻击) {
-        Equip sel = (Equip) this.c.getPlayer().getInventory(MapleInventoryType.EQUIPPED).getItem((short) slot);
+        Equip sel = (Equip) this.c.getPlayer().getInventory(MapleInventoryType.EQUIPPED).getItem(slot);
         if (攻击) {
             int Watk = 30 + -Randomizer.nextInt(60);
             int Matk = 30 + -Randomizer.nextInt(60);

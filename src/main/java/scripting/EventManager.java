@@ -60,12 +60,12 @@ import database.DatabaseConnection;
 
 public class EventManager {
 
-    private static int[] eventChannel = new int[2];
-    private Invocable iv;
-    private int channel;
-    private Map<String, EventInstanceManager> instances = new WeakHashMap<>();
-    private Properties props = new Properties();
-    private String name;
+    private static final int[] eventChannel = new int[2];
+    private final Invocable iv;
+    private final int channel;
+    private final Map<String, EventInstanceManager> instances = new WeakHashMap<>();
+    private final Properties props = new Properties();
+    private final String name;
 
     public EventManager(ChannelServer cserv, Invocable iv, String name) {
         this.iv = iv;
@@ -208,7 +208,7 @@ public class EventManager {
 
     public void startInstance(String mapid, MapleCharacter chr) {
         try {
-            EventInstanceManager eim = (EventInstanceManager) iv.invokeFunction("setup", (Object) mapid);
+            EventInstanceManager eim = (EventInstanceManager) iv.invokeFunction("setup", mapid);
             eim.registerCarnivalParty(chr, chr.getMap(), (byte) 0);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -218,7 +218,7 @@ public class EventManager {
 
     public void startInstance_Party(String mapid, MapleCharacter chr) {
         try {
-            EventInstanceManager eim = (EventInstanceManager) iv.invokeFunction("setup", (Object) mapid);
+            EventInstanceManager eim = (EventInstanceManager) iv.invokeFunction("setup", mapid);
             eim.registerParty(chr.getParty(), chr.getMap());
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -349,7 +349,7 @@ public class EventManager {
             }
         }
         try {
-            EventInstanceManager eim = (EventInstanceManager) (EventInstanceManager) this.iv.invokeFunction("setup", squad.getLeaderName());
+            EventInstanceManager eim = (EventInstanceManager) this.iv.invokeFunction("setup", squad.getLeaderName());
             eim.registerSquad(squad, map, Integer.parseInt(bossid));
         } catch (Exception ex) {
             System.out.println(new StringBuilder().append("Event name : ").append(this.name).append(", method Name : setup-squad:\n").append(ex).toString());

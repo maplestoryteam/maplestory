@@ -34,7 +34,7 @@ public class Start {
     public static final Start instance = new Start();
     private static int maxUsers = 0;
     private static ServerSocket srvSocket = null; //服务线程，用以控制服务器只启动一个实例
-    private static int srvPort = 6350;     //控制启动唯一实例的端口号，这个端口如果保存在配置文件中会更灵活
+    private static final int srvPort = 6350;     //控制启动唯一实例的端口号，这个端口如果保存在配置文件中会更灵活
     //设置服务端单一实例.启动一个ServerSocket，用以控制只启动一个实例  禁止服务端多开
     //设置srv端口 = 6350//用于控制启动唯一实例的端口号，这个端口如果保存在配置文件中会更灵活
 
@@ -50,7 +50,7 @@ public class Start {
     }
 
     //bat启动。
-    public static void main(final String args[]) {
+    public static void main(final String[] args) {
         Start.checkSingleInstance();//检测是否只启动一个进程
         if (Boolean.parseBoolean(ServerProperties.getProperty("ZlhssMS.Admin", "true"))) {
             System.out.println("已开启仅管理员登录模式");

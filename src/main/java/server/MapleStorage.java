@@ -29,13 +29,13 @@ import tools.Pair;
 public class MapleStorage implements Serializable {
 
     private static final long serialVersionUID = 9179541993413738569L;
-    private int id;
-    private int accountId;
-    private List<IItem> items;
+    private final int id;
+    private final int accountId;
+    private final List<IItem> items;
     private int meso;
     private byte slots;
     private boolean changed = false;
-    private Map<MapleInventoryType, List<IItem>> typeItems = new EnumMap<MapleInventoryType, List<IItem>>(MapleInventoryType.class);
+    private final Map<MapleInventoryType, List<IItem>> typeItems = new EnumMap<MapleInventoryType, List<IItem>>(MapleInventoryType.class);
 
     private MapleStorage(int id, byte slots, int meso, int accountId) {
         this.id = id;

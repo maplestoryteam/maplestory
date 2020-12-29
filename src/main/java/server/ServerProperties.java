@@ -2,6 +2,7 @@ package server;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -28,7 +29,7 @@ public class ServerProperties {
         for (String s : toLoad) {
             InputStreamReader fr;
             try {
-                fr = new InputStreamReader(new FileInputStream(s), "UTF-8");//这里是用utf-8加载配置的，否则乱码
+                fr = new InputStreamReader(new FileInputStream(s), StandardCharsets.UTF_8);//这里是用utf-8加载配置的，否则乱码
                 props.load(fr);
                 fr.close();
             } catch (IOException ex) {

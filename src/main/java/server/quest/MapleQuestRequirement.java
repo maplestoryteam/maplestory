@@ -22,8 +22,8 @@ import tools.Pair;
 
 public class MapleQuestRequirement implements Serializable {
     private static final long serialVersionUID = 9179541993413738569L;
-    private MapleQuest quest;
-    private MapleQuestRequirementType type;
+    private final MapleQuest quest;
+    private final MapleQuestRequirementType type;
     private int intStore;
     private String stringStore;
     private List<Pair<Integer, Integer>> dataStore;
@@ -84,7 +84,7 @@ public class MapleQuestRequirement implements Serializable {
             case skill:
                 for (Pair<Integer, Integer> a : this.dataStore) {
                     boolean acquire = a.getRight() > 0;
-                    int skill = ((Integer) a.getLeft()).intValue();
+                    int skill = a.getLeft().intValue();
                     ISkill skil = SkillFactory.getSkill(skill);
                     if (acquire) {
                         if (skil.isFourthJob()) {
@@ -103,8 +103,8 @@ public class MapleQuestRequirement implements Serializable {
                 return true;
             case quest:
                 for (Pair<Integer, Integer> a : this.dataStore) {
-                    MapleQuestStatus q = c.getQuest(MapleQuest.getInstance(((Integer) a.getLeft()).intValue()));
-                    int state = ((Integer) a.getRight()).intValue();
+                    MapleQuestStatus q = c.getQuest(MapleQuest.getInstance(a.getLeft().intValue()));
+                    int state = a.getRight().intValue();
                     if (state != 0) {
                         if ((q == null) && (state == 0)) {
                             continue;
@@ -143,8 +143,8 @@ public class MapleQuestRequirement implements Serializable {
                 return cal.getTimeInMillis() >= System.currentTimeMillis();
             case mob:
                 for (Pair<Integer, Integer> a : this.dataStore) {
-                    int mobId = ((Integer) a.getLeft()).intValue();
-                    int killReq = ((Integer) a.getRight()).intValue();
+                    int mobId = a.getLeft().intValue();
+                    int killReq = a.getRight().intValue();
                     if (c.getQuest(this.quest).getMobKills(mobId) < killReq) {
                         return false;
                     }

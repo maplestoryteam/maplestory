@@ -32,7 +32,7 @@ public enum MapleEventType {
     public String command;
     public int[] mapids;
 
-    private MapleEventType(String comm, int[] mapids) {
+    MapleEventType(String comm, int[] mapids) {
         this.command = comm;
         this.mapids = mapids;
     }

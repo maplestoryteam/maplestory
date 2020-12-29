@@ -42,7 +42,7 @@ import server.movement.LifeMovementFragment;
 
 public class MaplePet implements Serializable {
 
-    public static enum PetFlag {
+    public enum PetFlag {
 
         ITEM_PICKUP(0x01, 5190000, 5191000),
         EXPAND_PICKUP(0x02, 5190002, 5191002), //idk
@@ -57,7 +57,7 @@ public class MaplePet implements Serializable {
 
         private final int i, item, remove;
 
-        private PetFlag(int i, int item, int remove) {
+        PetFlag(int i, int item, int remove) {
             this.i = i;
             this.item = item;
             this.remove = remove;
@@ -92,7 +92,11 @@ public class MaplePet implements Serializable {
 
     private static final long serialVersionUID = 9179541993413738569L;
     private String name;
-    private int Fh = 0, stance = 0, uniqueid, petitemid, secondsLeft = 0;
+    private int Fh = 0;
+    private int stance = 0;
+    private final int uniqueid;
+    private final int petitemid;
+    private int secondsLeft = 0;
     private Point pos;
     private byte fullness = 100, level = 1, summoned = 0;
     private short inventorypos = 0, closeness = 0, flags = 0;
@@ -180,7 +184,7 @@ public class MaplePet implements Serializable {
             pse.setShort(4, (short) closeness);
             pse.setByte(5, (byte) fullness);
             pse.setInt(6, secondsLeft);
-            pse.setShort(7, (short) ret1); //flags
+            pse.setShort(7, ret1); //flags
             pse.executeUpdate();
             pse.close();
         } catch (final SQLException ex) {
@@ -312,7 +316,7 @@ public class MaplePet implements Serializable {
         for (final LifeMovementFragment move : movement) {
             if (move instanceof LifeMovement) {
                 if (move instanceof AbsoluteLifeMovement) {
-                    setPos(((LifeMovement) move).getPosition());
+                    setPos(move.getPosition());
                 }
                 setStance(((LifeMovement) move).getNewstate());
             }

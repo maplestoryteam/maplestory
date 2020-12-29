@@ -27,7 +27,7 @@ import tools.Pair;
 public class MapleQuest implements Serializable {
 
     private static final long serialVersionUID = 9179541993413738569L;
-    private static Map<Integer, MapleQuest> quests = new LinkedHashMap();
+    private static final Map<Integer, MapleQuest> quests = new LinkedHashMap();
     protected List<MapleQuestRequirement> startReqs = new LinkedList();
     protected List<MapleQuestRequirement> completeReqs = new LinkedList();
     protected List<MapleQuestAction> startActs = new LinkedList();
@@ -430,7 +430,7 @@ public class MapleQuest implements Serializable {
         return viewMedalItem;
     }
 
-    public static enum MedalQuest {
+    public enum MedalQuest {
 
         新手冒险家(29005, 29015, 15, new int[]{104000000, 104010001, 100000006, 104020000, 100000000, 100010000, 100040000, 100040100, 101010103, 101020000, 101000000, 102000000, 101030104, 101030406, 102020300, 103000000, 102050000, 103010001, 103030200, 110000000}),
         ElNath(29006, 29012, 50, new int[]{200000000, 200010100, 200010300, 200080000, 200080100, 211000000, 211030000, 211040300, 211040400, 211040401}),
@@ -443,7 +443,7 @@ public class MapleQuest implements Serializable {
         public int questid, level, lquestid;
         public int[] maps;
 
-        private MedalQuest(int questid, int lquestid, int level, int[] maps) {
+        MedalQuest(int questid, int lquestid, int level, int[] maps) {
             this.questid = questid; //infoquest = questid -2005, customdata = questid -1995
             this.level = level;
             this.lquestid = lquestid;

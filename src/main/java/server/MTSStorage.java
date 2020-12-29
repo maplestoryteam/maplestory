@@ -57,8 +57,8 @@ public class MTSStorage {
     private final Map<Integer, MTSItemInfo> buyNow; //packageid to mtsiteminfo
     private static MTSStorage instance;
     private boolean end = false;
-    private ReentrantReadWriteLock mutex;
-    private ReentrantReadWriteLock cart_mutex;
+    private final ReentrantReadWriteLock mutex;
+    private final ReentrantReadWriteLock cart_mutex;
     //mts_cart is just characterid, itemid
     //mts_items is id/packageid, tab(byte), price, characterid, seller, expiration
 
@@ -365,12 +365,12 @@ public class MTSStorage {
 
     public static class MTSItemInfo {
 
-        private int price;
-        private IItem item;
-        private String seller;
-        private int id; //packageid
-        private int cid;
-        private long date;
+        private final int price;
+        private final IItem item;
+        private final String seller;
+        private final int id; //packageid
+        private final int cid;
+        private final long date;
 
         public MTSItemInfo(int price, IItem item, String seller, int id, int cid, long date) {
             this.item = item;
@@ -394,7 +394,7 @@ public class MTSStorage {
         }
 
         public int getTaxes() {
-            return ServerConstants.MTS_BASE + (int) (price * ServerConstants.MTS_TAX / 100);
+            return ServerConstants.MTS_BASE + (price * ServerConstants.MTS_TAX / 100);
         }
 
         public int getId() {

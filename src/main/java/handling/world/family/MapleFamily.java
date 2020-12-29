@@ -44,9 +44,9 @@ import tools.packet.FamilyPacket;
 
 public class MapleFamily implements java.io.Serializable {
 
-    public static enum FCOp {
+    public enum FCOp {
 
-        NONE, DISBAND;
+        NONE, DISBAND
     }
 
     public static final long serialVersionUID = 6322150443228168192L;
@@ -466,7 +466,7 @@ public class MapleFamily implements java.io.Serializable {
             int old_level = member.getLevel();
             int old_job = member.getJobId();
             member.setJobId(mgc.getJob());
-            member.setLevel((short) mgc.getLevel());
+            member.setLevel(mgc.getLevel());
             if (old_level != mgc.getLevel()) {
                 this.broadcast(MaplePacketCreator.sendLevelup(true, mgc.getLevel(), mgc.getName()), mgc.getId(), mgc.getId() == leaderid ? null : member.getPedigree());
             }

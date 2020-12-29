@@ -617,7 +617,7 @@ public class MapleItemInformationProvider {
 
     protected final MapleData getItemData(final int itemId) {
         MapleData ret = null;
-        final String idStr = "0" + String.valueOf(itemId);
+        final String idStr = "0" + itemId;
         MapleDataDirectoryEntry root = itemData.getRoot();
         for (final MapleDataDirectoryEntry topDir : root.getSubdirectories()) {
             // we should have .img files here beginning with the first 4 IID
@@ -712,14 +712,14 @@ public class MapleItemInformationProvider {
             try {
                 pEntry = MapleDataTool.getDouble(pData);
             } catch (Exception e) {
-                pEntry = (double) MapleDataTool.getIntConvert(pData, 0);
+                pEntry = MapleDataTool.getIntConvert(pData, 0);
             }
         } else {
             pData = item.getChildByPath("info/price");
             if (pData == null) {
                 return -1;
             }
-            pEntry = (double) MapleDataTool.getIntConvert(pData, 0);
+            pEntry = MapleDataTool.getIntConvert(pData, 0);
         }
         if (itemId == 2070019 || itemId == 2330007) {
             pEntry = 1.0;
@@ -765,7 +765,7 @@ public class MapleItemInformationProvider {
     }
 
     private int rand(int min, int max) {
-        return Math.abs((int) Randomizer.rand(min, max));
+        return Math.abs(Randomizer.rand(min, max));
     }
 
     public Equip levelUpEquip(Equip equip, Map<String, Integer> sta) {
@@ -917,10 +917,7 @@ public class MapleItemInformationProvider {
     public final boolean canEquip(final Map<String, Integer> stats, final int itemid, final int level, final int job, final int fame, final int str, final int dex, final int luk, final int int_, final int supremacy) {
         if ((level + supremacy) >= stats.get("reqLevel") && str >= stats.get("reqSTR") && dex >= stats.get("reqDEX") && luk >= stats.get("reqLUK") && int_ >= stats.get("reqINT")) {
             final int fameReq = stats.get("reqPOP");
-            if (fameReq != 0 && fame < fameReq) {
-                return false;
-            }
-            return true;
+            return fameReq == 0 || fame >= fameReq;
         }
         return false;
     }
@@ -1648,7 +1645,7 @@ public class MapleItemInformationProvider {
             return inventoryTypeCache.get(itemId);
         }
         MapleInventoryType ret;
-        String idStr = "0" + String.valueOf(itemId);
+        String idStr = "0" + itemId;
         MapleDataDirectoryEntry root = itemData.getRoot();
         for (MapleDataDirectoryEntry topDir : root.getSubdirectories()) {
             for (MapleDataFileEntry iFile : topDir.getFiles()) {
@@ -1711,7 +1708,7 @@ public class MapleItemInformationProvider {
 
     public boolean isKarmaAble(int itemId) {
         if (this.karmaCache.containsKey(Integer.valueOf(itemId))) {
-            return ((Boolean) this.karmaCache.get(Integer.valueOf(itemId))).booleanValue();
+            return this.karmaCache.get(Integer.valueOf(itemId)).booleanValue();
         }
         MapleData data = getItemData(itemId);
         boolean bRestricted = MapleDataTool.getIntConvert("info/tradeAvailable", data, 0) > 0; //可以交易
@@ -1787,7 +1784,7 @@ public class MapleItemInformationProvider {
 
     public int getExpCache(int itemId) {
         if (getExpCache.containsKey(Integer.valueOf(itemId))) {
-            return ((Integer) getExpCache.get(Integer.valueOf(itemId))).intValue();
+            return getExpCache.get(Integer.valueOf(itemId)).intValue();
         }
         MapleData item = getItemData(itemId);
         if (item == null) {
@@ -1808,6 +1805,6 @@ public class MapleItemInformationProvider {
         if ((getEquipStats(itemId) == null) || (!getEquipStats(itemId).containsKey("limitBreak"))) {
             return 999999;
         }
-        return ((Integer) getEquipStats(itemId).get("limitBreak")).intValue();
+        return getEquipStats(itemId).get("limitBreak").intValue();
     }
 }

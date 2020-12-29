@@ -37,12 +37,13 @@ import tools.MaplePacketCreator;
 
 public class MapleDoor extends AbstractMapleMapObject {
 
-    private WeakReference<MapleCharacter> owner;
-    private MapleMap town;
+    private final WeakReference<MapleCharacter> owner;
+    private final MapleMap town;
     private MaplePortal townPortal;
-    private MapleMap target;
-    private int skillId, ownerId;
-    private Point targetPosition;
+    private final MapleMap target;
+    private final int skillId;
+    private final int ownerId;
+    private final Point targetPosition;
 
     public MapleDoor(final MapleCharacter owner, final Point targetPosition, final int skillId) {
         super();

@@ -37,46 +37,46 @@ public interface LittleEndianWriter {
      *
      * @param b The bytes to write.
      */
-    public void writeZeroBytes(final int i);
+    void writeZeroBytes(final int i);
 
     /**
      * Write an array of bytes to the sequence.
      *
      * @param b The bytes to write.
      */
-    public void write(final byte b[]);
+    void write(final byte[] b);
 
     /**
      * Write a byte to the sequence.
      *
      * @param b The byte to write.
      */
-    public void write(final byte b);
+    void write(final byte b);
 
-    public void write(final int b);
+    void write(final int b);
 
     /**
      * Writes an integer to the sequence.
      *
      * @param i The integer to write.
      */
-    public void writeInt(final int i);
+    void writeInt(final int i);
 
     /**
      * Write a short integer to the sequence.
      *
      * @param s The short integer to write.
      */
-    public void writeShort(final short s);
+    void writeShort(final short s);
 
-    public void writeShort(final int i);
+    void writeShort(final int i);
 
     /**
      * Write a long integer to the sequence.
      *
      * @param l The long integer to write.
      */
-    public void writeLong(final long l);
+    void writeLong(final long l);
 
     /**
      * Writes an ASCII string the the sequence.

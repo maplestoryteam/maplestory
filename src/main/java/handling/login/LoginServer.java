@@ -60,7 +60,7 @@ public class LoginServer {
     private static boolean finishedShutdown = true, adminOnly = false;
     private static final HashMap<Integer, Triple<String, String, Integer>> loginAuth = new HashMap();
     private static final HashSet<String> loginIPAuth = new HashSet();
-    private static LoginServer instance = new LoginServer();
+    private static final LoginServer instance = new LoginServer();
 
     public static LoginServer getInstance() {
         return instance;
