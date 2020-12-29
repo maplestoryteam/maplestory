@@ -64,21 +64,8 @@ import java.lang.ref.WeakReference;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Deque;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -93,6 +80,7 @@ import provider.MapleDataProviderFactory;
 import scripting.EventInstanceManager;
 import scripting.NPCScriptManager;
 import server.*;
+import server.Timer;
 import server.Timer.BuffTimer;
 import server.Timer.EtcTimer;
 import server.Timer.EventTimer;
@@ -4057,6 +4045,15 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
             }
         }
         return null;
+    }
+
+    //Find lowest fullness pet
+    public final MaplePet getPet() {
+        return pets.parallelStream()
+                .filter(MaplePet::getSummoned)
+                .sorted(Comparator.comparingInt(MaplePet::getFullness))
+                .findFirst()
+                .get();
     }
 
     public void removePetCS(MaplePet pet) {

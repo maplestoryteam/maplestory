@@ -145,56 +145,52 @@ public class PetHandler {
             c.getSession().write(MaplePacketCreator.enableActions());
             return;
         }
-        int slot = 0;
-        List<MaplePet> pets = c.getPlayer().getPets();
-        for (MaplePet pet : pets) {
+//        int slot = 0;
+//        List<MaplePet> pets = c.getPlayer().getPets();
+//        for (MaplePet pet : pets) {
+//            if (pet.getFullness() < 100) {
+//                slot = c.getPlayer().getPetSlot(pet);
+//            }
+//        }
+        int itemId = 0;
+        MaplePet pet = c.getPlayer().getPet();
+        if (pet != null) {
+//        MaplePet pet = c.getPlayer().getPet(slot);
+            int slot = c.getPlayer().getPetSlot(pet);
+            slea.readInt();
+            slea.readShort();
+            itemId = slea.readInt();
+            boolean gainCloseness = false;
+            if (Randomizer.nextInt(101) > 50) {
+                gainCloseness = true;
+            }
             if (pet.getFullness() < 100) {
-                slot = c.getPlayer().getPetSlot(pet);
-            }
-        }
-        MaplePet pet = c.getPlayer().getPet(slot);
-        slea.readInt();
-        slea.readShort();
-        int itemId = slea.readInt();
-
-        boolean gainCloseness = false;
-
-        if (Randomizer.nextInt(101) > 50) {
-            gainCloseness = true;
-        }
-        if (pet.getFullness() < 100) {
-            int newFullness = pet.getFullness() + 30;
-            if (newFullness > 100) {
-                newFullness = 100;
-            }
-            pet.setFullness(newFullness);
-            if ((gainCloseness) && (pet.getCloseness() < 30000)) {
-                int newCloseness = pet.getCloseness() + 1;
-                if (newCloseness > 30000) {
-                    newCloseness = 30000;
+                pet.setFullness(Math.min(pet.getFullness() + 30, 100));
+                if ((gainCloseness) && (pet.getCloseness() < 30000)) {
+                    int newCloseness = pet.getCloseness() + 1;
+                    if (newCloseness > 30000) {
+                        newCloseness = 30000;
+                    }
+                    pet.setCloseness(newCloseness);
+                    if (newCloseness >= ExpTable.getClosenessNeededForLevel(pet.getLevel() + 1)) {
+                        pet.setLevel(pet.getLevel() + 1);
+                    }
                 }
-                pet.setCloseness(newCloseness);
-                if (newCloseness >= ExpTable.getClosenessNeededForLevel(pet.getLevel() + 1)) {
-                    pet.setLevel(pet.getLevel() + 1);
+                c.getSession().write(PetPacket.updatePet(pet, c.getPlayer().getInventory(MapleInventoryType.CASH).getItem((byte) pet.getInventoryPosition()), true));
+                c.getPlayer().getMap().broadcastMessage(c.getPlayer(), PetPacket.commandResponse(c.getPlayer().getId(), slot, 1, true), true);
+            } else {
+                if (gainCloseness) {
+                    int newCloseness = pet.getCloseness() - 1;
+                    if (newCloseness < 0) {
+                        newCloseness = 0;
+                    }
+                    pet.setCloseness(newCloseness);
+                    if (newCloseness < ExpTable.getClosenessNeededForLevel(pet.getLevel())) {
+                        pet.setLevel(pet.getLevel() - 1);
+                    }
                 }
-
+                c.getPlayer().getMap().broadcastMessage(c.getPlayer(), PetPacket.commandResponse(c.getPlayer().getId(), slot, 1, false), true);
             }
-
-            c.getSession().write(PetPacket.updatePet(pet, c.getPlayer().getInventory(MapleInventoryType.CASH).getItem((byte) pet.getInventoryPosition()), true));
-            c.getPlayer().getMap().broadcastMessage(c.getPlayer(), PetPacket.commandResponse(c.getPlayer().getId(), slot, 1, true), true);
-        } else {
-            if (gainCloseness) {
-                int newCloseness = pet.getCloseness() - 1;
-                if (newCloseness < 0) {
-                    newCloseness = 0;
-                }
-                pet.setCloseness(newCloseness);
-                if (newCloseness < ExpTable.getClosenessNeededForLevel(pet.getLevel())) {
-                    pet.setLevel(pet.getLevel() - 1);
-                }
-            }
-
-            c.getPlayer().getMap().broadcastMessage(c.getPlayer(), PetPacket.commandResponse(c.getPlayer().getId(), slot, 1, false), true);
         }
         MapleInventoryManipulator.removeById(c, MapleInventoryType.USE, itemId, 1, true, false);
     }
