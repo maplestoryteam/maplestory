@@ -5,6 +5,10 @@
 package tools.wztosql;
 
 import database.DatabaseConnection;
+import provider.MapleData;
+import provider.MapleDataProvider;
+import provider.MapleDataProviderFactory;
+import provider.MapleDataTool;
 
 import java.io.File;
 import java.nio.charset.Charset;
@@ -15,18 +19,13 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import provider.MapleData;
-import provider.MapleDataProvider;
-import provider.MapleDataProviderFactory;
-import provider.MapleDataTool;
-
 /**
  * @author Itzik
  */
 public class DumpOxQuizData {
 
-    private final Connection con = DatabaseConnection.getConnection();
     static CharsetEncoder asciiEncoder = Charset.forName("GBK").newEncoder();
+    private final Connection con = DatabaseConnection.getConnection();
 
     public static void main(String[] args) {
         try {

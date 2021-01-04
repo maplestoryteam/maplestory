@@ -1,5 +1,11 @@
 package tools.wztosql;
 
+import client.inventory.MapleInventoryType;
+import constants.GameConstants;
+import database.DatabaseConnection;
+import provider.*;
+import tools.Pair;
+
 import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,20 +16,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import provider.MapleData;
-import provider.MapleDataDirectoryEntry;
-import provider.MapleDataFileEntry;
-import provider.MapleDataProvider;
-import provider.MapleDataProviderFactory;
-import provider.MapleDataTool;
-import tools.Pair;
-import client.inventory.MapleInventoryType;
-import constants.GameConstants;
-import database.DatabaseConnection;
-
 public class DumpItems {
 
-    private final MapleDataProvider item, character, string = MapleDataProviderFactory.getDataProvider(new File((System.getProperty("wzpath") != null ? System.getProperty("wzpath") : "") + "wz/String.wz"));
     protected final MapleData cashStringData = string.getData("Cash.img");
     protected final MapleData consumeStringData = string.getData("Consume.img");
     protected final MapleData eqpStringData = string.getData("Eqp.img");
@@ -31,10 +25,11 @@ public class DumpItems {
     protected final MapleData insStringData = string.getData("Ins.img");
     protected final MapleData petStringData = string.getData("Pet.img");
     protected final Set<Integer> doneIds = new LinkedHashSet<>();
+    private final MapleDataProvider item, character, string = MapleDataProviderFactory.getDataProvider(new File((System.getProperty("wzpath") != null ? System.getProperty("wzpath") : "") + "wz/String.wz"));
+    private final Connection con = DatabaseConnection.getConnection();
     protected boolean hadError = false;
     protected boolean update = false;
     protected int id = 0;
-    private final Connection con = DatabaseConnection.getConnection();
 
     public DumpItems(boolean update) throws Exception {
         this.update = update;
@@ -43,6 +38,39 @@ public class DumpItems {
         if (item == null || string == null || character == null) {
             hadError = true;
         }
+    }
+
+    public static void main(String[] args) {
+        boolean hadError = false;
+        boolean update = false;
+        long startTime = System.currentTimeMillis();
+        for (String file : args) {
+            if (file.equalsIgnoreCase("-update")) {
+                update = true;
+            }
+        }
+        int currentQuest = 0;
+        try {
+            final DumpItems dq = new DumpItems(update);
+            System.out.println("Dumping Items");
+            dq.dumpItems();
+            hadError |= dq.isHadError();
+            currentQuest = dq.currentId();
+        } catch (Exception e) {
+            hadError = true;
+            e.printStackTrace();
+            System.out.println(currentQuest + " quest.");
+        }
+        long endTime = System.currentTimeMillis();
+        double elapsedSeconds = (endTime - startTime) / 1000.0;
+        int elapsedSecs = (((int) elapsedSeconds) % 60);
+        int elapsedMinutes = (int) (elapsedSeconds / 60.0);
+
+        String withErrors = "";
+        if (hadError) {
+            withErrors = " with errors";
+        }
+        System.out.println("Finished" + withErrors + " in " + elapsedMinutes + " minutes " + elapsedSecs + " seconds");
     }
 
     public boolean isHadError() {
@@ -104,6 +132,7 @@ public class DumpItems {
             }
         }
     }
+    //kinda inefficient
 
     public void dumpItem(PreparedStatement psa, PreparedStatement psr, PreparedStatement ps, PreparedStatement pse, MapleData iz) throws Exception {
         try {
@@ -332,7 +361,7 @@ public class DumpItems {
                                     switch (conK.getName()) {
                                         case "job":
                                             StringBuilder sbbb = new StringBuilder();
-                                            if (conK.getData() == null) { // a loop										
+                                            if (conK.getData() == null) { // a loop
                                                 for (MapleData ids : conK.getChildren()) {
                                                     sbbb.append(ids.getData().toString());
                                                     sbbb.append(",");
@@ -398,7 +427,6 @@ public class DumpItems {
         ps.setInt(21, MapleDataTool.getInt("info/create", iz, 0));
         ps.addBatch();
     }
-    //kinda inefficient
 
     public void dumpItems(PreparedStatement psa, PreparedStatement psr, PreparedStatement ps, PreparedStatement pse) throws Exception {
         if (!update) {
@@ -416,39 +444,6 @@ public class DumpItems {
 
     public int currentId() {
         return id;
-    }
-
-    public static void main(String[] args) {
-        boolean hadError = false;
-        boolean update = false;
-        long startTime = System.currentTimeMillis();
-        for (String file : args) {
-            if (file.equalsIgnoreCase("-update")) {
-                update = true;
-            }
-        }
-        int currentQuest = 0;
-        try {
-            final DumpItems dq = new DumpItems(update);
-            System.out.println("Dumping Items");
-            dq.dumpItems();
-            hadError |= dq.isHadError();
-            currentQuest = dq.currentId();
-        } catch (Exception e) {
-            hadError = true;
-            e.printStackTrace();
-            System.out.println(currentQuest + " quest.");
-        }
-        long endTime = System.currentTimeMillis();
-        double elapsedSeconds = (endTime - startTime) / 1000.0;
-        int elapsedSecs = (((int) elapsedSeconds) % 60);
-        int elapsedMinutes = (int) (elapsedSeconds / 60.0);
-
-        String withErrors = "";
-        if (hadError) {
-            withErrors = " with errors";
-        }
-        System.out.println("Finished" + withErrors + " in " + elapsedMinutes + " minutes " + elapsedSecs + " seconds");
     }
 
     protected final MapleData getStringData(final int itemId) {

@@ -1,6 +1,6 @@
 package kinms.pvp;
 
-import java.awt.Rectangle;
+import java.awt.*;
 
 public class PvpAttackInfo {
     public int skillId;

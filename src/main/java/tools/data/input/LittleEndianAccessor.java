@@ -20,7 +20,7 @@
  */
 package tools.data.input;
 
-import java.awt.Point;
+import java.awt.*;
 
 /**
  * Provides an abstract interface for a little-endian stream of bytes.

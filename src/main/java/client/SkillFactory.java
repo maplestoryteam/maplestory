@@ -20,28 +20,17 @@
  */
 package client;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.locks.ReentrantLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
-
-import provider.MapleData;
-import provider.MapleDataProvider;
-import provider.MapleDataFileEntry;
-import provider.MapleDataProviderFactory;
-import provider.MapleDataDirectoryEntry;
-import provider.MapleDataTool;
+import provider.*;
 import tools.StringUtil;
+
+import java.io.File;
+import java.util.*;
 
 public class SkillFactory {
 
-    private static final Map<Integer, ISkill> skills = new HashMap<Integer, ISkill>();
-    private static final Map<Integer, List<Integer>> skillsByJob = new HashMap<Integer, List<Integer>>();
-    private static final Map<Integer, SummonSkillEntry> SummonSkillInformation = new HashMap<Integer, SummonSkillEntry>();
+    private static final Map<Integer, ISkill> skills = new HashMap<>();
+    private static final Map<Integer, List<Integer>> skillsByJob = new HashMap<>();
+    private static final Map<Integer, SummonSkillEntry> SummonSkillInformation = new HashMap<>();
     private final static MapleData stringData = MapleDataProviderFactory.getDataProvider(new File(System.getProperty("net.sf.odinms.wzpath", "wz") + "/String.wz")).getData("Skill.img");
     private static final MapleDataProvider datasource = MapleDataProviderFactory.getDataProvider(new File(System.getProperty("net.sf.odinms.wzpath", "wz") + "/Skill.wz"));
 
@@ -68,7 +57,7 @@ public class SkillFactory {
                                 Skill skil = Skill.loadFromData(skillid, data2);
                                 List<Integer> job = skillsByJob.get(skillid / 10000);
                                 if (job == null) {
-                                    job = new ArrayList<Integer>();
+                                    job = new ArrayList<>();
                                     skillsByJob.put(skillid / 10000, job);
                                 }
                                 job.add(skillid);

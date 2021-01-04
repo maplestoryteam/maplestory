@@ -20,9 +20,9 @@
  */
 package tools.data.input;
 
-import java.io.IOException;
-
 import tools.HexTool;
+
+import java.io.IOException;
 
 /**
  * Provides for an abstraction layer for an array of bytes.
@@ -33,9 +33,9 @@ import tools.HexTool;
  */
 public class ByteArrayByteStream implements SeekableInputStreamBytestream {
 
+    private final byte[] arr;
     private int pos = 0;
     private long bytesRead = 0;
-    private final byte[] arr;
 
     /**
      * Class constructor.

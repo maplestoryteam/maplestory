@@ -20,8 +20,7 @@
  */
 package tools.data.input;
 
-import java.awt.Point;
-import java.io.ByteArrayOutputStream;
+import java.awt.*;
 
 /**
  * Provides a generic interface to a Little Endian stream of bytes.

@@ -20,12 +20,12 @@
  */
 package tools.data.output;
 
-import java.io.ByteArrayOutputStream;
-
 import handling.ByteArrayMaplePacket;
 import handling.MaplePacket;
 import server.ServerProperties;
 import tools.HexTool;
+
+import java.io.ByteArrayOutputStream;
 
 /**
  * Writes a maplestory-packet little-endian stream of bytes.
@@ -36,8 +36,8 @@ import tools.HexTool;
  */
 public class MaplePacketLittleEndianWriter extends GenericLittleEndianWriter {
 
-    private final ByteArrayOutputStream baos;
     private static final boolean debugMode = Boolean.parseBoolean(ServerProperties.getProperty("ZlhssMS.Debug", "false"));
+    private final ByteArrayOutputStream baos;
 
     /**
      * Constructor - initializes this stream with a default size.

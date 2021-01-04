@@ -20,14 +20,13 @@
  */
 package tools;
 
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * Provides a class for encrypting MapleStory packets with AES OFB encryption.
@@ -38,12 +37,9 @@ import javax.crypto.spec.SecretKeySpec;
  */
 public class MapleAESOFB {
 
-    private byte[] iv;
-    private Cipher cipher;
-    private final short mapleVersion;
+    public static final byte[] MAPLE_AES_KEY = {0x13, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0x06, 0x00, 0x00, 0x00, (byte) 0xB4, 0x00, 0x00, 0x00, 0x1B, 0x00, 0x00, 0x00, 0x0F, 0x00, 0x00, 0x00, 0x33, 0x00, 0x00, 0x00, 0x52, 0x00, 0x00, 0x00};
     //private final static SecretKeySpec skey = new SecretKeySpec(new byte[]{0x13, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0x06, 0x00, 0x00, 0x00, (byte) 0xB4, 0x00, 0x00, 0x00, 0x1B, 0x00, 0x00, 0x00, 0x0F, 0x00, 0x00, 0x00, 0x33, 0x00, 0x00, 0x00, 0x52, 0x00, 0x00, 0x00}, "AES");
     private final static SecretKeySpec skey = new SecretKeySpec(new byte[]{0x13, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0x06, 0x00, 0x00, 0x00, (byte) 0xB4, 0x00, 0x00, 0x00, 0x1B, 0x00, 0x00, 0x00, 0x0F, 0x00, 0x00, 0x00, 0x33, 0x00, 0x00, 0x00, 0x52, 0x00, 0x00, 0x00}, "AES");
-    public static final byte[] MAPLE_AES_KEY = {0x13, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0x06, 0x00, 0x00, 0x00, (byte) 0xB4, 0x00, 0x00, 0x00, 0x1B, 0x00, 0x00, 0x00, 0x0F, 0x00, 0x00, 0x00, 0x33, 0x00, 0x00, 0x00, 0x52, 0x00, 0x00, 0x00};
     // KMS
 //    {0x13, 0x00, 0x00, 0x00, 0x52, 0x00, 0x00, 0x00, 0x2A, 0x00, 0x00, 0x00, 0x5B, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x10, 0x00, 0x00, 0x00, 0x60, 0x00, 0x00, 0x00}
     /* VANA */
@@ -131,6 +127,9 @@ public class MapleAESOFB {
             (byte) 0x1F, (byte) 0x3A, (byte) 0x43, (byte) 0x8A, (byte) 0x96, (byte) 0x41, (byte) 0x74, (byte) 0xAC, (byte) 0x52, (byte) 0x33, (byte) 0xF0, (byte) 0xD9, (byte) 0x29, (byte) 0x80, (byte) 0xB1, (byte) 0x16,
             (byte) 0xD3, (byte) 0xAB, (byte) 0x91, (byte) 0xB9, (byte) 0x84, (byte) 0x7F, (byte) 0x61, (byte) 0x1E, (byte) 0xCF, (byte) 0xC5, (byte) 0xD1, (byte) 0x56, (byte) 0x3D, (byte) 0xCA, (byte) 0xF4, (byte) 0x05,
             (byte) 0xC6, (byte) 0xE5, (byte) 0x08, (byte) 0x49};
+    private final short mapleVersion;
+    private byte[] iv;
+    private Cipher cipher;
 
     /**
      * Class constructor - Creates an instance of the MapleStory encryption
@@ -156,12 +155,73 @@ public class MapleAESOFB {
     }
 
     /**
-     * Sets the IV of this instance.
+     * Gets the packet length from a header.
      *
-     * @param iv The new IV.
+     * @param packetHeader The header as an integer.
+     * @return The length of the packet.
      */
-    private void setIv(byte[] iv) {
-        this.iv = iv;
+    public static int getPacketLength(int packetHeader) {
+        int packetLength = ((packetHeader >>> 16) ^ (packetHeader & 0xFFFF));
+        packetLength = ((packetLength << 8) & 0xFF00) | ((packetLength >>> 8) & 0xFF); // fix endianness
+        return packetLength;
+    }
+
+    /**
+     * Gets a new IV from <code>oldIv</code>
+     *
+     * @param oldIv The old IV to get a new IV from.
+     * @return The new IV.
+     */
+    public static byte[] getNewIv(byte[] oldIv) {
+        byte[] in = {(byte) 0xf2, 0x53, (byte) 0x50, (byte) 0xc6}; // magic
+        // ;)
+        for (int x = 0; x < 4; x++) {
+            funnyShit(oldIv[x], in);
+            // System.out.println(HexTool.toString(in));
+        }
+        return in;
+    }
+
+    /**
+     * Does funny stuff. <code>this.OldIV</code> must not equal <code>in</code>
+     * Modifies <code>in</code> and returns it for convenience.
+     *
+     * @param inputByte The byte to apply the funny stuff to.
+     * @param in        Something needed for all this to occur.
+     * @return The modified version of <code>in</code>.
+     */
+    public static final void funnyShit(byte inputByte, byte[] in) {
+        byte elina = in[1];
+        byte anna = inputByte;
+        byte moritz = funnyBytes[(int) elina & 0xFF];
+        moritz -= inputByte;
+        in[0] += moritz;
+        moritz = in[2];
+        moritz ^= funnyBytes[(int) anna & 0xFF];
+        elina -= (int) moritz & 0xFF;
+        in[1] = elina;
+        elina = in[3];
+        moritz = elina;
+        elina -= (int) in[0] & 0xFF;
+        moritz = funnyBytes[(int) moritz & 0xFF];
+        moritz += inputByte;
+        moritz ^= in[2];
+        in[2] = moritz;
+        elina += (int) funnyBytes[(int) anna & 0xFF] & 0xFF;
+        in[3] = elina;
+
+        int merry = ((int) in[0]) & 0xFF;
+        merry |= (in[1] << 8) & 0xFF00;
+        merry |= (in[2] << 16) & 0xFF0000;
+        merry |= (in[3] << 24) & 0xFF000000;
+        int ret_value = merry >>> 0x1d;
+        merry <<= 3;
+        ret_value |= merry;
+
+        in[0] = (byte) (ret_value & 0xFF);
+        in[1] = (byte) ((ret_value >> 8) & 0xFF);
+        in[2] = (byte) ((ret_value >> 16) & 0xFF);
+        in[3] = (byte) ((ret_value >> 24) & 0xFF);
     }
 
     /**
@@ -171,6 +231,15 @@ public class MapleAESOFB {
      */
     public byte[] getIv() {
         return this.iv;
+    }
+
+    /**
+     * Sets the IV of this instance.
+     *
+     * @param iv The new IV.
+     */
+    private void setIv(byte[] iv) {
+        this.iv = iv;
     }
 
     /**
@@ -237,18 +306,6 @@ public class MapleAESOFB {
     }
 
     /**
-     * Gets the packet length from a header.
-     *
-     * @param packetHeader The header as an integer.
-     * @return The length of the packet.
-     */
-    public static int getPacketLength(int packetHeader) {
-        int packetLength = ((packetHeader >>> 16) ^ (packetHeader & 0xFFFF));
-        packetLength = ((packetLength << 8) & 0xFF00) | ((packetLength >>> 8) & 0xFF); // fix endianness
-        return packetLength;
-    }
-
-    /**
      * Check the packet to make sure it has a header.
      *
      * @param packet The packet to check.
@@ -271,68 +328,10 @@ public class MapleAESOFB {
     }
 
     /**
-     * Gets a new IV from <code>oldIv</code>
-     *
-     * @param oldIv The old IV to get a new IV from.
-     * @return The new IV.
-     */
-    public static byte[] getNewIv(byte[] oldIv) {
-        byte[] in = {(byte) 0xf2, 0x53, (byte) 0x50, (byte) 0xc6}; // magic
-        // ;)
-        for (int x = 0; x < 4; x++) {
-            funnyShit(oldIv[x], in);
-            // System.out.println(HexTool.toString(in));
-        }
-        return in;
-    }
-
-    /**
      * Returns the IV of this instance as a string.
      */
     @Override
     public String toString() {
         return "IV: " + HexTool.toString(this.iv);
-    }
-
-    /**
-     * Does funny stuff. <code>this.OldIV</code> must not equal <code>in</code>
-     * Modifies <code>in</code> and returns it for convenience.
-     *
-     * @param inputByte The byte to apply the funny stuff to.
-     * @param in        Something needed for all this to occur.
-     * @return The modified version of <code>in</code>.
-     */
-    public static final void funnyShit(byte inputByte, byte[] in) {
-        byte elina = in[1];
-        byte anna = inputByte;
-        byte moritz = funnyBytes[(int) elina & 0xFF];
-        moritz -= inputByte;
-        in[0] += moritz;
-        moritz = in[2];
-        moritz ^= funnyBytes[(int) anna & 0xFF];
-        elina -= (int) moritz & 0xFF;
-        in[1] = elina;
-        elina = in[3];
-        moritz = elina;
-        elina -= (int) in[0] & 0xFF;
-        moritz = funnyBytes[(int) moritz & 0xFF];
-        moritz += inputByte;
-        moritz ^= in[2];
-        in[2] = moritz;
-        elina += (int) funnyBytes[(int) anna & 0xFF] & 0xFF;
-        in[3] = elina;
-
-        int merry = ((int) in[0]) & 0xFF;
-        merry |= (in[1] << 8) & 0xFF00;
-        merry |= (in[2] << 16) & 0xFF0000;
-        merry |= (in[3] << 24) & 0xFF000000;
-        int ret_value = merry >>> 0x1d;
-        merry <<= 3;
-        ret_value |= merry;
-
-        in[0] = (byte) (ret_value & 0xFF);
-        in[1] = (byte) ((ret_value >> 8) & 0xFF);
-        in[2] = (byte) ((ret_value >> 16) & 0xFF);
-        in[3] = (byte) ((ret_value >> 24) & 0xFF);
     }
 }

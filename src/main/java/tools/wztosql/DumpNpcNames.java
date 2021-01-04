@@ -5,6 +5,11 @@
 package tools.wztosql;
 
 import database.DatabaseConnection;
+import provider.MapleData;
+import provider.MapleDataProvider;
+import provider.MapleDataProviderFactory;
+import provider.MapleDataTool;
+import tools.StringUtil;
 
 import java.io.File;
 import java.sql.Connection;
@@ -13,19 +18,13 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-import provider.MapleData;
-import provider.MapleDataProvider;
-import provider.MapleDataProviderFactory;
-import provider.MapleDataTool;
-import tools.StringUtil;
-
 /**
  * @author Itzik
  */
 public class DumpNpcNames {
 
-    private final Connection con = DatabaseConnection.getConnection();
     private static final Map<Integer, String> npcNames = new HashMap<>();
+    private final Connection con = DatabaseConnection.getConnection();
 
     public static void main(String[] args) throws SQLException {
         System.out.println("Dumping npc name data.");

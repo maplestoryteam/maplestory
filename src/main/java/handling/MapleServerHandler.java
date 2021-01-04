@@ -20,50 +20,40 @@
  */
 package handling;
 
-import constants.ServerConstants;
-
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.concurrent.ConcurrentHashMap;
-
 import client.MapleClient;
+import constants.ServerConstants;
 import handling.cashshop.CashShopServer;
+import handling.cashshop.handler.CashShopOperation;
+import handling.cashshop.handler.MTSOperation;
 import handling.channel.ChannelServer;
-import handling.cashshop.handler.*;
 import handling.channel.handler.*;
 import handling.login.LoginServer;
-import handling.login.handler.*;
+import handling.login.handler.CharLoginHandler;
 import handling.mina.MaplePacketDecoder;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.lang.management.ManagementFactory;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Scanner;
-import java.util.concurrent.RejectedExecutionException;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
-import javax.management.MBeanServer;
-import javax.management.ObjectName;
-
 import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
+import server.MTSStorage;
 import server.Randomizer;
+import server.ServerProperties;
+import tools.FileoutputUtil;
 import tools.MapleAESOFB;
-import tools.packet.LoginPacket;
+import tools.Pair;
 import tools.data.input.ByteArrayByteStream;
 import tools.data.input.GenericSeekableLittleEndianAccessor;
 import tools.data.input.SeekableLittleEndianAccessor;
-import tools.Pair;
+import tools.packet.LoginPacket;
 
-import server.MTSStorage;
-import server.ServerProperties;
-import tools.FileoutputUtil;
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.lang.management.ManagementFactory;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class MapleServerHandler extends IoHandlerAdapter implements MapleServerHandlerMBean {
 
@@ -527,9 +517,10 @@ public class MapleServerHandler extends IoHandlerAdapter implements MapleServerH
             case CREATE_CHAR:
                 CharLoginHandler.CreateChar(slea, c);
                 break;
-            case DELETE_CHAR:
-                CharLoginHandler.DeleteChar(slea, c);
-                break;
+//            FIXME v079并没有删除人物功能 屏蔽掉
+//            case DELETE_CHAR:
+//                CharLoginHandler.DeleteChar(slea, c);
+//                break;
             case CHAR_SELECT:
                 CharLoginHandler.Character_WithoutSecondPassword(slea, c);
                 break;

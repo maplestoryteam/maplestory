@@ -23,22 +23,16 @@ package tools;
 import java.io.IOException;
 import java.io.Writer;
 import java.lang.Thread.State;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.Map.Entry;
 
 public class CPUSampler {
 
-    private final List<String> included = new LinkedList<String>();
     private static final CPUSampler instance = new CPUSampler();
+    private final List<String> included = new LinkedList<String>();
+    private final Map<StackTrace, Integer> recorded = new HashMap<StackTrace, Integer>();
     private long interval = 5;
     private SamplerThread sampler = null;
-    private final Map<StackTrace, Integer> recorded = new HashMap<StackTrace, Integer>();
     private int totalSamples = 0;
 
     public static CPUSampler getInstance() {
@@ -218,44 +212,6 @@ public class CPUSampler {
         }
     }
 
-    private class SamplerThread implements Runnable {
-
-        private boolean running = false;
-        private boolean shouldRun = false;
-        private Thread rthread;
-
-        public void start() {
-            if (!running) {
-                shouldRun = true;
-                rthread = new Thread(this, "CPU Sampling Thread");
-                rthread.start();
-                running = true;
-            }
-        }
-
-        public void stop() {
-            this.shouldRun = false;
-            rthread.interrupt();
-            try {
-                rthread.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-
-        @Override
-        public void run() {
-            while (shouldRun) {
-                consumeStackTraces(Thread.getAllStackTraces());
-                try {
-                    Thread.sleep(interval);
-                } catch (InterruptedException e) {
-                    return;
-                }
-            }
-        }
-    }
-
     public static class StacktraceWithCount implements Comparable<StacktraceWithCount> {
 
         private final int count;
@@ -337,6 +293,44 @@ public class CPUSampler {
                 }
             }
             return ret.toString();
+        }
+    }
+
+    private class SamplerThread implements Runnable {
+
+        private boolean running = false;
+        private boolean shouldRun = false;
+        private Thread rthread;
+
+        public void start() {
+            if (!running) {
+                shouldRun = true;
+                rthread = new Thread(this, "CPU Sampling Thread");
+                rthread.start();
+                running = true;
+            }
+        }
+
+        public void stop() {
+            this.shouldRun = false;
+            rthread.interrupt();
+            try {
+                rthread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public void run() {
+            while (shouldRun) {
+                consumeStackTraces(Thread.getAllStackTraces());
+                try {
+                    Thread.sleep(interval);
+                } catch (InterruptedException e) {
+                    return;
+                }
+            }
         }
     }
 }

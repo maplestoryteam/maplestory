@@ -20,17 +20,16 @@
  */
 package client.status;
 
-import java.util.concurrent.ScheduledFuture;
-
-import client.ISkill;
 import server.life.MobSkill;
+
+import java.util.concurrent.ScheduledFuture;
 
 public class MonsterStatusEffect {
 
-    private MonsterStatus stati;
     private final int skill;
     private final MobSkill mobskill;
     private final boolean monsterSkill;
+    private MonsterStatus stati;
     private Integer x;
     private ScheduledFuture<?> cancelTask;
     private ScheduledFuture<?> poisonSchedule;

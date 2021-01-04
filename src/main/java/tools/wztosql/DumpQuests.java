@@ -1,14 +1,6 @@
 package tools.wztosql;
 
 import database.DatabaseConnection;
-
-import java.io.File;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.util.List;
-import java.sql.ResultSet;
-import java.util.LinkedList;
-
 import provider.MapleData;
 import provider.MapleDataProvider;
 import provider.MapleDataProviderFactory;
@@ -17,13 +9,20 @@ import server.quest.MapleQuestActionType;
 import server.quest.MapleQuestRequirementType;
 import tools.Pair;
 
+import java.io.File;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.LinkedList;
+import java.util.List;
+
 public class DumpQuests {
 
     private final MapleDataProvider quest;
+    private final Connection con = DatabaseConnection.getConnection();
     protected boolean hadError = false;
     protected boolean update = false;
     protected int id = 0;
-    private final Connection con = DatabaseConnection.getConnection();
 
     public DumpQuests(boolean update) throws Exception {
         this.update = update;
@@ -31,6 +30,39 @@ public class DumpQuests {
         if (quest == null) {
             hadError = true;
         }
+    }
+
+    public static void main(String[] args) {
+        boolean hadError = false;
+        boolean update = false;
+        long startTime = System.currentTimeMillis();
+        for (String file : args) {
+            if (file.equalsIgnoreCase("-update")) {
+                update = true;
+            }
+        }
+        int currentQuest = 0;
+        try {
+            final DumpQuests dq = new DumpQuests(update);
+            System.out.println("Dumping quests");
+            dq.dumpQuests();
+            hadError |= dq.isHadError();
+            currentQuest = dq.currentId();
+        } catch (Exception e) {
+            hadError = true;
+            e.printStackTrace();
+            System.out.println(currentQuest + " quest.");
+        }
+        long endTime = System.currentTimeMillis();
+        double elapsedSeconds = (endTime - startTime) / 1000.0;
+        int elapsedSecs = (((int) elapsedSeconds) % 60);
+        int elapsedMinutes = (int) (elapsedSeconds / 60.0);
+
+        String withErrors = "";
+        if (hadError) {
+            withErrors = " with errors";
+        }
+        System.out.println("Finished" + withErrors + " in " + elapsedMinutes + " minutes " + elapsedSecs + " seconds");
     }
 
     public boolean isHadError() {
@@ -325,38 +357,5 @@ public class DumpQuests {
 
     public int currentId() {
         return id;
-    }
-
-    public static void main(String[] args) {
-        boolean hadError = false;
-        boolean update = false;
-        long startTime = System.currentTimeMillis();
-        for (String file : args) {
-            if (file.equalsIgnoreCase("-update")) {
-                update = true;
-            }
-        }
-        int currentQuest = 0;
-        try {
-            final DumpQuests dq = new DumpQuests(update);
-            System.out.println("Dumping quests");
-            dq.dumpQuests();
-            hadError |= dq.isHadError();
-            currentQuest = dq.currentId();
-        } catch (Exception e) {
-            hadError = true;
-            e.printStackTrace();
-            System.out.println(currentQuest + " quest.");
-        }
-        long endTime = System.currentTimeMillis();
-        double elapsedSeconds = (endTime - startTime) / 1000.0;
-        int elapsedSecs = (((int) elapsedSeconds) % 60);
-        int elapsedMinutes = (int) (elapsedSeconds / 60.0);
-
-        String withErrors = "";
-        if (hadError) {
-            withErrors = " with errors";
-        }
-        System.out.println("Finished" + withErrors + " in " + elapsedMinutes + " minutes " + elapsedSecs + " seconds");
     }
 }

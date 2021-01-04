@@ -1,22 +1,5 @@
 package tools.wztosql;
 
-import java.io.Console;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.rmi.NotBoundException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import javax.management.InstanceAlreadyExistsException;
-import javax.management.MBeanRegistrationException;
-import javax.management.MalformedObjectNameException;
-import javax.management.NotCompliantMBeanException;
-
 import provider.MapleData;
 import provider.MapleDataProvider;
 import provider.MapleDataProviderFactory;
@@ -24,20 +7,34 @@ import provider.MapleDataTool;
 import tools.Pair;
 import tools.StringUtil;
 
+import javax.management.InstanceAlreadyExistsException;
+import javax.management.MBeanRegistrationException;
+import javax.management.MalformedObjectNameException;
+import javax.management.NotCompliantMBeanException;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.rmi.NotBoundException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
 public class MonsterDropCreator {
 
+    protected static final MapleDataProvider data = MapleDataProviderFactory.getDataProvider(new File(System.getProperty("net.sf.odinms.wzpath", "wz") + "/String.wz"));
+    protected static final MapleDataProvider mobData = MapleDataProviderFactory.getDataProvider(new File(System.getProperty("net.sf.odinms.wzpath", "wz") + "/Mob.wz"));
     private static final int COMMON_ETC_RATE = 600000;
     private static final int SUPER_BOSS_ITEM_RATE = 300000;
     private static final int POTION_RATE = 20000;
     private static final int ARROWS_RATE = 25000;
     private static final int lastmonstercardid = 2388070;
-    private static boolean addFlagData = false;
     protected static String monsterQueryData = "drop_data";
     protected static List<Pair<Integer, String>> itemNameCache = new ArrayList();
     protected static List<Pair<Integer, MobInfo>> mobCache = new ArrayList();
     protected static Map<Integer, Boolean> bossCache = new HashMap();
-    protected static final MapleDataProvider data = MapleDataProviderFactory.getDataProvider(new File(System.getProperty("net.sf.odinms.wzpath", "wz") + "/String.wz"));
-    protected static final MapleDataProvider mobData = MapleDataProviderFactory.getDataProvider(new File(System.getProperty("net.sf.odinms.wzpath", "wz") + "/Mob.wz"));
+    private static boolean addFlagData = false;
 
     public static void main(String[] args) throws IOException, NotBoundException, InstanceAlreadyExistsException, MBeanRegistrationException, NotCompliantMBeanException, MalformedObjectNameException {
         //  MapleData data = MapleDataProviderFactory.getDataProvider(new File(new StringBuilder().append(System.getProperty("net.sf.odinms.wzpath", "wz")).append("String.wz").toString())).getData("MonsterBook.img");

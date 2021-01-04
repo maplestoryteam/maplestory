@@ -29,11 +29,10 @@ import handling.world.family.MapleFamily;
 import handling.world.family.MapleFamilyBuff;
 import handling.world.family.MapleFamilyBuff.MapleFamilyBuffEntry;
 import handling.world.family.MapleFamilyCharacter;
-
-import java.util.List;
-
 import tools.Pair;
 import tools.data.output.MaplePacketLittleEndianWriter;
+
+import java.util.List;
 
 public class FamilyPacket {
 

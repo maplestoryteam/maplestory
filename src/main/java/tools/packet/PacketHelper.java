@@ -20,47 +20,29 @@
  */
 package tools.packet;
 
-import java.util.List;
-import java.util.Map;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.SimpleTimeZone;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map.Entry;
-
-import client.inventory.IEquip;
-import client.inventory.Item;
-import client.ISkill;
-import constants.GameConstants;
-import client.inventory.MapleRing;
-import client.inventory.MaplePet;
-import client.MapleCharacter;
-import client.MapleCoolDownValueHolder;
-import client.inventory.MapleInventory;
-import client.inventory.MapleInventoryType;
-import client.MapleQuestStatus;
-import client.inventory.IItem;
-import client.SkillEntry;
+import client.*;
 import client.inventory.*;
+import constants.GameConstants;
 import constants.ServerConstants;
 import server.MapleItemInformationProvider;
-import tools.Pair;
 import server.movement.LifeMovementFragment;
 import server.shops.AbstractPlayerStore;
 import server.shops.IMaplePlayerShop;
 import tools.DateUtil;
 import tools.KoreanDateUtil;
+import tools.Pair;
 import tools.data.output.LittleEndianWriter;
 import tools.data.output.MaplePacketLittleEndianWriter;
 
+import java.util.*;
+import java.util.Map.Entry;
+
 public class PacketHelper {
 
-    private final static long FT_UT_OFFSET = 116444592000000000L; // EDT
     public final static long MAX_TIME = 150842304000000000L; //00 80 05 BB 46 E6 17 02
     public static final byte[] unk1 = new byte[]{(byte) 0x00, (byte) 0x40, (byte) 0xE0, (byte) 0xFD};
     public static final byte[] unk2 = new byte[]{(byte) 0x3B, (byte) 0x37, (byte) 0x4F, (byte) 0x01};
+    private final static long FT_UT_OFFSET = 116444592000000000L; // EDT
 
     public static final long getKoreanTimestamp(final long realTimestamp) {
         if (realTimestamp == -1) {

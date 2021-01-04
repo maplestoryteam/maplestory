@@ -2,10 +2,9 @@ package kinms.db;
 
 import client.MapleCharacter;
 import handling.channel.ChannelServer;
+import server.maps.MapleMapFactory;
 
 import java.util.Collection;
-
-import server.maps.MapleMapFactory;
 
 public interface CherryMSLottery {
 
@@ -17,23 +16,23 @@ public interface CherryMSLottery {
 
     long getAllpeichu();
 
+    void setAllpeichu(long paramLong);
+
     long getAlltouzhu();
+
+    void setAlltouzhu(long paramLong);
 
     ChannelServer getChannelServer();
 
     Collection<MapleCharacter> getCharacters();
+
+    void setCharacters(Collection<MapleCharacter> paramCollection);
 
     MapleMapFactory getMapleMapFactory();
 
     int getTouNumbyType(int paramInt);
 
     int getZjNum();
-
-    void setAllpeichu(long paramLong);
-
-    void setAlltouzhu(long paramLong);
-
-    void setCharacters(Collection<MapleCharacter> paramCollection);
 
     void setZjNum(int paramInt);
 

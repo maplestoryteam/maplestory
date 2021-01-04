@@ -6,6 +6,7 @@
 package tools;
 
 import database.DatabaseConnection;
+import server.MapleItemInformationProvider;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -14,14 +15,28 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import server.MapleItemInformationProvider;
-
 /**
  * @author Pungin
  */
 public class FixShopItemsPrice {
 
     private final Connection con = DatabaseConnection.getConnection();
+
+    public static void main(String[] args) {
+        System.setProperty("net.sf.odinms.wzpath", System.getProperty("net.sf.odinms.wzpath", "wz"));
+        FixShopItemsPrice i = new FixShopItemsPrice();
+        System.out.println("正在加载道具数据......");
+        // MapleItemInformationProvider.getInstance().load();
+        MapleItemInformationProvider.getInstance().runEtc();
+        MapleItemInformationProvider.getInstance().runItems();
+        System.out.println("正在读取商店内商品......");
+        List<Integer> list = i.loadFromDB();
+        System.out.println("正在处理商店内商品价格......");
+        for (int ii : list) {
+            i.changePrice(ii);
+        }
+        System.out.println("处理商品价格结束。");
+    }
 
     private List<Integer> loadFromDB() {
         List<Integer> shopItemsId = new ArrayList<Integer>();
@@ -66,21 +81,5 @@ public class FixShopItemsPrice {
         } catch (SQLException e) {
             System.out.println("處理商品失敗, 道具ID:" + itemId);
         }
-    }
-
-    public static void main(String[] args) {
-        System.setProperty("net.sf.odinms.wzpath", System.getProperty("net.sf.odinms.wzpath", "wz"));
-        FixShopItemsPrice i = new FixShopItemsPrice();
-        System.out.println("正在加载道具数据......");
-        // MapleItemInformationProvider.getInstance().load();
-        MapleItemInformationProvider.getInstance().runEtc();
-        MapleItemInformationProvider.getInstance().runItems();
-        System.out.println("正在读取商店内商品......");
-        List<Integer> list = i.loadFromDB();
-        System.out.println("正在处理商店内商品价格......");
-        for (int ii : list) {
-            i.changePrice(ii);
-        }
-        System.out.println("处理商品价格结束。");
     }
 }

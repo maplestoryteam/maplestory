@@ -257,8 +257,8 @@ public class AdminCommand {
     public static class ShutdownTime extends CommandExecute {
 
         private static ScheduledFuture<?> ts = null;
-        private int minutesLeft = 0;
         private static Thread t = null;
+        private int minutesLeft = 0;
 
         public int execute(MapleClient c, String[] splitted) {
 

@@ -24,13 +24,12 @@ import client.MapleCharacter;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.Calendar;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 public class FileoutputUtil {
 
-    private static final SimpleDateFormat sdfT = new SimpleDateFormat("yyyy年MM月dd日HH時mm分ss秒");
     // Logging output file
     public static final String fixdam_mg = "日志/logs/魔法伤害修正.rtf",
             fixdam_ph = "日志/logs/物理伤害修正.rtf",
@@ -49,6 +48,7 @@ public class FileoutputUtil {
             ScriptEx_Log = "日志/logs/Log_Script_脚本异常.rtf",
             PacketEx_Log = "日志/logs/Log_Packet_封包异常.rtf" // I cba looking for every error, adding this back in.
                     + "";
+    private static final SimpleDateFormat sdfT = new SimpleDateFormat("yyyy年MM月dd日HH時mm分ss秒");
     // End
     private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private static final SimpleDateFormat sdf_ = new SimpleDateFormat("yyyy-MM-dd");

@@ -3,31 +3,38 @@ package kinms.db;
 import client.MapleCharacter;
 import database.DatabaseConnection;
 import handling.channel.ChannelServer;
+import server.maps.MapleMap;
+import server.maps.MapleMapFactory;
+import tools.MaplePacketCreator;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 
-import server.maps.MapleMap;
-import server.maps.MapleMapFactory;
-import tools.MaplePacketCreator;
-
 public class CherryMSLotteryImpl
         implements CherryMSLottery {
 
     private static CherryMSLotteryImpl instance = null;
+    public boolean jjc;
+    Collection<MapleCharacter> characters = new ArrayList();
     private ChannelServer cserv;
     private MapleMapFactory mapFactory;
-    public boolean jjc;
     private int zjNum;
-    Collection<MapleCharacter> characters = new ArrayList();
     private long alltouzhu;
     private long allpeichu;
 
     private CherryMSLotteryImpl() {
+    }
+
+    private CherryMSLotteryImpl(ChannelServer cserv, MapleMapFactory mapFactory) {
+        this.cserv = cserv;
+        this.mapFactory = mapFactory;
     }
 
     public static CherryMSLotteryImpl getInstance() {
@@ -37,16 +44,18 @@ public class CherryMSLotteryImpl
         return instance;
     }
 
-    private CherryMSLotteryImpl(ChannelServer cserv, MapleMapFactory mapFactory) {
-        this.cserv = cserv;
-        this.mapFactory = mapFactory;
-    }
-
     public static CherryMSLotteryImpl getInstance(ChannelServer cserv, MapleMapFactory mapFactory) {
         if (instance == null) {
             instance = new CherryMSLotteryImpl(cserv, mapFactory);
         }
         return instance;
+    }
+
+    public static int getDatetimemm() {
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("mm");
+        String datetime = sdf.format(date);
+        return Integer.parseInt(datetime);
     }
 
     public ChannelServer getChannelServer() {
@@ -55,13 +64,6 @@ public class CherryMSLotteryImpl
 
     public MapleMapFactory getMapleMapFactory() {
         return this.mapFactory;
-    }
-
-    public static int getDatetimemm() {
-        Date date = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("mm");
-        String datetime = sdf.format(date);
-        return Integer.parseInt(datetime);
     }
 
     public void warp(int map, MapleCharacter c) {

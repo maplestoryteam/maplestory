@@ -20,7 +20,7 @@
  */
 package tools.data.output;
 
-import java.awt.Point;
+import java.awt.*;
 import java.nio.charset.Charset;
 
 /**
@@ -45,20 +45,20 @@ public class GenericLittleEndianWriter implements LittleEndianWriter {
     }
 
     /**
-     * Sets the byte-output stream for this instance of the object.
-     *
-     * @param bos The new output stream to set.
-     */
-    protected void setByteOutputStream(ByteOutputStream bos) {
-        this.bos = bos;
-    }
-
-    /**
      * Class constructor - only this one can be used.
      *
      * @param bos The stream to wrap this objecr around.
      */
     public GenericLittleEndianWriter(ByteOutputStream bos) {
+        this.bos = bos;
+    }
+
+    /**
+     * Sets the byte-output stream for this instance of the object.
+     *
+     * @param bos The new output stream to set.
+     */
+    protected void setByteOutputStream(ByteOutputStream bos) {
         this.bos = bos;
     }
 
