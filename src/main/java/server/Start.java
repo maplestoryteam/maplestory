@@ -24,6 +24,7 @@ import java.util.Map;
 import server.Timer.*;
 import server.events.MapleOxQuizFactory;
 import server.life.MapleLifeFactory;
+import server.maps.MapleMapFactory;
 import server.quest.MapleQuest;
 import tools.FileoutputUtil;
 import tools.StringUtil;
@@ -150,6 +151,8 @@ public class Start {
         } catch (SQLException e) {
             System.out.println("SpeedRunner错误:" + e);
         }
+        //FIXED NPC重启失效
+        MapleMapFactory.loadCustomLife();
         World.registerRespawn();
         LoginServer.setOn();
         System.out.println("\r\n经验倍率:" + Integer.parseInt(ServerProperties.getProperty("ZlhssMS.Exp")) + "  物品倍率：" + Integer.parseInt(ServerProperties.getProperty("ZlhssMS.Drop")) + "  金币倍率" + Integer.parseInt(ServerProperties.getProperty("ZlhssMS.Meso")));
@@ -261,6 +264,8 @@ public class Start {
         } catch (SQLException e) {
             System.out.println("SpeedRunner错误:" + e);
         }
+        //FIXED NPC重启失效
+        MapleMapFactory.loadCustomLife();
         World.registerRespawn();
         LoginServer.setOn();
         System.out.println("\r\n经验倍率:" + Integer.parseInt(ServerProperties.getProperty("ZlhssMS.Exp")) + "  物品倍率：" + Integer.parseInt(ServerProperties.getProperty("ZlhssMS.Drop")) + "  金币倍率" + Integer.parseInt(ServerProperties.getProperty("ZlhssMS.Meso")));
@@ -273,26 +278,23 @@ public class Start {
 
     public static void 自动存档(int time) {
         System.out.println("服务端启用自动存档." + time + "分钟自动存档一次");
-        WorldTimer.getInstance().register(new Runnable() {
-            @Override
-            public void run() {
-                int ppl = 0;
-                try {
-                    for (ChannelServer cserv : ChannelServer.getAllInstances()) {
-                        for (MapleCharacter chr : cserv.getPlayerStorage().getAllCharacters()) {
-                            if (chr == null) {
-                                continue;
-                            }
-                            ppl++;
-                            chr.saveToDB(false, false);
+        WorldTimer.getInstance().register(() -> {
+            int ppl = 0;
+            try {
+                for (ChannelServer cserv : ChannelServer.getAllInstances()) {
+                    for (MapleCharacter chr : cserv.getPlayerStorage().getAllCharacters()) {
+                        if (chr == null) {
+                            continue;
                         }
+                        ppl++;
+                        chr.saveToDB(false, false);
                     }
-                } catch (Exception e) {
-                    System.err.println("自动存档时，获取玩家人数发生异常" + e);
                 }
-                System.out.println("[自动存档] 已经将 " + ppl + " 个玩家保存到数据中.");
-
+            } catch (Exception e) {
+                System.err.println("自动存档时，获取玩家人数发生异常" + e);
             }
+            System.out.println("[自动存档] 已经将 " + ppl + " 个玩家保存到数据中.");
+
         }, 60 * 1000 * time);
     }
 

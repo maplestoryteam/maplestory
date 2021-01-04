@@ -180,7 +180,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
     private long nextConsume = 0, pqStartTime = 0;
     private transient Event_PyramidSubway pyramidSubway = null;
     private transient List<Integer> pendingExpiration = null, pendingSkills = null;
-    private final transient Map<Integer, Integer> movedMobs = new HashMap<Integer, Integer>();
+    private final transient Map<Integer, Integer> movedMobs = new HashMap<>();
     private String teleportname = "";
     private int APQScore;
     private long lasttime = 0L;
@@ -238,25 +238,25 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
             regrocks = new int[5];
             clones = new WeakReference[25];
             for (int i = 0; i < clones.length; i++) {
-                clones[i] = new WeakReference<MapleCharacter>(null);
+                clones[i] = new WeakReference<>(null);
             }
             inst = new AtomicInteger();
             inst.set(0); // 1 = NPC/ Quest, 2 = Duey, 3 = Hired Merch store, 4 = Storage
             keylayout = new MapleKeyLayout();
-            doors = new ArrayList<MapleDoor>();
-            controlled = new LinkedHashSet<MapleMonster>();
-            summons = new LinkedHashMap<Integer, MapleSummon>();
-            visibleMapObjects = new LinkedHashSet<MapleMapObject>();
+            doors = new ArrayList<>();
+            controlled = new LinkedHashSet<>();
+            summons = new LinkedHashMap<>();
+            visibleMapObjects = new LinkedHashSet<>();
             visibleMapObjectsLock = new ReentrantReadWriteLock();
-            pendingCarnivalRequests = new LinkedList<MapleCarnivalChallenge>();
-            linkMid = new HashMap<Integer, Integer>();
+            pendingCarnivalRequests = new LinkedList<>();
+            linkMid = new HashMap<>();
             savedLocations = new int[SavedLocationType.values().length];
             for (int i = 0; i < SavedLocationType.values().length; i++) {
                 savedLocations[i] = -1;
             }
-            questinfo = new LinkedHashMap<Integer, String>();
+            questinfo = new LinkedHashMap<>();
             anticheat = new CheatTracker(this);
-            pets = new ArrayList<MaplePet>();
+            pets = new ArrayList<>();
         }
     }
 
@@ -3756,7 +3756,22 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
         }
     }
 
+    //FIXED 技能宏指令
     public void sendMacros() {
+        boolean packet = false;
+        for (int i = 0; i < 5; i++) {
+            if (skillMacros[i] != null) {
+                packet = true;
+                client.getSession().write(MaplePacketCreator.getMacros(skillMacros));
+                break;
+            }
+        }
+        if (!packet) {
+            client.getSession().write(MaplePacketCreator.getMacros(skillMacros));
+        }
+    }
+
+    public void sendMacros2() {
         for (int i = 0; i < 5; i++) {
             if (skillMacros[i] != null) {
                 client.getSession().write(MaplePacketCreator.getMacros(skillMacros));
@@ -4573,7 +4588,6 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
                 }
             }
         }
-
         return -1;
     }
 

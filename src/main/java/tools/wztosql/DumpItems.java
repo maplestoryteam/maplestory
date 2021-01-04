@@ -18,6 +18,7 @@ import java.util.Set;
 
 public class DumpItems {
 
+    private final MapleDataProvider item, character, string = MapleDataProviderFactory.getDataProvider(new File((System.getProperty("wzpath") != null ? System.getProperty("wzpath") : "") + "wz/String.wz"));
     protected final MapleData cashStringData = string.getData("Cash.img");
     protected final MapleData consumeStringData = string.getData("Consume.img");
     protected final MapleData eqpStringData = string.getData("Eqp.img");
@@ -25,7 +26,6 @@ public class DumpItems {
     protected final MapleData insStringData = string.getData("Ins.img");
     protected final MapleData petStringData = string.getData("Pet.img");
     protected final Set<Integer> doneIds = new LinkedHashSet<>();
-    private final MapleDataProvider item, character, string = MapleDataProviderFactory.getDataProvider(new File((System.getProperty("wzpath") != null ? System.getProperty("wzpath") : "") + "wz/String.wz"));
     private final Connection con = DatabaseConnection.getConnection();
     protected boolean hadError = false;
     protected boolean update = false;

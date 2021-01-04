@@ -1979,7 +1979,8 @@ public final class MapleMap {
         if (chr.getMapId() >= 140090100 && chr.getMapId() <= 140090500 || chr.getJob() == 1000 && chr.getMapId() != 130030000) {
             chr.getClient().getSession().write(MaplePacketCreator.spawnTutorialSummon(1));
         }
-        chr.startMapEffect(chr.getMap().getMapName(), 5120016, 5000);
+        //FIXED 过图显示
+//        chr.startMapEffect(chr.getMap().getMapName(), 5120016, 5000);
         if (!onUserEnter.equals("")) {
             MapScriptMethods.startScript_User(chr.getClient(), onUserEnter);
             //  MapScriptManager.getInstance().getMapScript(chr.getClient(), onUserEnter, false);
@@ -3115,13 +3116,26 @@ public final class MapleMap {
         }
     }
 
-    private interface DelayedPacketCreation {
+    public void respawn2(final boolean force) {
+        respawned = true;
+        lastSpawnTime = System.currentTimeMillis();
+        final int numShouldSpawn = maxRegularSpawn - spawnedMonstersOnMap.get();
+        if (numShouldSpawn > 0 && monsterSpawn.size() > 0) {
+            final List<Spawns> randomSpawn = new ArrayList<>(monsterSpawn);
+            Collections.shuffle(randomSpawn);
+            for (Spawns spawnPoint : randomSpawn) {
+                if (spawnPoint.shouldSpawn() || GameConstants.isForceRespawn(mapid)) {
+                    spawnPoint.spawnMonster(this);
+                }
+            }
+        }
+    }
 
+    private interface DelayedPacketCreation {
         void sendPackets(MapleClient c);
     }
 
     private interface SpawnCondition {
-
         boolean canSpawn(MapleCharacter chr);
     }
 
@@ -3565,11 +3579,15 @@ public final class MapleMap {
         return nodes.getSkillIds();
     }
 
+    public final boolean canSpawn2() {
+        return lastSpawnTime > 0 && isSpawns && lastSpawnTime + createMobInterval < System.currentTimeMillis();
+    }
+
     public final boolean canSpawn() {
-        //1、第一次的時候 刷怪时间为1s
-        //2、其他时候 刷新时间为9s
+//        1、第一次的時候 刷怪时间为1s
+//        2、其他时候 刷新时间为9s
         if (!respawned) {
-            //说明此地图还没有刷过怪，使用第一次的间隔时间刷怪
+//            说明此地图还没有刷过怪，使用第一次的间隔时间刷怪
             return lastSpawnTime + firstCreateMobInterval < System.currentTimeMillis();
         }
         return lastSpawnTime > 0 && isSpawns && lastSpawnTime + createMobInterval < System.currentTimeMillis();
