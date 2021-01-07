@@ -37,6 +37,8 @@ import server.MapleStatEffect;
 import server.Randomizer;
 import server.maps.MapleMapObjectType;
 
+//FIXED Note
+//1013 <-> 1017 骑宠技能调换
 public class GameConstants {
 
     public static final String[] stats = {"tuc", "reqLevel", "reqJob", "reqSTR", "reqDEX", "reqINT", "reqLUK", "reqPOP", "cash", "cursed", "success", "setItemID", "equipTradeBlock", "durability", "randOption", "randStat", "masterLevel", "reqSkillLevel", "elemDefault", "incRMAS", "incRMAF", "incRMAI", "incRMAL", "canLevel", "skill", "charmEXP"};
@@ -1494,7 +1496,7 @@ public class GameConstants {
             case 35001002:
             case 35120000:
                 return 1932016;
-            case 1013:
+            case 1017:
             case 10001013:
             case 20001013:
             case 20011013:
@@ -1521,7 +1523,7 @@ public class GameConstants {
             case 20001016:
             case 20011016:
             case 30001016:
-            case 1017:
+            case 1013:
             case 1007:
             case 10001017:
             case 20001017:

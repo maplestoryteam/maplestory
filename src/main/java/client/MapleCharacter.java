@@ -146,7 +146,6 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
     private transient Map<Integer, MapleSummon> summons;
     private final transient Map<Integer, MapleCoolDownValueHolder> coolDowns = new LinkedHashMap<>();
     private final transient Map<MapleDisease, MapleDiseaseValueHolder> diseases = new ConcurrentEnumMap<>(MapleDisease.class);
-    private final List<MapleDisease> diseases2 = new ArrayList();
     private CashShop cs;
     private transient Deque<MapleCarnivalChallenge> pendingCarnivalRequests;
     private transient MapleCarnivalParty carnivalParty;
@@ -186,9 +185,6 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
     private long lasttime = 0L;
     private long currenttime = 0L;
     private long deadtime = 1000L;
-    private MapleCharacter chars;
-    private final long nengl = 0;
-    private final long nengls = 0;
     private static final String[] ariantroomleader = new String[3]; // AriantPQ
     private static final int[] ariantroomslot = new int[3]; // AriantPQ
     public int apprentice = 0, master = 0; // apprentice ID for master
@@ -1083,7 +1079,9 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
             con.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
             con.setAutoCommit(false);
 
-            ps = con.prepareStatement("UPDATE characters SET level = ?, fame = ?, str = ?, dex = ?, luk = ?, `int` = ?, exp = ?, hp = ?, mp = ?, maxhp = ?, maxmp = ?, sp = ?, ap = ?, gm = ?, skincolor = ?, gender = ?, job = ?, hair = ?, face = ?, map = ?, meso = ?, hpApUsed = ?, spawnpoint = ?, party = ?, buddyCapacity = ?, monsterbookcover = ?, dojo_pts = ?, dojoRecord = ?, pets = ?, subcategory = ?, marriageId = ?, currentrep = ?, totalrep = ?, charmessage = ?, expression = ?, constellation = ?, blood = ?, month = ?, day = ?, beans = ?, prefix = ?, skillzq = ?, bosslog = ?, grname = ?,djjl = ?, qiandao = ?, jzname = ?, mrfbrw = ?, mrsjrw = ?, mrsgrw = ?, mrsbossrw = ?, hythd = ?, mrsgrwa = ?, mrfbrwa = ?, mrsbossrwa = ?, mrsgrws = ?,  mrsbossrws = ?, mrfbrws = ?, mrsgrwas = ?,  mrsbossrwas = ?, mrfbrwas = ?, ddj = ?, vip = ?, sg = ?, name = ? WHERE id = ?", DatabaseConnection.RETURN_GENERATED_KEYS);
+            //FIXED 骑宠存档
+            ps = con.prepareStatement("UPDATE characters SET level = ?, fame = ?, str = ?, dex = ?, luk = ?, `int` = ?, exp = ?, hp = ?, mp = ?, maxhp = ?, maxmp = ?, sp = ?, ap = ?, gm = ?, skincolor = ?, gender = ?, job = ?, hair = ?, face = ?, map = ?, meso = ?, hpApUsed = ?, spawnpoint = ?, party = ?, buddyCapacity = ?, monsterbookcover = ?, dojo_pts = ?, dojoRecord = ?, pets = ?, subcategory = ?, marriageId = ?, currentrep = ?, totalrep = ?, charmessage = ?, expression = ?, constellation = ?, blood = ?, month = ?, day = ?, beans = ?, prefix = ?, skillzq = ?, bosslog = ?, grname = ?,djjl = ?, qiandao = ?, jzname = ?, mrfbrw = ?, mrsjrw = ?, mrsgrw = ?, mrsbossrw = ?, hythd = ?, mrsgrwa = ?, mrfbrwa = ?, mrsbossrwa = ?, mrsgrws = ?,  mrsbossrws = ?, mrfbrws = ?, mrsgrwas = ?,  mrsbossrwas = ?, mrfbrwas = ?, ddj = ?, vip = ?, sg = ?, name = ?, mountid = ? WHERE id = ?", DatabaseConnection.RETURN_GENERATED_KEYS);
+            ps.setInt(1, mount_id);
             ps.setInt(1, level);
             ps.setShort(2, fame);
             ps.setShort(3, stats.getStr());
@@ -1184,7 +1182,8 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
             ps.setInt(63, vip);
             ps.setInt(64, sg);
             ps.setString(65, name);
-            ps.setInt(66, id);
+            ps.setInt(66, mount_id);
+            ps.setInt(67, id);
 
             if (ps.executeUpdate() < 1) {
                 ps.close();
@@ -4713,7 +4712,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
     }
 
     public void addCooldown(int skillId, long startTime, long length) {
-        coolDowns.put(Integer.valueOf(skillId), new MapleCoolDownValueHolder(skillId, startTime, length));
+        coolDowns.put(skillId, new MapleCoolDownValueHolder(skillId, startTime, length));
     }
 
     public void removeCooldown(int skillId) {
@@ -4812,7 +4811,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
 
     //怪物给玩家上BUFF
     public void giveDebuff(final MapleDisease disease, int x, long duration, int skillid, int level) {
-        final List<Pair<MapleDisease, Integer>> debuff = Collections.singletonList(new Pair<MapleDisease, Integer>(disease, Integer.valueOf(x)));
+        final List<Pair<MapleDisease, Integer>> debuff = Collections.singletonList(new Pair<>(disease, x));
 
         if (!hasDisease(disease) && diseases.size() < 2) {
             if (!(disease == MapleDisease.SEDUCE || disease == MapleDisease.STUN)) {

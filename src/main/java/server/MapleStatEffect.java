@@ -108,7 +108,7 @@ public class MapleStatEffect implements Serializable {
             ret.duration *= 1000; // items have their times stored in ms, of course
             ret.overTime = overTime || ret.isMorph() || ret.isPirateMorph() || ret.isFinalAttack();
         }
-        final ArrayList<Pair<MapleBuffStat, Integer>> statups = new ArrayList<Pair<MapleBuffStat, Integer>>();
+        final ArrayList<Pair<MapleBuffStat, Integer>> statups = new ArrayList<>();
 
         ret.mastery = (byte) MapleDataTool.getInt("mastery", source, 0);
         ret.watk = (short) MapleDataTool.getInt("pad", source, 0);
@@ -133,7 +133,7 @@ public class MapleStatEffect implements Serializable {
         ret.booster = MapleDataTool.getInt("booster", source, 0);
         ret.illusion = MapleDataTool.getInt("illusion", source, 0);
 
-        List<MapleDisease> cure = new ArrayList<MapleDisease>(5);
+        List<MapleDisease> cure = new ArrayList<>(5);
         if (MapleDataTool.getInt("poison", source, 0) > 0) {
             cure.add(MapleDisease.POISON);
         }
@@ -1277,7 +1277,7 @@ public class MapleStatEffect implements Serializable {
                     localDuration = 2100000000;
                     int mountid = parseMountInfo(applyto, sourceid);
                     int mountid2 = parseMountInfo_Pure(applyto, sourceid);
-                    if (sourceid == 1013 && applyto.getMountId() != 0) {
+                    if (sourceid == 1017 && applyto.getMountId() != 0) {
                         mountid = applyto.getMountId();
                         mountid2 = applyto.getMountId();
                     }
@@ -1994,12 +1994,12 @@ public class MapleStatEffect implements Serializable {
     }
 
     public final boolean isMonsterS() {
-        return skill && sourceid == 1017 || sourceid == 20001019 || sourceid == 10001019;
+        return skill && sourceid == 1013 || sourceid == 20001019 || sourceid == 10001019;
     }
 
     public static final int parseMountInfoA(final MapleCharacter player, final int skillid, int s) {
         switch (skillid) {
-            case 1017: // Monster riding
+            case 1013: // Monster riding
             case 10001019:
             case 20001019:
                 return GameConstants.getMountS(s);

@@ -151,8 +151,8 @@ public class MobSkill {
 
     public void applyEffect(MapleCharacter player, MapleMonster monster, boolean skill) {
         MapleDisease disease = null;
-        Map<MonsterStatus, Integer> stats = new EnumMap<MonsterStatus, Integer>(MonsterStatus.class);
-        List<Integer> reflection = new LinkedList<Integer>();
+        Map<MonsterStatus, Integer> stats = new EnumMap<>(MonsterStatus.class);
+        List<Integer> reflection = new LinkedList<>();
 
         switch (skillId) {
             case 100:

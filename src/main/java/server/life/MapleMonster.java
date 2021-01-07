@@ -76,20 +76,20 @@ public class MapleMonster extends AbstractLoadedMapleLife {
     private int mp;
     private byte venom_counter, carnivalTeam;
     private MapleMap map;
-    private WeakReference<MapleMonster> sponge = new WeakReference<MapleMonster>(null);
+    private WeakReference<MapleMonster> sponge = new WeakReference<>(null);
     private int linkoid = 0, lastNode = -1, lastNodeController = -1, highestDamageChar = 0; // Just a reference for monster EXP distribution after dead
-    private WeakReference<MapleCharacter> controller = new WeakReference<MapleCharacter>(null);
+    private WeakReference<MapleCharacter> controller = new WeakReference<>(null);
     private boolean fake, dropsDisabled, controllerHasAggro, controllerKnowsAboutAggro;
-    private final Collection<AttackerEntry> attackers = new LinkedList<AttackerEntry>();
+    private final Collection<AttackerEntry> attackers = new LinkedList<>();
     private EventInstanceManager eventInstance;
     private MonsterListener listener = null;
     private MaplePacket reflectpack = null, nodepack = null;
-    private final Map<MonsterStatus, MonsterStatusEffect> stati = new ConcurrentEnumMap<MonsterStatus, MonsterStatusEffect>(MonsterStatus.class);
+    private final Map<MonsterStatus, MonsterStatusEffect> stati = new ConcurrentEnumMap<>(MonsterStatus.class);
     private Map<Integer, Long> usedSkills;
     private int stolen = -1; //monster can only be stolen ONCE
     private ScheduledFuture<?> dropItemSchedule;
     private boolean shouldDropItem = false;
-    private final LinkedList<MonsterStatusEffect> poisons = new LinkedList<MonsterStatusEffect>();
+    private final LinkedList<MonsterStatusEffect> poisons = new LinkedList<>();
     private final ReentrantReadWriteLock poisonsLock = new ReentrantReadWriteLock();
 
     public MapleMonster(final int id, final MapleMonsterStats stats) {
@@ -1153,17 +1153,13 @@ public class MapleMonster extends AbstractLoadedMapleLife {
 
     public final void applyMonsterBuff(final Map<MonsterStatus, Integer> effect, final int skillId, final long duration, final MobSkill skill, final List<Integer> reflection) {
         MobTimer timerManager = MobTimer.getInstance();
-        final Runnable cancelTask = new Runnable() {
-
-            @Override
-            public final void run() {
-                if (reflection.size() > 0) {
-                    MapleMonster.this.reflectpack = null;
-                }
-                if (isAlive()) {
-                    for (MonsterStatus z : effect.keySet()) {
-                        cancelStatus(z);
-                    }
+        final Runnable cancelTask = () -> {
+            if (reflection.size() > 0) {
+                MapleMonster.this.reflectpack = null;
+            }
+            if (isAlive()) {
+                for (MonsterStatus z : effect.keySet()) {
+                    cancelStatus(z);
                 }
             }
         };
@@ -1190,12 +1186,7 @@ public class MapleMonster extends AbstractLoadedMapleLife {
 
     public final void setTempEffectiveness(final Element e, final long milli) {
         stats.setEffectiveness(e, ElementalEffectiveness.虚弱);
-        MobTimer.getInstance().schedule(new Runnable() {
-
-            public void run() {
-                stats.removeEffectiveness(e);
-            }
-        }, milli);
+        MobTimer.getInstance().schedule(() -> stats.removeEffectiveness(e), milli);
     }
 
     public final boolean isBuffed(final MonsterStatus status) {
