@@ -373,15 +373,15 @@ public class CharLoginHandler {
                 newchar.setQuestAdd(MapleQuest.getInstance(20015), (byte) 1, null); //
                 newchar.setQuestAdd(MapleQuest.getInstance(20020), (byte) 1, null); //
                 //获取背包其他栏，往其他栏(ETC)写入道具数据
-                newchar.getInventory(MapleInventoryType.ETC).addItem(new Item(4161047, (byte) 0, (short) 1, (byte) 0));// - 初心者指南 - 是为初心者准备的指南。 \n#c双击道具可以翻开书本。#
+//                newchar.getInventory(MapleInventoryType.ETC).addItem(new Item(4161047, (byte) 0, (short) 1, (byte) 0));// - 初心者指南 - 是为初心者准备的指南。 \n#c双击道具可以翻开书本。#
                 break;
             case 1: // 冒险家
                 //获取背包其他栏，往其他栏(ETC)写入道具数据
-                newchar.getInventory(MapleInventoryType.ETC).addItem(new Item(4161001, (byte) 0, (short) 1, (byte) 0));// - 新手指南 - 注入神秘星星精神的石头。拥有与护身符相同的效果，角色死亡时不会掉落经验值的功效。\n于有效期限可使用一次。
+//                newchar.getInventory(MapleInventoryType.ETC).addItem(new Item(4161001, (byte) 0, (short) 1, (byte) 0));// - 新手指南 - 注入神秘星星精神的石头。拥有与护身符相同的效果，角色死亡时不会掉落经验值的功效。\n于有效期限可使用一次。
                 break;
             case 2: // 战神
                 //获取背包其他栏，往其他栏(ETC)写入道具数据
-                newchar.getInventory(MapleInventoryType.ETC).addItem(new Item(4161048, (byte) 0, (short) 1, (byte) 0));//- 战童指南 - 战童专用指南。\n#c双击道具，可以把书打开。#
+//                newchar.getInventory(MapleInventoryType.ETC).addItem(new Item(4161048, (byte) 0, (short) 1, (byte) 0));//- 战童指南 - 战童专用指南。\n#c双击道具，可以把书打开。#
                 break;
         }
         newchar.getInventory(MapleInventoryType.USE).addItem(new Item(2022336, (byte) 0, (short) 1, (byte) 0));//5530000//- 秘密箱子 - 新手礼包

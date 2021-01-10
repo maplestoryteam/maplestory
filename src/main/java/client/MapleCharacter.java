@@ -1000,10 +1000,10 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
             ps.execute();
             ps.close();
 
-            List<Pair<IItem, MapleInventoryType>> listing = new ArrayList<Pair<IItem, MapleInventoryType>>();
+            List<Pair<IItem, MapleInventoryType>> listing = new ArrayList<>();
             for (final MapleInventory iv : chr.inventory) {
                 for (final IItem item : iv.list()) {
-                    listing.add(new Pair<IItem, MapleInventoryType>(item, iv.getType()));
+                    listing.add(new Pair<>(item, iv.getType()));
                 }
             }
             ItemLoader.INVENTORY.saveItems(listing, con, chr.id);

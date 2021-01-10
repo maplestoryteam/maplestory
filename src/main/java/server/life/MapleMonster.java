@@ -695,13 +695,13 @@ public class MapleMonster extends AbstractLoadedMapleLife {
         sb.append(stats.getName());
         sb.append("(");
         sb.append(getId());
-        sb.append(") (等級 ");
+        sb.append(") (等级 ");
         sb.append(stats.getLevel());
         sb.append(") 在 (X");
         sb.append(getPosition().x);
         sb.append("/ Y");
         sb.append(getPosition().y);
-        sb.append(") 座標 ");
+        sb.append(") 坐标 ");
         sb.append(getHp());
         sb.append("/ ");
         sb.append(getMobMaxHp());
@@ -709,11 +709,11 @@ public class MapleMonster extends AbstractLoadedMapleLife {
         sb.append(getMp());
         sb.append("/ ");
         sb.append(getMobMaxMp());
-        sb.append(" 魔力, 反應堆: ");
+        sb.append(" 魔力, 反应堆: ");
         sb.append(getObjectId());
-        sb.append(" || 仇恨目標 : ");
+        sb.append(" || 仇恨目标 : ");
         final MapleCharacter chr = controller.get();
-        sb.append(chr != null ? chr.getName() : "無");
+        sb.append(chr != null ? chr.getName() : "无");
 
         return sb.toString();
     }

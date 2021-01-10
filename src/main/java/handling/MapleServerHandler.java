@@ -602,7 +602,6 @@ public class MapleServerHandler extends IoHandlerAdapter implements MapleServerH
             case USE_ITEMEFFECT:
                 //case WHEEL_OF_FORTUNE:
                 PlayerHandler.UseItemEffect(slea, c, c.getPlayer());
-                // PlayerHandler.UseItemEffect(slea.readInt(), c, c.getPlayer());
                 break;
             case WHEEL_OF_FORTUNE:
                 System.out.println("WHEEL_OF_FORTUNE啊啊啊");

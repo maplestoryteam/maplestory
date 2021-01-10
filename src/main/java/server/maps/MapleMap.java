@@ -482,6 +482,12 @@ public final class MapleMap {
             if (de.itemId == mob.getStolen()) {
                 continue;
             }
+
+            // FIXED 除了BOSS以外都不爆金币
+            if (!mob.getStats().isBoss() && de.itemId == 0) {
+                continue;
+            }
+
             int Rand = Randomizer.nextInt(999999);
             int part1 = de.chance;
             int part2 = chServerrate;
@@ -520,17 +526,18 @@ public final class MapleMap {
             }
         }
 
-        double mesoDecrease = Math.pow(0.93, mob.getStats().getExp() / 350.0);
-        if (mesoDecrease > 1.0) {
-            mesoDecrease = 1.0;
-        }
-        int tempmeso = Math.min(30000, (int) (mesoDecrease * (mob.getStats().getExp()) * (1.0 + Math.random() * 5) / 10.0));
-        if (tempmeso > 0) {
-            pos.x = Math.min(Math.max(mobpos - 25 * (d / 2), footholds.getMinDropX() + 25), footholds.getMaxDropX() - d * 25);
-            spawnMobMesoDrop((int) (tempmeso * (chr.getStat().mesoBuff / 100.0) * chr.getDropMod() * cmServerrate), calcDropPos(pos, mob.getPosition()), mob, chr, false, droptype);
-        }
+        // FIXED 除了BOSS以外都不爆金币
+//        double mesoDecrease = Math.pow(0.93, mob.getStats().getExp() / 350.0);
+//        if (mesoDecrease > 1.0) {
+//            mesoDecrease = 1.0;
+//        }
+//        int tempmeso = Math.min(30000, (int) (mesoDecrease * (mob.getStats().getExp()) * (1.0 + Math.random() * 5) / 10.0));
+//        if (tempmeso > 0) {
+//            pos.x = Math.min(Math.max(mobpos - 25 * (d / 2), footholds.getMinDropX() + 25), footholds.getMaxDropX() - d * 25);
+//            spawnMobMesoDrop((int) (tempmeso * (chr.getStat().mesoBuff / 100.0) * chr.getDropMod() * cmServerrate), calcDropPos(pos, mob.getPosition()), mob, chr, false, droptype);
+//        }
 
-        final List<MonsterGlobalDropEntry> globalEntry = new ArrayList<MonsterGlobalDropEntry>(mi.getGlobalDrop());
+        final List<MonsterGlobalDropEntry> globalEntry = new ArrayList<>(mi.getGlobalDrop());
         Collections.shuffle(globalEntry);
         final int cashz = (mob.getStats().isBoss() && mob.getStats().getHPDisplayType() == 0 ? 20 : 1) * caServerrate;
         final int cashModifier = (int) ((mob.getStats().isBoss() ? 0 : (mob.getMobExp() / 1000 + mob.getMobMaxHp() / 10000))); //no rate
@@ -580,13 +587,9 @@ public final class MapleMap {
 
     public final void killMonster(final MapleMonster monster, final MapleCharacter chr, final boolean withDrops, final boolean second, byte animation, final int lastSkill) {
         if ((monster.getId() == 8810122 || monster.getId() == 8810018) && !second) {
-            MapTimer.getInstance().schedule(new Runnable() {
-
-                @Override
-                public void run() {
-                    killMonster(monster, chr, true, true, (byte) 1);
-                    killAllMonsters(true);
-                }
+            MapTimer.getInstance().schedule(() -> {
+                killMonster(monster, chr, true, true, (byte) 1);
+                killAllMonsters(true);
             }, 3000);
             return;
         }
@@ -824,7 +827,7 @@ public final class MapleMap {
             }
         }
         if (withDrops) {
-            MapleCharacter drop = null;
+            MapleCharacter drop;
             if (dropOwner <= 0) {
                 drop = chr;
             } else {
@@ -1652,13 +1655,7 @@ public final class MapleMap {
     public final void spawnMobMesoDrop(final int meso, final Point position, final MapleMapObject dropper, final MapleCharacter owner, final boolean playerDrop, final byte droptype) {
         final MapleMapItem mdrop = new MapleMapItem(meso, position, dropper, owner, droptype, playerDrop);
 
-        spawnAndAddRangedMapObject(mdrop, new DelayedPacketCreation() {
-
-            @Override
-            public void sendPackets(MapleClient c) {
-                c.getSession().write(MaplePacketCreator.dropItemFromMapObject(mdrop, dropper.getPosition(), position, (byte) 1));
-            }
-        }, null);
+        spawnAndAddRangedMapObject(mdrop, c -> c.getSession().write(MaplePacketCreator.dropItemFromMapObject(mdrop, dropper.getPosition(), position, (byte) 1)), null);
 
         mdrop.registerExpire(120000);
         if (droptype == 0 || droptype == 1) {
@@ -1669,13 +1666,9 @@ public final class MapleMap {
     public final void spawnMobDrop(final IItem idrop, final Point dropPos, final MapleMonster mob, final MapleCharacter chr, final byte droptype, final short questid) {
         final MapleMapItem mdrop = new MapleMapItem(idrop, dropPos, mob, chr, droptype, false, questid);
 
-        spawnAndAddRangedMapObject(mdrop, new DelayedPacketCreation() {
-
-            @Override
-            public void sendPackets(MapleClient c) {
-                if (questid <= 0 || c.getPlayer().getQuestStatus(questid) == 1) {
-                    c.getSession().write(MaplePacketCreator.dropItemFromMapObject(mdrop, mob.getPosition(), dropPos, (byte) 1));
-                }
+        spawnAndAddRangedMapObject(mdrop, c -> {
+            if (questid <= 0 || c.getPlayer().getQuestStatus(questid) == 1) {
+                c.getSession().write(MaplePacketCreator.dropItemFromMapObject(mdrop, mob.getPosition(), dropPos, (byte) 1));
             }
         }, null);
 //	broadcastMessage(MaplePacketCreator.dropItemFromMapObject(mdrop, mob.getPosition(), dropPos, (byte) 0));

@@ -35,7 +35,7 @@ public class MapleMapItem extends AbstractMapleMapObject {
 
     protected IItem item;
     protected MapleMapObject dropper;
-    protected int character_ownerid, meso = 0, questid = -1;
+    protected int character_owner, meso = 0, questid = -1;
     protected byte type;
     protected boolean pickedUp = false, playerDrop, randDrop = false;
     protected long nextExpiry = 0, nextFFA = 0;
@@ -45,7 +45,7 @@ public class MapleMapItem extends AbstractMapleMapObject {
         setPosition(position);
         this.item = item;
         this.dropper = dropper;
-        this.character_ownerid = owner.getId();
+        this.character_owner = owner.getId();
         this.type = type;
         this.playerDrop = playerDrop;
     }
@@ -54,7 +54,7 @@ public class MapleMapItem extends AbstractMapleMapObject {
         setPosition(position);
         this.item = item;
         this.dropper = dropper;
-        this.character_ownerid = owner.getId();
+        this.character_owner = owner.getId();
         this.type = type;
         this.playerDrop = playerDrop;
         this.questid = questid;
@@ -64,7 +64,7 @@ public class MapleMapItem extends AbstractMapleMapObject {
         setPosition(position);
         this.item = null;
         this.dropper = dropper;
-        this.character_ownerid = owner.getId();
+        this.character_owner = owner.getId();
         this.meso = meso;
         this.type = type;
         this.playerDrop = playerDrop;
@@ -73,7 +73,7 @@ public class MapleMapItem extends AbstractMapleMapObject {
     public MapleMapItem(Point position, IItem item) {
         setPosition(position);
         this.item = item;
-        this.character_ownerid = 0;
+        this.character_owner = 0;
         this.type = 2;
         this.playerDrop = false;
         this.randDrop = true;
@@ -103,7 +103,7 @@ public class MapleMapItem extends AbstractMapleMapObject {
     }
 
     public final int getOwner() {
-        return character_ownerid;
+        return character_owner;
     }
 
     public final int getMeso() {

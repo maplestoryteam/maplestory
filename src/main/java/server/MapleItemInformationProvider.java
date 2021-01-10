@@ -669,8 +669,9 @@ public class MapleItemInformationProvider {
             }
         }
 
-        if (GameConstants.isThrowingStar(itemId)) {
+        if (GameConstants.isThrowingStar(itemId) || GameConstants.isBullet(itemId)) {
             //镖 上限给1800
+            //子弹 上限给1800
             ret = 1800;
         }
 
@@ -1264,7 +1265,7 @@ public class MapleItemInformationProvider {
     }
 
     public final MapleStatEffect getItemEffect(final int itemId) {
-        MapleStatEffect ret = itemEffects.get(Integer.valueOf(itemId));
+        MapleStatEffect ret = itemEffects.get(itemId);
         if (ret == null) {
             final MapleData item = getItemData(itemId);
             if (item == null) {
