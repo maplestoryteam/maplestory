@@ -8,7 +8,7 @@ import java.util.Properties;
 
 public class DatabaseConnection {
 
-    private static final HashMap<Integer, ConWrapper> connections = new HashMap<Integer, ConWrapper>();
+    private static final HashMap<Integer, ConWrapper> connections = new HashMap<>();
     private static String dbDriver;
     private static String dbUrl;
     private static String dbUser;

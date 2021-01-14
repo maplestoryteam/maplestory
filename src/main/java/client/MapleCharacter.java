@@ -37,6 +37,8 @@ import constants.GameConstants;
 import constants.ServerConstants;
 import database.DatabaseConnection;
 import database.DatabaseException;
+import exts.FishExt;
+import exts.FishReward;
 import handling.MaplePacket;
 import handling.channel.ChannelServer;
 import handling.login.LoginServer;
@@ -984,11 +986,11 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
 
             ps = con.prepareStatement("INSERT INTO inventoryslot (characterid, `equip`, `use`, `setup`, `etc`, `cash`) VALUES (?, ?, ?, ?, ?, ?)");
             ps.setInt(1, chr.id);
-            ps.setByte(2, (byte) 32); // Eq
-            ps.setByte(3, (byte) 32); // Use
-            ps.setByte(4, (byte) 32); // Setup
-            ps.setByte(5, (byte) 32); // ETC
-            ps.setByte(6, (byte) 60); // Cash
+            ps.setByte(2, (byte) 24); // Eq
+            ps.setByte(3, (byte) 24); // Use
+            ps.setByte(4, (byte) 24); // Setup
+            ps.setByte(5, (byte) 24); // ETC
+            ps.setByte(6, (byte) 24); // Cash
             ps.execute();
             ps.close();
 
@@ -1632,32 +1634,21 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
         if (dragonBloodSchedule != null) {
             dragonBloodSchedule.cancel(false);
         }
-        dragonBloodSchedule = BuffTimer.getInstance().register(new Runnable() {
-
-            @Override
-            public void run() {
-                if (stats.getHp() - bloodEffect.getX() > 1) {
-                    cancelBuffStats(MapleBuffStat.DRAGONBLOOD);
-                } else {
-                    addHP(-bloodEffect.getX());
-                    client.getSession().write(MaplePacketCreator.showOwnBuffEffect(bloodEffect.getSourceId(), 5));
-                    map.broadcastMessage(MapleCharacter.this, MaplePacketCreator.showBuffeffect(getId(), bloodEffect.getSourceId(), 5), false);
-                }
+        dragonBloodSchedule = BuffTimer.getInstance().register(() -> {
+            if (stats.getHp() - bloodEffect.getX() > 1) {
+                cancelBuffStats(MapleBuffStat.DRAGONBLOOD);
+            } else {
+                addHP(-bloodEffect.getX());
+                client.getSession().write(MaplePacketCreator.showOwnBuffEffect(bloodEffect.getSourceId(), 5));
+                map.broadcastMessage(MapleCharacter.this, MaplePacketCreator.showBuffeffect(getId(), bloodEffect.getSourceId(), 5), false);
             }
         }, 4000, 4000);
     }
 
     public void startMapTimeLimitTask(int time, final MapleMap to) {
         client.getSession().write(MaplePacketCreator.getClock(time));
-
         time *= 1000;
-        mapTimeLimitTask = MapTimer.getInstance().register(new Runnable() {
-
-            @Override
-            public void run() {
-                changeMap(to, to.getPortal(0));
-            }
-        }, time, time);
+        mapTimeLimitTask = MapTimer.getInstance().register(() -> changeMap(to, to.getPortal(0)), time, time);
     }
 
     public int fishTasking = 0;
@@ -1678,60 +1669,69 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
         final int time = GameConstants.getFishingTime(VIP, isGM());
         cancelFishingTask();
 
-        fishing = EtcTimer.getInstance().register(new Runnable() { //no real reason for clone.
-
-            @Override
-            public void run() {
-                final boolean expMulti = haveItem(2300001, 1, false, true);
-                if (!expMulti && !haveItem(2300000, 1, false, true)) {
-                    cancelFishingTask();
-                    dropMessage(5, "您的鱼饵已经用光了。");
-                    getClient().getSession().write(MaplePacketCreator.sendHint("没有鱼饵无法钓鱼\r\n", 200, 200));
-                    return;
-                }
-                MapleInventoryManipulator.removeById(client, MapleInventoryType.USE, expMulti ? 2300001 : 2300000, 1, false, false);
-
-                final int randval = RandomRewards.getInstance().getFishingReward();
-
-                switch (randval) {
-                    case 0: // Meso
-                        final int money = Randomizer.rand(expMulti ? 15 : 10, expMulti ? 75000 : 50000);
-                        gainMeso(money, true);
-                        client.getSession().write(UIPacket.fishingUpdate((byte) 1, money));
-                        if (getItemQuantity(5340001, true) == 1) {
-                            dropMessage(5, "使用高级鱼竿钓鱼。\r\n获得金币：" + money);
-                            getClient().getSession().write(MaplePacketCreator.sendHint("使用高级鱼竿钓鱼。\r\n获得金币：" + money, 200, 200));
-                        } else if (getItemQuantity(5340000, true) == 1) {
-                            dropMessage(5, "使用普通鱼竿钓鱼。\r\n获得金币：" + money);
-                            getClient().getSession().write(MaplePacketCreator.sendHint("使用普通鱼竿钓鱼。\r\n获得金币：" + money, 200, 200));
-                        }
-                        break;
-                    case 1: // EXP
-                        final int experi = Randomizer.nextInt(Math.abs(GameConstants.getExpNeededForLevel(level) / 600) + 1);
-                        gainExp(expMulti ? (experi * 3 / 2) : experi, true, false, true);
-                        client.getSession().write(UIPacket.fishingUpdate((byte) 2, experi));
-                        if (getItemQuantity(5340001, true) == 1) {
-                            dropMessage(5, "使用高级鱼竿钓鱼。\r\n获得经验：" + experi);
-                            getClient().getSession().write(MaplePacketCreator.sendHint("使用高级鱼竿钓鱼。\r\n获得经验：" + experi, 200, 200));
-                        } else if (getItemQuantity(5340000, true) == 1) {
-                            dropMessage(5, "使用普通鱼竿钓鱼。\r\n获得经验：" + experi);
-                            getClient().getSession().write(MaplePacketCreator.sendHint("使用普通鱼竿钓鱼。\r\n获得经验：" + experi, 200, 200));
-                        }
-                        break;
-                    default:
-                        if (getItemQuantity(5340001, true) == 1) {
-                            dropMessage(5, "使用高级鱼竿钓鱼。\r\n获得经验：" + randval);
-                            getClient().getSession().write(MaplePacketCreator.sendHint("使用高级鱼竿钓鱼。\r\n获得经验：" + randval, 200, 200));
-                        } else if (getItemQuantity(5340000, true) == 1) {
-                            dropMessage(5, "使用普通鱼竿钓鱼。\r\n获得经验：" + randval);
-                            getClient().getSession().write(MaplePacketCreator.sendHint("使用普通鱼竿钓鱼。\r\n获得经验：" + randval, 200, 200));
-                        }
-                        MapleInventoryManipulator.addById(client, randval, (short) 1, (byte) 0);
-                        client.getSession().write(UIPacket.fishingUpdate((byte) 0, randval));
-                        break;
-                }
-                map.broadcastMessage(UIPacket.fishingCaught(id));
+        //no real reason for clone.
+//        fishing =
+        EtcTimer.getInstance().register(() -> {
+            final boolean expMulti = haveItem(2300001, 1, false, true);
+            if (!expMulti && !haveItem(2300000, 1, false, true)) {
+                cancelFishingTask();
+                dropMessage(5, "您的鱼饵已经用光了。");
+                getClient().getSession().write(MaplePacketCreator.sendHint("没有鱼饵无法钓鱼\r\n", 200, 200));
+                return;
             }
+            MapleInventoryManipulator.removeById(client, MapleInventoryType.USE, expMulti ? 2300001 : 2300000, 1, false, false);
+
+//            final int randval = RandomRewards.getInstance().getFishingReward();
+            final int randval = 3;
+            switch (randval) {
+                // 从数据库读取钓鱼物品
+                case 3:
+                    FishExt.refreshFishRewareds();
+                    FishReward fishReward = FishExt.randomItem();
+                    if (null == fishReward) {
+                        dropMessage(5, "服务器缺少钓鱼奖励物品。");
+                        break;
+                    }
+                    dropMessage(5, "恭喜您获得" + fishReward.getCount() + "个" + fishReward.getItemName() + "。");
+                    gainItem(fishReward.getItemId(), fishReward.getCount());
+                    break;
+                case 0: // Meso
+                    final int money = Randomizer.rand(expMulti ? 15 : 10, expMulti ? 75000 : 50000);
+                    gainMeso(money, true);
+                    client.getSession().write(UIPacket.fishingUpdate((byte) 1, money));
+                    if (getItemQuantity(5340001, true) == 1) {
+                        dropMessage(5, "使用高级鱼竿钓鱼。\r\n获得金币：" + money);
+                        getClient().getSession().write(MaplePacketCreator.sendHint("使用高级鱼竿钓鱼。\r\n获得金币：" + money, 200, 200));
+                    } else if (getItemQuantity(5340000, true) == 1) {
+                        dropMessage(5, "使用普通鱼竿钓鱼。\r\n获得金币：" + money);
+                        getClient().getSession().write(MaplePacketCreator.sendHint("使用普通鱼竿钓鱼。\r\n获得金币：" + money, 200, 200));
+                    }
+                    break;
+                case 1: // EXP
+                    final int experi = Randomizer.nextInt(Math.abs(GameConstants.getExpNeededForLevel(level) / 600) + 1);
+                    gainExp(expMulti ? (experi * 3 / 2) : experi, true, false, true);
+                    client.getSession().write(UIPacket.fishingUpdate((byte) 2, experi));
+                    if (getItemQuantity(5340001, true) == 1) {
+                        dropMessage(5, "使用高级鱼竿钓鱼。\r\n获得经验：" + experi);
+                        getClient().getSession().write(MaplePacketCreator.sendHint("使用高级鱼竿钓鱼。\r\n获得经验：" + experi, 200, 200));
+                    } else if (getItemQuantity(5340000, true) == 1) {
+                        dropMessage(5, "使用普通鱼竿钓鱼。\r\n获得经验：" + experi);
+                        getClient().getSession().write(MaplePacketCreator.sendHint("使用普通鱼竿钓鱼。\r\n获得经验：" + experi, 200, 200));
+                    }
+                    break;
+                default:
+                    if (getItemQuantity(5340001, true) == 1) {
+                        dropMessage(5, "使用高级鱼竿钓鱼。\r\n获得经验：" + randval);
+                        getClient().getSession().write(MaplePacketCreator.sendHint("使用高级鱼竿钓鱼。\r\n获得经验：" + randval, 200, 200));
+                    } else if (getItemQuantity(5340000, true) == 1) {
+                        dropMessage(5, "使用普通鱼竿钓鱼。\r\n获得经验：" + randval);
+                        getClient().getSession().write(MaplePacketCreator.sendHint("使用普通鱼竿钓鱼。\r\n获得经验：" + randval, 200, 200));
+                    }
+                    MapleInventoryManipulator.addById(client, randval, (short) 1, (byte) 0);
+                    client.getSession().write(UIPacket.fishingUpdate((byte) 0, randval));
+                    break;
+            }
+            map.broadcastMessage(UIPacket.fishingCaught(id));
         }, time, time);
     }
 
@@ -1742,10 +1742,10 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
     }
 
     public void cancelFishingTask() {
-        if (fishing != null) {
-            fishing.cancel(false);
-            getClient().getSession().write(MaplePacketCreator.sendHint("钓鱼中断。", 200, 200));
-        }
+//        if (fishing != null) {
+//            fishing.cancel(false);
+//            getClient().getSession().write(MaplePacketCreator.sendHint("钓鱼中断。", 200, 200));
+//        }
     }
 
     public void registerEffect(MapleStatEffect effect, long starttime, ScheduledFuture<?> schedule) {
@@ -3331,8 +3331,8 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
         long expiration;
         final List<Integer> ret = new ArrayList<>();
         final long currenttime = System.currentTimeMillis();
-        final List<Pair<MapleInventoryType, IItem>> toberemove = new ArrayList<Pair<MapleInventoryType, IItem>>(); // This is here to prevent deadlock.
-        final List<IItem> tobeunlock = new ArrayList<IItem>(); // This is here to prevent deadlock.
+        final List<Pair<MapleInventoryType, IItem>> toberemove = new ArrayList<>(); // This is here to prevent deadlock.
+        final List<IItem> tobeunlock = new ArrayList<>(); // This is here to prevent deadlock.
 
         for (final MapleInventoryType inv : MapleInventoryType.values()) {
             for (final IItem item : getInventory(inv)) {
@@ -3342,10 +3342,10 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
                     if (ItemFlag.LOCK.check(item.getFlag())) {
                         tobeunlock.add(item);
                     } else if (currenttime > expiration) {
-                        toberemove.add(new Pair<MapleInventoryType, IItem>(inv, item));
+                        toberemove.add(new Pair<>(inv, item));
                     }
                 } else if (item.getItemId() == 5000054 && item.getPet() != null && item.getPet().getSecondsLeft() <= 0) {
-                    toberemove.add(new Pair<MapleInventoryType, IItem>(inv, item));
+                    toberemove.add(new Pair<>(inv, item));
                 }
             }
         }
@@ -3501,7 +3501,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
     }
 
     public final List<MapleQuestStatus> getStartedQuests() {
-        List<MapleQuestStatus> ret = new LinkedList<MapleQuestStatus>();
+        List<MapleQuestStatus> ret = new LinkedList<>();
         for (MapleQuestStatus q : quests.values()) {
             if (q.getStatus() == 1 && !(q.isCustom())) {
                 ret.add(q);
@@ -3511,7 +3511,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
     }
 
     public final List<MapleQuestStatus> getCompletedQuests() {
-        List<MapleQuestStatus> ret = new LinkedList<MapleQuestStatus>();
+        List<MapleQuestStatus> ret = new LinkedList<>();
         for (MapleQuestStatus q : quests.values()) {
             if (q.getStatus() == 2 && !(q.isCustom())) {
                 ret.add(q);
@@ -4774,7 +4774,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
     public void giveDebuff(MapleDisease disease, MobSkill skill, boolean cpq) {
         MapleClient c;
         synchronized (diseases) {
-            
+
             int duration = 4000;
             if (isAlive() && !isActiveBuffedValue(2321005) && !diseases2.contains(disease) && diseases2.size() < 2) {
                 diseases2.add(disease);
@@ -7125,8 +7125,8 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
         mount_id = id;
     }
 
-    public void gainIten(int id, int amount) {
-        MapleInventoryManipulator.addById(getClient(), id, (short) amount, (byte) 0);
+    public void gainItem(int itemId, int amount) {
+        MapleInventoryManipulator.addById(getClient(), itemId, (short) amount, (byte) 0);
     }
 
     public long getLastHM() {

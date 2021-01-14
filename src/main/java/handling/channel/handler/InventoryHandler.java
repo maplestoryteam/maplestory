@@ -36,9 +36,7 @@ import client.inventory.MaplePet;
 import client.inventory.MaplePet.PetFlag;
 import client.inventory.MapleMount;
 import client.MapleCharacter;
-import client.MapleCharacterUtil;
 import client.MapleClient;
-import client.MapleDisease;
 import client.inventory.MapleInventoryType;
 import client.inventory.MapleInventory;
 import client.MapleStat;
@@ -46,8 +44,6 @@ import client.PlayerStats;
 import constants.GameConstants;
 import client.SkillFactory;
 import client.anticheat.CheatingOffense;
-import constants.ServerConstants;
-import handling.channel.ChannelServer;
 import handling.world.MaplePartyCharacter;
 import handling.world.World;
 
@@ -76,14 +72,11 @@ import server.*;
 import server.maps.*;
 import server.shops.HiredMerchant;
 import server.shops.IMaplePlayerShop;
-import tools.HexTool;
 import tools.Pair;
 import tools.packet.MTSCSPacket;
 import tools.packet.PetPacket;
 import tools.data.input.SeekableLittleEndianAccessor;
 import tools.MaplePacketCreator;
-import tools.data.input.ByteArrayByteStream;
-import tools.data.input.GenericSeekableLittleEndianAccessor;
 import tools.packet.PlayerShopPacket;
 
 public class InventoryHandler {
@@ -1016,12 +1009,12 @@ public class InventoryHandler {
                 //执行
                 c.getPlayer().gainDY(抵用卷);
                 c.getPlayer().gainMeso(金币, true);
-                c.getPlayer().gainIten(勋章, 1);
-                c.getPlayer().gainIten(美发卡, 1);
-                c.getPlayer().gainIten(整形卡, 1);
-                c.getPlayer().gainIten(物品1, 1);
-                c.getPlayer().gainIten(物品2, 1);
-                c.getPlayer().gainIten(物品3, 1);
+                c.getPlayer().gainItem(勋章, 1);
+                c.getPlayer().gainItem(美发卡, 1);
+                c.getPlayer().gainItem(整形卡, 1);
+                c.getPlayer().gainItem(物品1, 1);
+                c.getPlayer().gainItem(物品2, 1);
+                c.getPlayer().gainItem(物品3, 1);
                 gift.add(物品4);//此函数不要改，给予到这里的时候，add函数会自动删除道具
                 c.getPlayer().dropMessage(5, "恭喜成功领取新手礼包。此[苹果套装]做活动时候请穿戴！");
                 /*if (gender == 0) {//如果性别是男的
