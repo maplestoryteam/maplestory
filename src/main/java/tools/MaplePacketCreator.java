@@ -707,7 +707,15 @@ public class MaplePacketCreator {
         return new ByteArrayMaplePacket(HexTool.getByteArrayFromHexString(hex));
     }
 
-    public static final MaplePacket GainEXP_Monster(final int gain, final boolean white, final int wedding_EXP, final int partyinc, final int Class_Bonus_EXP, final int Equipment_Bonus_EXP, final int Premium_Bonus_EXP) {
+    public static final MaplePacket gainEXPMonster(final int gain,
+                                                   final boolean white,
+                                                   final int weddingEXP,
+                                                   final int partyinc,
+                                                   final int Class_Bonus_EXP,
+                                                   final int Equipment_Bonus_EXP,
+                                                   final int Premium_Bonus_EXP,
+                                                   final int activityEXP // 活动经验
+                                                   ) {
         final MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 
         if (ServerConstants.调试输出封包) {
@@ -727,9 +735,10 @@ public class MaplePacketCreator {
         mplew.write(white ? 1 : 0);
         mplew.writeInt(gain);
         mplew.write(0); // Not in chat
-        mplew.writeInt(0); // 活动奖励经验
+        mplew.writeInt(activityEXP); // 活动奖励经验
+//        mplew.writeInt(0); // 活动奖励经验
         mplew.writeShort(0);
-        mplew.writeInt(wedding_EXP); // 结婚经验
+        mplew.writeInt(weddingEXP); // 结婚经验
         mplew.write(0);
         mplew.writeInt(partyinc); // 组队经验
         mplew.writeInt(Equipment_Bonus_EXP); // 道具佩戴经验

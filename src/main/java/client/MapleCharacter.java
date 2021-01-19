@@ -63,18 +63,12 @@ import java.awt.Rectangle;
 import java.io.File;
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.sql.*;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.print.attribute.standard.Chromaticity;
 
 import provider.MapleData;
 import provider.MapleDataProvider;
@@ -82,7 +76,6 @@ import provider.MapleDataProviderFactory;
 import scripting.EventInstanceManager;
 import scripting.NPCScriptManager;
 import server.*;
-import server.Timer;
 import server.Timer.BuffTimer;
 import server.Timer.EtcTimer;
 import server.Timer.EventTimer;
@@ -3244,7 +3237,12 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
             }
             updateSingleStat(MapleStat.EXP, getExp());
             if (show) { // still show the expgain even if it's not there
-                client.getSession().write(MaplePacketCreator.GainEXP_Monster(gain, white, wedding_EXP, partyinc, Class_Bonus_EXP, Equipment_Bonus_EXP, Premium_Bonus_EXP));
+                // 玩家在150级以下给活动经验
+                int activityEXP = 0;
+                if (level <= 150) {
+                    activityEXP = gain;
+                }
+                client.getSession().write(MaplePacketCreator.gainEXPMonster(gain, white, wedding_EXP, partyinc, Class_Bonus_EXP, Equipment_Bonus_EXP, Premium_Bonus_EXP, activityEXP));
             }
             // stats.checkEquipLevels(this, total);
         }

@@ -33,7 +33,7 @@ public class MovementParse {
 
     //1 = player, 2 = mob, 3 = pet, 4 = summon, 5 = dragon
     public static final List<LifeMovementFragment> parseMovement(final SeekableLittleEndianAccessor lea, int kind) {
-        final List<LifeMovementFragment> res = new ArrayList<LifeMovementFragment>();
+        final List<LifeMovementFragment> res = new ArrayList<>();
         final byte numCommands = lea.readByte();//循环次数
         String 类型 = "";
         switch (kind) {
