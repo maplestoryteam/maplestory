@@ -108,9 +108,9 @@ public class MapleMonsterInformationProvider {
             while (rs.next()) {
                 itemid = rs.getInt("itemid");
                 chance = rs.getInt("chance");
-                if (GameConstants.getInventoryType(itemid) == MapleInventoryType.EQUIP) {
-                    chance = chance / 3; //in GMS/SEA it was raised
-                }
+//                if (GameConstants.getInventoryType(itemid) == MapleInventoryType.EQUIP) {
+//                    chance = chance / 3; //in GMS/SEA it was raised
+//                }
                 ret.add(new MonsterDropEntry(
                         itemid,
                         chance,

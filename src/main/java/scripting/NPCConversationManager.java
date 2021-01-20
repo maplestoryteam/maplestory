@@ -106,6 +106,15 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
         this.wh = wh;
     }
 
+    public NPCConversationManager(MapleClient c, int npc, int questid, byte type, Invocable iv) {
+        super(c);
+        this.c = c;
+        this.npc = npc;
+        this.questid = questid;
+        this.type = type;
+        this.iv = iv;
+    }
+
     public int getwh() {
         return this.wh;
     }

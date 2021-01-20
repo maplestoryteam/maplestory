@@ -415,7 +415,7 @@ public final class MapleMap {
     public final void removeMapObject(final MapleMapObject obj) {
         mapobjectlocks.get(obj.getType()).writeLock().lock();
         try {
-            mapobjects.get(obj.getType()).remove(Integer.valueOf(obj.getObjectId()));
+            mapobjects.get(obj.getType()).remove(obj.getObjectId());
         } finally {
             mapobjectlocks.get(obj.getType()).writeLock().unlock();
         }
@@ -850,7 +850,7 @@ public final class MapleMap {
     }
 
     public List<MapleReactor> getAllReactorsThreadsafe() {
-        ArrayList<MapleReactor> ret = new ArrayList<MapleReactor>();
+        ArrayList<MapleReactor> ret = new ArrayList<>();
         mapobjectlocks.get(MapleMapObjectType.REACTOR).readLock().lock();
         try {
             for (MapleMapObject mmo : mapobjects.get(MapleMapObjectType.REACTOR).values()) {
@@ -867,7 +867,7 @@ public final class MapleMap {
     }
 
     public List<MapleMapObject> getAllDoorsThreadsafe() {
-        ArrayList<MapleMapObject> ret = new ArrayList<MapleMapObject>();
+        ArrayList<MapleMapObject> ret = new ArrayList<>();
         mapobjectlocks.get(MapleMapObjectType.DOOR).readLock().lock();
         try {
             for (MapleMapObject mmo : mapobjects.get(MapleMapObjectType.DOOR).values()) {
@@ -884,7 +884,7 @@ public final class MapleMap {
     }
 
     public List<MapleMapObject> getAllHiredMerchantsThreadsafe() {
-        ArrayList<MapleMapObject> ret = new ArrayList<MapleMapObject>();
+        ArrayList<MapleMapObject> ret = new ArrayList<>();
         mapobjectlocks.get(MapleMapObjectType.HIRED_MERCHANT).readLock().lock();
         try {
             for (MapleMapObject mmo : mapobjects.get(MapleMapObjectType.HIRED_MERCHANT).values()) {
@@ -901,7 +901,7 @@ public final class MapleMap {
     }
 
     public List<MapleMonster> getAllMonstersThreadsafe() {
-        ArrayList<MapleMonster> ret = new ArrayList<MapleMonster>();
+        ArrayList<MapleMonster> ret = new ArrayList<>();
         mapobjectlocks.get(MapleMapObjectType.MONSTER).readLock().lock();
         try {
             for (MapleMapObject mmo : mapobjects.get(MapleMapObjectType.MONSTER).values()) {
@@ -2558,7 +2558,7 @@ public final class MapleMap {
     }
 
     public final List<MapleMapObject> getMapObjectsInRange(final Point from, final double rangeSq) {
-        final List<MapleMapObject> ret = new ArrayList<MapleMapObject>();
+        final List<MapleMapObject> ret = new ArrayList<>();
         for (MapleMapObjectType type : MapleMapObjectType.values()) {
             mapobjectlocks.get(type).readLock().lock();
             try {
@@ -2581,7 +2581,7 @@ public final class MapleMap {
     }
 
     public final List<MapleMapObject> getMapObjectsInRange(final Point from, final double rangeSq, final List<MapleMapObjectType> MapObject_types) {
-        final List<MapleMapObject> ret = new ArrayList<MapleMapObject>();
+        final List<MapleMapObject> ret = new ArrayList<>();
         for (MapleMapObjectType type : MapObject_types) {
             mapobjectlocks.get(type).readLock().lock();
             try {
@@ -2600,7 +2600,7 @@ public final class MapleMap {
     }
 
     public final List<MapleMapObject> getMapObjectsInRect(final Rectangle box, final List<MapleMapObjectType> MapObject_types) {
-        final List<MapleMapObject> ret = new ArrayList<MapleMapObject>();
+        final List<MapleMapObject> ret = new ArrayList<>();
         for (MapleMapObjectType type : MapObject_types) {
             mapobjectlocks.get(type).readLock().lock();
             try {
@@ -2619,7 +2619,7 @@ public final class MapleMap {
     }
 
     public final List<MapleCharacter> getPlayersInRectAndInList(final Rectangle box, final List<MapleCharacter> chrList) {
-        final List<MapleCharacter> character = new LinkedList<MapleCharacter>();
+        final List<MapleCharacter> character = new LinkedList<>();
 
         charactersLock.readLock().lock();
         try {
@@ -2827,7 +2827,7 @@ public final class MapleMap {
         if (!player.isClone()) {
             try {
                 Collection<MapleMapObject> visibleObjects = player.getAndWriteLockVisibleMapObjects();
-                ArrayList<MapleMapObject> copy = new ArrayList<MapleMapObject>(visibleObjects);
+                ArrayList<MapleMapObject> copy = new ArrayList<>(visibleObjects);
                 Iterator<MapleMapObject> itr = copy.iterator();
                 while (itr.hasNext()) {
                     MapleMapObject mo = itr.next();

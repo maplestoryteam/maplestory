@@ -914,6 +914,19 @@ public class InventoryHandler {
         if (toUse.getItemId() != item) {
             c.getSession().write(MaplePacketCreator.enableActions());
             return;
+        }
+        NPCScriptManager.getInstance().startBox(c, 9900004, item);
+        c.getSession().write(MaplePacketCreator.enableActions());
+    }
+
+    public static void UsePenguinBox2(final SeekableLittleEndianAccessor slea, MapleClient c) {
+        final List<Integer> gift = new ArrayList<>();
+        final byte slot = (byte) slea.readShort();
+        final int item = slea.readInt();
+        final IItem toUse = c.getPlayer().getInventory(MapleInventoryType.USE).getItem(slot);
+        if (toUse.getItemId() != item) {
+            c.getSession().write(MaplePacketCreator.enableActions());
+            return;
         } else if (c.getPlayer().getInventory(MapleInventoryType.EQUIP).getNumFreeSlot() <= 2) {//判断装备栏剩余格数是否小于=2
             c.getPlayer().dropMessage(1, "您无法获得物品\r\n背包装备栏剩余栏位不足\r\n装备栏最少留下3个空格");
             c.getSession().write(MaplePacketCreator.enableActions());

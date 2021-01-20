@@ -56,12 +56,12 @@ public abstract class AbstractScriptManager {
         try {
 
             path = "scripts/" + path;
-            ScriptEngine engine = null;
+            ScriptEngine engine;
 
-            if (c != null) {
-                engine = c.getScriptEngine(path);
-            }
-            if (engine == null) {
+//            if (c != null) {
+//                engine = c.getScriptEngine(path);
+//            }
+//            if (engine == null) {
                 File scriptFile = new File(path);
                 if (!scriptFile.exists()) {
                     return null;
@@ -85,11 +85,11 @@ public abstract class AbstractScriptManager {
                     buffer.append(s);
                 });
                 engine.eval(buffer.toString());
-            } else if (c != null && npc) {
-                NPCScriptManager.getInstance().dispose(c);
-                c.getSession().write(MaplePacketCreator.enableActions());
-                //c.getPlayer().dropMessage(5, "你现在已经假死请使用@ea");
-            }
+//            } else if (c != null && npc) {
+//                NPCScriptManager.getInstance().dispose(c);
+//                c.getSession().write(MaplePacketCreator.enableActions());
+//                //c.getPlayer().dropMessage(5, "你现在已经假死请使用@ea");
+//            }
             return (Invocable) engine;
         } catch (Exception e) {
             System.err.println("Error executing script. Path: " + path + "\nException " + e);

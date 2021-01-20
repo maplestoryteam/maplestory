@@ -2530,7 +2530,6 @@ public class AdminCommand {
 
         public String getMessage() {
             return new StringBuilder().append("!killall [range] [mapid] - 杀掉所有怪物").toString();
-
         }
     }
 

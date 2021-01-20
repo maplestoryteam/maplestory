@@ -52,9 +52,9 @@ public class PlayerStats implements Serializable {
 
     private static final long serialVersionUID = -679541993413738569L;
     private final transient WeakReference<MapleCharacter> chr;
-    private final Map<Integer, Integer> setHandling = new HashMap<Integer, Integer>();
-    private final List<Equip> durabilityHandling = new ArrayList<Equip>();
-    private final List<Equip> equipLevelHandling = new ArrayList<Equip>();
+    private final Map<Integer, Integer> setHandling = new HashMap<>();
+    private final List<Equip> durabilityHandling = new ArrayList<>();
+    private final List<Equip> equipLevelHandling = new ArrayList<>();
     private transient float shouldHealHP, shouldHealMP;
     public short str, dex, luk, int_, hp, maxhp, mp, maxmp;
     private transient short passive_sharpeye_percent, localmaxhp, localmaxmp;
