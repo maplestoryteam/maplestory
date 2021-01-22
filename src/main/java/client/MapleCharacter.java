@@ -122,6 +122,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
             currentrep, totalrep, coconutteam = 0, followid = 0, battleshipHP = 0,
             expression, constellation, blood, month, day, beans, beansNum, beansRange, prefix;
     private boolean canSetBeansNum;
+    public long npcCooldownTime;
     private Point old = new Point(0, 0);
     private boolean smega, hidden, hasSummon = false;
     private int[] wishlist, rocks, savedLocations, regrocks, remainingSp = new int[10];
@@ -3635,33 +3636,35 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
          * if (level == 200) { finishAchievement(5); }
          */
         if (!isGM()) {
-            if (level == 10 || level == 30 || level == 70 || level == 120 || level == 200) {
-                final StringBuilder sb = new StringBuilder("[恭喜] ");
-                final IItem medal = getInventory(MapleInventoryType.EQUIPPED).getItem((byte) -26);
-                if (medal != null) { // Medal
-                    sb.append("<");
-                    sb.append(MapleItemInformationProvider.getInstance().getName(medal.getItemId()));
-                    sb.append("> ");
-                }
-                sb.append(getName());
-                sb.append(" 达到了 " + level + " 级,让我们一起恭喜他/她吧!");
-                World.Broadcast.broadcastMessage(MaplePacketCreator.serverNotice(6, sb.toString()).getBytes());
-            }
+            // [升级提示]玩家 xxx 在 xxx 地图 升到 xx级
+            final StringBuilder sb = new StringBuilder("[升级提示] ");
+//            final IItem medal = getInventory(MapleInventoryType.EQUIPPED).getItem((byte) -26);
+//            if (medal != null) { // Medal
+//                sb.append("<");
+//                sb.append(MapleItemInformationProvider.getInstance().getName(medal.getItemId()));
+//                sb.append("> ");
+//            }
+            sb.append("玩家[");
+            sb.append(getName());
+            sb.append("]在");
+            sb.append(map.getMapName());
+            sb.append("地图升级到[" + level + "]级,让我们一起恭喜他/她吧!");
+            World.Broadcast.broadcastMessage(MaplePacketCreator.serverNotice(6, sb.toString()).getBytes());
         }
         // maxhp = (short) Math.min(30000, Math.abs(maxhp));
         //maxmp = (short) Math.min(30000, Math.abs(maxmp));
 
         maxhp = Math.min(30000, maxhp);
         maxmp = Math.min(30000, maxmp);
-        final List<Pair<MapleStat, Integer>> statup = new ArrayList<Pair<MapleStat, Integer>>(8);
+        final List<Pair<MapleStat, Integer>> statup = new ArrayList<>(8);
 
         statup.add(new Pair(MapleStat.AVAILABLEAP, Integer.valueOf(this.remainingAp)));
-        statup.add(new Pair<MapleStat, Integer>(MapleStat.MAXHP, maxhp));
-        statup.add(new Pair<MapleStat, Integer>(MapleStat.MAXMP, maxmp));
-        statup.add(new Pair<MapleStat, Integer>(MapleStat.HP, maxhp));
-        statup.add(new Pair<MapleStat, Integer>(MapleStat.MP, maxmp));
-        statup.add(new Pair<MapleStat, Integer>(MapleStat.EXP, exp));
-        statup.add(new Pair<MapleStat, Integer>(MapleStat.LEVEL, level));
+        statup.add(new Pair<>(MapleStat.MAXHP, maxhp));
+        statup.add(new Pair<>(MapleStat.MAXMP, maxmp));
+        statup.add(new Pair<>(MapleStat.HP, maxhp));
+        statup.add(new Pair<>(MapleStat.MP, maxmp));
+        statup.add(new Pair<>(MapleStat.EXP, exp));
+        statup.add(new Pair<>(MapleStat.LEVEL, level));
 
         if (isGM() || (job != 0 && job != 1000 && job != 2000 && job != 2001 && job != 3000)) { // Not Beginner, Nobless and Legend
             remainingSp[GameConstants.getSkillBook(this.job)] += 3;
@@ -3670,10 +3673,10 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
             stats.setStr((short) (stats.getStr() + remainingAp));
             remainingAp = 0;
 
-            statup.add(new Pair<MapleStat, Integer>(MapleStat.STR, (int) stats.getStr()));
+            statup.add(new Pair<>(MapleStat.STR, (int) stats.getStr()));
         }
 
-        statup.add(new Pair<MapleStat, Integer>(MapleStat.AVAILABLEAP, (int) remainingAp));
+        statup.add(new Pair<>(MapleStat.AVAILABLEAP, (int) remainingAp));
 
         stats.setMaxHp((short) maxhp);
         stats.setMaxMp((short) maxmp);
@@ -6558,13 +6561,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
     public void startMapEffect(String msg, int itemId, int duration) {
         final MapleMapEffect mapEffect = new MapleMapEffect(msg, itemId);
         getClient().getSession().write(mapEffect.makeStartData());
-        EventTimer.getInstance().schedule(new Runnable() {
-
-            @Override
-            public void run() {
-                getClient().getSession().write(mapEffect.makeDestroyData());
-            }
-        }, duration);
+        EventTimer.getInstance().schedule(() -> getClient().getSession().write(mapEffect.makeDestroyData()), duration);
     }
 
     public int getHyPay(int type) {

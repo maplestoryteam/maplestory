@@ -2011,4 +2011,8 @@ public abstract class AbstractPlayerInteraction {
             给物品(itemid, amount);
         }
     }
+
+    public final void 横幅喇叭(String msg, int itemId, int second) {
+        c.getPlayer().startMapEffect(msg, itemId, second * 1000);
+    }
 }

@@ -176,12 +176,23 @@ public class NPCHandler {
         if (npc == null) {
             return;
         }
+
+        // FIX NPC点击频繁
+        if (c.getPlayer().npcCooldownTime > 0 && System.currentTimeMillis() - c.getPlayer().npcCooldownTime < 500) {
+            NPCScriptManager.getInstance().dispose(c);
+            c.getSession().write(MaplePacketCreator.enableActions());
+            return;
+        }
+
+        c.getPlayer().npcCooldownTime = System.currentTimeMillis();
+
         if (chr.getConversation() != 0) {
             NPCScriptManager.getInstance().dispose(c);
             c.getSession().write(MaplePacketCreator.enableActions());
             //chr.dropMessage(5, "你现在已经假死请使用@ea");
             return;
         }
+
 
         if (npc.hasShop()) {
             /*

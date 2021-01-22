@@ -210,7 +210,7 @@ public class MapleQuestAction implements Serializable {
                             c.dropMessage(-1, msg);
                             c.dropMessage(5, msg);
                         }
-                        MapleInventoryManipulator.addById(c.getClient(), id, count, "任务获得 " + this.quest.getId() + " 时间: " + FileoutputUtil.CurrentReadable_Date());
+                        MapleInventoryManipulator.addById(c.getClient(), id, count, null);
                         //MapleInventoryManipulator.addById(c.getClient(), id, count, "", null, period, "任务获得 " + this.quest.getId() + " 时间: " + FileoutputUtil.CurrentReadable_Date());
                         c.getClient().getSession().write(MaplePacketCreator.getShowItemGain(id, count, true));
                     }
