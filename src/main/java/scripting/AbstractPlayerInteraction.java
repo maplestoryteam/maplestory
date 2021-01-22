@@ -118,6 +118,13 @@ public abstract class AbstractPlayerInteraction {
         }
     }
 
+    public final void warpMap(final int mapid, final int portal) {
+        final MapleMap map = getMap(mapid);
+        for (MapleCharacter chr : c.getPlayer().getMap().getCharactersThreadsafe()) {
+            chr.changeMap(map, map.getPortal(portal));
+        }
+    }
+
     public final void warp_Instanced(final int map) {
         final MapleMap mapz = getMap_Instanced(map);
         try {
@@ -183,12 +190,6 @@ public abstract class AbstractPlayerInteraction {
         c.getPlayer().changeMap(mapz, mapz.getPortal(portal));
     }
 
-    public final void warpMap(final int mapid, final int portal) {
-        final MapleMap map = getMap(mapid);
-        for (MapleCharacter chr : c.getPlayer().getMap().getCharactersThreadsafe()) {
-            chr.changeMap(map, map.getPortal(portal));
-        }
-    }
 
     public final void playPortalSE() {
         c.getSession().write(MaplePacketCreator.showOwnBuffEffect(0, 5));
@@ -530,6 +531,7 @@ public abstract class AbstractPlayerInteraction {
         gainItem(id, quantity, false, 0, -1, "", (byte) 0);
     }
 
+
     public final void gainItem(final int id, final short quantity, final long period, byte Flag) {
         gainItem(id, quantity, false, period, -1, "", Flag);
     }
@@ -550,8 +552,8 @@ public abstract class AbstractPlayerInteraction {
         gainItem(id, quantity, randomStats, period, slots, "", (byte) 0);
     }
 
-    public final void gainItem(final int id, final short quantity, final boolean randomStats, final long period, final int slots, final String owner, byte Flag) {
-        gainItem(id, quantity, randomStats, period, slots, owner, c, Flag);
+    public final void gainItem(final int id, final short quantity, final boolean randomStats, final long period, final int slots, final String owner, byte flag) {
+        gainItem(id, quantity, randomStats, period, slots, owner, c, flag);
     }
 
     public final void gainItem(final int id, final short quantity, final boolean randomStats, final long period, final int slots, final String owner, final MapleClient cg, byte Flag) {
@@ -590,73 +592,73 @@ public abstract class AbstractPlayerInteraction {
     }
 
     public final void gainItem(final int id, final int str, final int dex, final int luk, final int Int, final int hp, int mp, int watk, int matk, int wdef, int mdef, int hb, int mz, int ty, int yd, int suo, int cishu, int yscishu) {
-        gainItemS(id, str, dex, luk, Int, hp, mp, watk, matk, wdef, mdef, hb, mz, ty, yd, suo, cishu, yscishu, c);
+        gainItem(id, str, dex, luk, Int, hp, mp, watk, matk, wdef, mdef, hb, mz, ty, yd, suo, cishu, yscishu, c);
     }
 
-    public final void gainItemS(final int id, final int str, final int dex, final int luk, final int Int, final int hp, int mp, int watk, int matk, int wdef, int mdef, int hb, int mz, int ty, int yd, int suo, int cishu, int yscishu, final MapleClient cg) {
-        if (1 >= 0) {
-            final MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
-            final MapleInventoryType type = GameConstants.getInventoryType(id);
 
-            if (!MapleInventoryManipulator.checkSpace(cg, id, 1, "")) {
-                return;
+    public final void gainItem(final int id, final int str, final int dex, final int luk, final int Int, final int hp, int mp, int watk, int matk, int wdef, int mdef, int hb, int mz, int ty, int yd, int suo, int cishu, int yscishu, final MapleClient cg) {
+        final MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
+        final MapleInventoryType type = GameConstants.getInventoryType(id);
+
+        if (!MapleInventoryManipulator.checkSpace(cg, id, 1, "")) {
+            return;
+        }
+        if (type.equals(MapleInventoryType.EQUIP) && !GameConstants.isThrowingStar(id) && !GameConstants.isBullet(id)) {
+            final Equip item = (Equip) (ii.getEquipById(id));
+
+            final String name = ii.getName(id);
+            if (id / 10000 == 114 && name != null && name.length() > 0) { //medal
+                final String msg = "你已获得称号 <" + name + ">";
+                cg.getPlayer().dropMessage(5, msg);
+                cg.getPlayer().dropMessage(5, msg);
             }
-            if (type.equals(MapleInventoryType.EQUIP) && !GameConstants.isThrowingStar(id) && !GameConstants.isBullet(id)) {
-                final Equip item = (Equip) (ii.getEquipById(id));
-
-                final String name = ii.getName(id);
-                if (id / 10000 == 114 && name != null && name.length() > 0) { //medal
-                    final String msg = "你已获得称号 <" + name + ">";
-                    cg.getPlayer().dropMessage(5, msg);
-                    cg.getPlayer().dropMessage(5, msg);
-                }
-                if (str > 0) {
-                    item.setStr((short) str);
-                }
-                if (dex > 0) {
-                    item.setDex((short) dex);
-                }
-                if (luk > 0) {
-                    item.setLuk((short) luk);
-                }
-                if (Int > 0) {
-                    item.setInt((short) Int);
-                }
-                if (hp > 0) {
-                    item.setHp((short) hp);
-                }
-                if (mp > 0) {
-                    item.setMp((short) mp);
-                }
-                if (watk > 0) {
-                    item.setWatk((short) watk);
-                }
-                if (matk > 0) {
-                    item.setMatk((short) matk);
-                }
-                if (wdef > 0) {
-                    item.setWdef((short) wdef);
-                }
-                if (mdef > 0) {
-                    item.setMdef((short) mdef);
-                }
-                if (hb > 0) {
-                    item.setAvoid((short) hb);
-                }
-                if (mz > 0) {
-                    item.setAcc((short) mz);
-                }
-                if (ty > 0) {
-                    item.setJump((short) ty);
-                }
-                if (yd > 0) {
-                    item.setSpeed((short) yd);
-                }
-                if (suo > 0) {
-                    byte flag = item.getFlag();
-                    flag |= ItemFlag.LOCK.getValue();
-                    item.setFlag(flag);
-                }
+            if (str > 0) {
+                item.setStr((short) str);
+            }
+            if (dex > 0) {
+                item.setDex((short) dex);
+            }
+            if (luk > 0) {
+                item.setLuk((short) luk);
+            }
+            if (Int > 0) {
+                item.setInt((short) Int);
+            }
+            if (hp > 0) {
+                item.setHp((short) hp);
+            }
+            if (mp > 0) {
+                item.setMp((short) mp);
+            }
+            if (watk > 0) {
+                item.setWatk((short) watk);
+            }
+            if (matk > 0) {
+                item.setMatk((short) matk);
+            }
+            if (wdef > 0) {
+                item.setWdef((short) wdef);
+            }
+            if (mdef > 0) {
+                item.setMdef((short) mdef);
+            }
+            if (hb > 0) {
+                item.setAvoid((short) hb);
+            }
+            if (mz > 0) {
+                item.setAcc((short) mz);
+            }
+            if (ty > 0) {
+                item.setJump((short) ty);
+            }
+            if (yd > 0) {
+                item.setSpeed((short) yd);
+            }
+            if (suo > 0) {
+                byte flag = item.getFlag();
+                flag |= ItemFlag.LOCK.getValue();
+                item.setFlag(flag);
+            }
                 /*byte flag = item.getFlag();
                     if (item.getType() == MapleInventoryType.EQUIP.getType()) {
                         flag |= ItemFlag.KARMA_EQ.getValue();
@@ -665,19 +667,16 @@ public abstract class AbstractPlayerInteraction {
                     }
                     item.setFlag(flag);
                 }*/
-                if (cishu > 0) {
-                    item.setUpgradeSlots((byte) cishu);
-                }
-                if (yscishu > 0) {
-                    item.setLevel((byte) yscishu);
-                    //  item.setViciousHammer((byte) yscishu);
-                }
-                MapleInventoryManipulator.addbyItem(cg, item.copy());
-            } else {
-                MapleInventoryManipulator.addById(cg, id, (short) 1, "", (byte) 0);
+            if (cishu > 0) {
+                item.setUpgradeSlots((byte) cishu);
             }
+            if (yscishu > 0) {
+                item.setLevel((byte) yscishu);
+                //  item.setViciousHammer((byte) yscishu);
+            }
+            MapleInventoryManipulator.addbyItem(cg, item.copy());
         } else {
-            MapleInventoryManipulator.removeById(cg, GameConstants.getInventoryType(id), id, -1, true, false);
+            MapleInventoryManipulator.addById(cg, id, (short) 1, "", (byte) 0);
         }
         cg.getSession().write(MaplePacketCreator.getShowItemGain(id, (short) 1, true));
     }
@@ -1076,6 +1075,10 @@ public abstract class AbstractPlayerInteraction {
 
     public final void openNpc(final int id) {
         NPCScriptManager.getInstance().start(getClient(), id);
+    }
+
+    public final void 打开NPC(final int npcid) {
+        NPCScriptManager.getInstance().start(getClient(), npcid);
     }
 
     public void openNpc(int id, int wh) {
@@ -1919,4 +1922,93 @@ public abstract class AbstractPlayerInteraction {
         this.c.getPlayer().resetGamePointsPS();
     }
 
+
+    public final void 移动(final int mapid) {
+        warp(mapid);
+    }
+
+    public final void 移动(final int mapid, final int portal) {
+        warp(mapid, portal);
+    }
+
+    public final boolean 判断物品(final int itemid) {
+        return haveItem(itemid, 1);
+    }
+
+    public final boolean 判断物品(final int itemid, final int quantity) {
+        return haveItem(itemid, quantity, false, true);
+    }
+
+    public final void 给物品(final int id, final int quantity) {
+        gainItem(id, (short) quantity, false, 0, -1, "", (byte) 0);
+    }
+
+    public final void 给装备(final int id, final int str, final int dex, final int luk, final int Int, final int hp, int mp, int watk, int matk, int wdef, int mdef, int hb, int mz, int ty, int yd, int suo, int cishu, int yscishu) {
+        gainItem(id, str, dex, luk, Int, hp, mp, watk, matk, wdef, mdef, hb, mz, ty, yd, suo, cishu, yscishu, c);
+    }
+
+    public final void 队伍移动(final int mapId) {
+        warpParty(mapId);
+    }
+
+    public final void 队伍移动(final int mapId, final String portal) {
+        warpParty(mapId, portal);
+    }
+
+    public final void 队伍移动(final int mapId, final int portal) {
+        warpParty(mapId, portal);
+    }
+
+    public final int 判断金币() {
+        return c.getPlayer().getMeso();
+    }
+
+    public final void 给金币(int a) {
+        gainMeso(a);
+    }
+
+    public final int 判断点券() {
+        return c.getPlayer().getNX();
+    }
+
+    public final void 给点券(int a) {
+        gainNX(a);
+    }
+
+    public final void 删除全部物品(int itemid) {
+        removeAll(itemid);
+    }
+
+    public final void 消息(final int type, final String message) {
+        World.Broadcast.broadcastMessage(MaplePacketCreator.serverNotice(type, message).getBytes());
+    }
+
+    public final void 消息(final int type, int channel, final String message, boolean smegaEar) {
+        World.Broadcast.broadcastMessage(MaplePacketCreator.serverNotice(type, channel, message, smegaEar).getBytes());
+    }
+
+    public final int 判断经验() {
+        return c.getPlayer().getExp();
+    }
+
+    public final void 给经验(int a) {
+        gainExp(a);
+    }
+
+    public final int 判断等级() {
+        return c.getPlayer().getLevel();
+    }
+
+    public final void 概率给物品(int itemid, int amount, int chance, String remark) {
+        System.out.println("概率给物品:" + remark);
+        if (chance <= 0) {
+            chance = 1;
+        }
+        if (chance >= 100) {
+            chance = 99;
+        }
+        if (Randomizer.nextInt(100) <= chance) {
+            给物品(itemid, amount);
+        }
+    }
 }

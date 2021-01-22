@@ -147,6 +147,10 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
         NPCScriptManager.getInstance().dispose(c);
     }
 
+    public void 对话结束() {
+        NPCScriptManager.getInstance().dispose(c);
+    }
+
     public void askMapSelection(final String sel) {
         if (lastMsg > -1) {
             return;
@@ -156,6 +160,18 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
     }
 
     public void sendNext(String text) {
+        if (lastMsg > -1) {
+            return;
+        }
+        if (text.contains("#L")) { //sendNext will dc otherwise!
+            sendSimple(text);
+            return;
+        }
+        c.getSession().write(MaplePacketCreator.getNPCTalk(npc, (byte) 0, text, "00 01", (byte) 0));
+        lastMsg = 0;
+    }
+
+    public void 继续对话(String text) {
         if (lastMsg > -1) {
             return;
         }
