@@ -120,8 +120,60 @@ public class NPCScriptManager extends AbstractScriptManager {
         }
     }
 
-    public final void startBox(final MapleClient c, final int npc, final int boxItemId) {
+    public final void startBox(final MapleClient c, final int boxItemId) {
         final Lock lock = c.getNPCLock();
+        int wh = 0;
+        int npc = 9400535;
+        lock.lock();
+        try {
+            if (c.getPlayer().isGM()) {
+                c.getPlayer().dropMessage(5, "[系统提示]您已经建立与BOX:" + boxItemId + "的对话。");
+            }
+            if (!cms.containsKey(c)) {
+                Invocable iv = getInvocable("box/" + boxItemId + ".js", c, true);
+                final ScriptEngine scriptengine = (ScriptEngine) iv;
+                final NPCConversationManager cm;
+                if (wh == 0) {
+                    cm = new NPCConversationManager(c, npc, -1, (byte) -1, iv, 0);
+                } else {
+                    cm = new NPCConversationManager(c, npc, -1, (byte) -1, iv, wh);
+                }
+                cms.put(c, cm);
+                if ((iv == null) || (getInstance() == null)) {
+                    cm.sendOk("欢迎来到#b冒险岛#k。对不起暂时无法查询到功能。\r\n我的ID是: #r" + boxItemId + "#k.\r\n ");
+                    cm.dispose();
+                    return;
+                }
+                scriptengine.put("cm", cm);
+                scriptengine.put("npcid", npc);
+                c.getPlayer().setConversation(1);
+
+                try {
+                    iv.invokeFunction("start"); // Temporary until I've removed all of start
+                } catch (NoSuchMethodException nsme) {
+                    iv.invokeFunction("action", (byte) 1, (byte) 0, 0);
+                }
+            } else {
+                NPCScriptManager.getInstance().dispose(c);
+                c.getSession().write(MaplePacketCreator.enableActions());
+                //c.getPlayer().dropMessage(5, "你现在已经假死请使用@ea");
+            }
+
+        } catch (final Exception e) {
+            System.err.println("NPC 腳本錯誤, 它ID為 : " + boxItemId + "." + e);
+            if (c.getPlayer().isGM()) {
+                c.getPlayer().dropMessage("[系統提示] BOX " + boxItemId + "腳本錯誤 " + e + "");
+            }
+            FileoutputUtil.log(FileoutputUtil.ScriptEx_Log, "Error executing BOX script, BOX ID : " + npc + "." + e);
+            dispose(c);
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public final void startBox2(final MapleClient c, final int boxItemId) {
+        final Lock lock = c.getNPCLock();
+        int npc = 9400535;
         lock.lock();
         try {
             if (c.getPlayer().isGM()) {

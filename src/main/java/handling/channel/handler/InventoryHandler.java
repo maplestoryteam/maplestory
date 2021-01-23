@@ -915,7 +915,8 @@ public class InventoryHandler {
             c.getSession().write(MaplePacketCreator.enableActions());
             return;
         }
-        NPCScriptManager.getInstance().startBox(c, 9900004, item);
+//        NPCScriptManager.getInstance().startBox(c, 9900004, item);
+        NPCScriptManager.getInstance().startBox(c, item);
         c.getSession().write(MaplePacketCreator.enableActions());
     }
 
