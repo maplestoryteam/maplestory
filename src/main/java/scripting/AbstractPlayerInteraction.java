@@ -2015,4 +2015,8 @@ public abstract class AbstractPlayerInteraction {
     public final void 横幅喇叭(String msg, int itemId, int second) {
         c.getPlayer().startMapEffect(msg, itemId, second * 1000);
     }
+
+    public final int 剩余背包(byte type) {
+        return c.getPlayer().getInventory(MapleInventoryType.getByType(type)).getNumFreeSlot();
+    }
 }
