@@ -28,6 +28,10 @@ public interface IItem extends Comparable<IItem> {
 
     byte getFlag();
 
+    byte getJiandaoFlag();
+
+    byte getQianghuaFlag();
+
     boolean getLocked();
 
     short getQuantity();
@@ -47,6 +51,10 @@ public interface IItem extends Comparable<IItem> {
     long getExpiration();
 
     void setFlag(byte flag);
+
+    void setJiandaoFlag(byte jiandaoFlag);
+
+    void setQianghuaFlag(byte qianghuaFlag);
 
     void setLocked(byte flag);
 

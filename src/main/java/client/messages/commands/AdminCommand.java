@@ -1005,7 +1005,7 @@ public class AdminCommand {
                     item = ii.randomizeStats((Equip) ii.getEquipById(itemId));
                     //    item.setFlag(flag);
                 } else {
-                    item = new client.inventory.Item(itemId, (byte) 0, quantity, (byte) 0);
+                    item = new client.inventory.Item(itemId, (byte) 0, quantity, (byte) 0, (byte) 0, (byte) 0);
                     if (GameConstants.getInventoryType(itemId) != MapleInventoryType.USE) {
                         //     item.setFlag(flag);
                     }
@@ -1104,12 +1104,12 @@ public class AdminCommand {
                     dStart += w;
                 } else if (i < 200) {
                     int val = start + i - (int) ('A');
-                    client.inventory.Item item = new client.inventory.Item(val, (byte) 0, (short) 1);
+                    client.inventory.Item item = new client.inventory.Item(val, (byte) 0, (short) 1, (byte) 0, (byte) 0);
                     c.getPlayer().getMap().spawnItemDrop(c.getPlayer(), c.getPlayer(), item, new Point(dStart, c.getPlayer().getPosition().y), false, false);
                     dStart += w;
                 } else if (i >= 200 && i <= 300) {
                     int val = nstart + i - (int) ('0') - 200;
-                    client.inventory.Item item = new client.inventory.Item(val, (byte) 0, (short) 1);
+                    client.inventory.Item item = new client.inventory.Item(val, (byte) 0, (short) 1, (byte) 0, (byte) 0);
                     c.getPlayer().getMap().spawnItemDrop(c.getPlayer(), c.getPlayer(), item, new Point(dStart, c.getPlayer().getPosition().y), false, false);
                     dStart += w;
                 }
@@ -3549,7 +3549,7 @@ public class AdminCommand {
 
                     toDrop = ii.randomizeStats((Equip) ii.getEquipById(itemId));
                 } else {
-                    toDrop = new client.inventory.Item(itemId, (byte) 0, quantity, (byte) 0);
+                    toDrop = new client.inventory.Item(itemId, (byte) 0, quantity, (byte) 0, (byte) 0, (byte) 0);
                 }
                 //toDrop.setOwner(c.getPlayer().getName());
                 toDrop.setGMLog(c.getPlayer().getName());

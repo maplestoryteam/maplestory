@@ -30,6 +30,8 @@ public class Item implements IItem, Serializable {
     private short position;
     private short quantity;
     private byte flag;
+    private byte jiandaoFlag;
+    private byte qianghuaFlag;
     private long expiration = -1;
     private MaplePet pet = null;
     private int uniqueid = -1;
@@ -39,39 +41,65 @@ public class Item implements IItem, Serializable {
     protected MapleRing ring = null;
     private byte itemLevel;
 
-    public Item(final int id, final short position, final short quantity, final byte flag, final int uniqueid) {
+    public Item(final int id, final short position, final short quantity, final byte flag, final int uniqueid, final byte jiandaoFlag, final byte qianghuaFlag) {
         super();
         this.id = id;
         this.position = position;
         this.quantity = quantity;
         this.flag = flag;
         this.uniqueid = uniqueid;
+        this.jiandaoFlag = jiandaoFlag;
+        this.qianghuaFlag = qianghuaFlag;
     }
 
-    public Item(final int id, final short position, final short quantity, final byte flag) {
+    public Item(final int id, final short position, final short quantity, final byte flag, final byte jiandaoFlag, final byte qianghuaFlag) {
         super();
         this.id = id;
         this.position = position;
         this.quantity = quantity;
         this.flag = flag;
+        this.jiandaoFlag = jiandaoFlag;
+        this.qianghuaFlag = qianghuaFlag;
     }
 
-    public Item(int id, byte position, short quantity) {
+    public Item(int id, byte position, short quantity, final byte jiandaoFlag, final byte qianghuaFlag) {
         super();
         this.id = id;
         this.position = position;
         this.quantity = quantity;
         this.itemLevel = 1;
+        this.jiandaoFlag = jiandaoFlag;
+        this.qianghuaFlag = qianghuaFlag;
     }
 
     public IItem copy() {
-        final Item ret = new Item(id, position, quantity, flag, uniqueid);
+        final Item ret = new Item(id, position, quantity, flag, uniqueid, jiandaoFlag, qianghuaFlag);
         ret.pet = pet;
         ret.owner = owner;
         ret.GameMaster_log = GameMaster_log;
         ret.expiration = expiration;
         ret.giftFrom = giftFrom;
         return ret;
+    }
+
+    @Override
+    public byte getJiandaoFlag() {
+        return jiandaoFlag;
+    }
+
+    @Override
+    public byte getQianghuaFlag() {
+        return qianghuaFlag;
+    }
+
+    @Override
+    public void setJiandaoFlag(byte jiandaoFlag) {
+        this.jiandaoFlag = jiandaoFlag;
+    }
+
+    @Override
+    public void setQianghuaFlag(byte qianghuaFlag) {
+        this.qianghuaFlag = qianghuaFlag;
     }
 
     public final void setPosition(final short position) {

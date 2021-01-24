@@ -82,7 +82,8 @@ public enum ItemLoader {
         while (rs.next()) {
             MapleInventoryType mit = MapleInventoryType.getByType(rs.getByte("inventorytype"));
             if (mit.equals(MapleInventoryType.EQUIP) || mit.equals(MapleInventoryType.EQUIPPED)) {
-                Equip equip = new Equip(rs.getInt("itemid"), rs.getShort("position"), rs.getInt("uniqueid"), rs.getByte("flag"));
+                Equip equip = new Equip(rs.getInt("itemid"), rs.getShort("position"),
+                        rs.getInt("uniqueid"), rs.getByte("flag"), rs.getByte("jiandaoFlag"), rs.getByte("qianghuaFlag"));
                 equip.setQuantity((short) 1);
                 equip.setOwner(rs.getString("owner"));
                 equip.setExpiration(rs.getLong("expiredate"));
@@ -125,7 +126,8 @@ public enum ItemLoader {
                 }
                 items.put(rs.getInt("inventoryitemid"), new Pair<IItem, MapleInventoryType>(equip.copy(), mit));
             } else {
-                Item item = new Item(rs.getInt("itemid"), rs.getShort("position"), rs.getShort("quantity"), rs.getByte("flag"));
+                Item item = new Item(rs.getInt("itemid"), rs.getShort("position"),
+                        rs.getShort("quantity"), rs.getByte("flag"), rs.getByte("jiandaoFlag"), rs.getByte("qianghuaFlag"));
                 item.setUniqueId(rs.getInt("uniqueid"));
                 item.setOwner(rs.getString("owner"));
                 item.setExpiration(rs.getLong("expiredate"));
@@ -144,7 +146,7 @@ public enum ItemLoader {
                         item.setPet(MaplePet.createPet(item.getItemId(), new_unique));
                     }
                 }
-                items.put(rs.getInt("inventoryitemid"), new Pair<IItem, MapleInventoryType>(item.copy(), mit));
+                items.put(rs.getInt("inventoryitemid"), new Pair<>(item.copy(), mit));
             }
         }
 
@@ -156,7 +158,7 @@ public enum ItemLoader {
 
     public Map<Integer, Pair<IItem, MapleInventoryType>> loadItems(boolean login, Integer... id) throws SQLException {
         List<Integer> lulz = Arrays.asList(id);
-        Map<Integer, Pair<IItem, MapleInventoryType>> items = new LinkedHashMap<Integer, Pair<IItem, MapleInventoryType>>();
+        Map<Integer, Pair<IItem, MapleInventoryType>> items = new LinkedHashMap<>();
         if (lulz.size() != arg.size()) {
             return items;
         }
@@ -187,7 +189,8 @@ public enum ItemLoader {
             MapleInventoryType mit = MapleInventoryType.getByType(rs.getByte("inventorytype"));
 
             if (mit.equals(MapleInventoryType.EQUIP) || mit.equals(MapleInventoryType.EQUIPPED)) {
-                Equip equip = new Equip(rs.getInt("itemid"), rs.getShort("position"), rs.getInt("uniqueid"), rs.getByte("flag"));
+                Equip equip = new Equip(rs.getInt("itemid"), rs.getShort("position"),
+                        rs.getInt("uniqueid"), rs.getByte("flag"), rs.getByte("jiandaoFlag"), rs.getByte("qianghuaFlag"));
                 if (!login) {
                     equip.setQuantity((short) 1);
                     equip.setOwner(rs.getString("owner"));
@@ -221,6 +224,7 @@ public enum ItemLoader {
                     equip.setMpR(rs.getShort("mpR"));
                     equip.setGiftFrom(rs.getString("sender"));
                     equip.setEquipLevel(rs.getByte("itemlevel"));
+
                     if (equip.getUniqueId() > -1) {
                         if (GameConstants.isEffectRing(rs.getInt("itemid"))) {
                             MapleRing ring = MapleRing.loadFromDb(equip.getUniqueId(), mit.equals(MapleInventoryType.EQUIPPED));
@@ -230,14 +234,17 @@ public enum ItemLoader {
                         }
                     }
                 }
-                items.put(rs.getInt("inventoryitemid"), new Pair<IItem, MapleInventoryType>(equip.copy(), mit));
+                items.put(rs.getInt("inventoryitemid"), new Pair<>(equip.copy(), mit));
             } else {
-                Item item = new Item(rs.getInt("itemid"), rs.getShort("position"), rs.getShort("quantity"), rs.getByte("flag"));
+                Item item = new Item(rs.getInt("itemid"), rs.getShort("position"), rs.getShort("quantity"),
+                        rs.getByte("flag"), rs.getByte("jiandaoFlag"), rs.getByte("qianghuaFlag"));
                 item.setUniqueId(rs.getInt("uniqueid"));
                 item.setOwner(rs.getString("owner"));
                 item.setExpiration(rs.getLong("expiredate"));
                 item.setGMLog(rs.getString("GM_Log"));
                 item.setGiftFrom(rs.getString("sender"));
+                item.setJiandaoFlag(rs.getByte("jiandaoFlag"));
+                item.setQianghuaFlag(rs.getByte("qianghuaFlag"));
                 if (GameConstants.isPet(item.getItemId())) {
                     if (item.getUniqueId() > -1) {
                         MaplePet pet = MaplePet.loadFromDb(item.getItemId(), item.getUniqueId(), item.getPosition());
@@ -251,7 +258,7 @@ public enum ItemLoader {
                         item.setPet(MaplePet.createPet(item.getItemId(), new_unique));
                     }
                 }
-                items.put(rs.getInt("inventoryitemid"), new Pair<IItem, MapleInventoryType>(item.copy(), mit));
+                items.put(rs.getInt("inventoryitemid"), new Pair<>(item.copy(), mit));
             }
         }
 
@@ -318,7 +325,7 @@ public enum ItemLoader {
             query_2.append(g);
             query_2.append(", ");
         }
-        query_2.append("itemid, inventorytype, position, quantity, owner, GM_Log, uniqueid, expiredate, flag, `type`, sender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?");
+        query_2.append("itemid, inventorytype, position, quantity, owner, GM_Log, uniqueid, expiredate, flag, `type`, sender, jiandaoFlag, qianghuaFlag) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?");
         for (String g : arg) {
             query_2.append(", ?");
         }
@@ -352,6 +359,8 @@ public enum ItemLoader {
                     ps.setByte(i + 8, item.getFlag());
                     ps.setByte(i + 9, (byte) value);
                     ps.setString(i + 10, item.getGiftFrom());
+                    ps.setByte(i + 11, item.getJiandaoFlag());
+                    ps.setByte(i + 12, item.getQianghuaFlag());
                     ps.executeUpdate();
                 } catch (Exception ex) {
                     System.err.println("GMLOG : " + item.getGMLog() + " Table_equip : " + table + " " + ex);

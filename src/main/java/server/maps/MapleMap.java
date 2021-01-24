@@ -512,16 +512,16 @@ public final class MapleMap {
                         idrop = ii.randomizeStats((Equip) ii.getEquipById(de.itemId));
                     } else {
                         final int range = Math.abs(de.Maximum - de.Minimum);
-                        idrop = new Item(de.itemId, (byte) 0, (short) (de.Maximum != 1 ? Randomizer.nextInt(range <= 0 ? 1 : range) + de.Minimum : 1), (byte) 0);
+                        idrop = new Item(de.itemId, (byte) 0, (short) (de.Maximum != 1 ? Randomizer.nextInt(range <= 0 ? 1 : range) + de.Minimum : 1), (byte) 0, (byte) 0, (byte) 0);
 
                     }
                     // 枫叶
                     if (Randomizer.nextInt(100) <= 7 && !mob.getStats().isBoss() && chr.getEventInstance() == null) {
-                        idrop = new Item(4001126, (byte) 0, (short) 1, (byte) 0);
+                        idrop = new Item(4001126, (byte) 0, (short) 1, (byte) 0, (byte) 0, (byte) 0);
                     }
                     // 铁块
                     if (Randomizer.nextInt(100) <= 10 && chr.getQuestStatus(28172) == 1) {
-                        idrop = new Item(4001341, (byte) 0, (short) 1, (byte) 0);
+                        idrop = new Item(4001341, (byte) 0, (short) 1, (byte) 0, (byte) 0, (byte) 0);
                     }
                     spawnMobDrop(idrop, calcDropPos(pos, mob.getPosition()), mob, chr, droptype, de.questid);
                 }
@@ -558,11 +558,11 @@ public final class MapleMap {
                     if (GameConstants.getInventoryType(de.itemId) == MapleInventoryType.EQUIP) {
                         idrop = ii.randomizeStats((Equip) ii.getEquipById(de.itemId));
                     } else {
-                        idrop = new Item(de.itemId, (byte) 0, (short) (de.Maximum != 1 ? Randomizer.nextInt(de.Maximum - de.Minimum) + de.Minimum : 1), (byte) 0);
+                        idrop = new Item(de.itemId, (byte) 0, (short) (de.Maximum != 1 ? Randomizer.nextInt(de.Maximum - de.Minimum) + de.Minimum : 1), (byte) 0, (byte) 0, (byte) 0);
                     }
                     // 枫叶
                     if (Randomizer.nextInt(100) <= 7 && !mob.getStats().isBoss() && chr.getEventInstance() == null) {
-                        idrop = new Item(4001126, (byte) 0, (short) 1, (byte) 0);
+                        idrop = new Item(4001126, (byte) 0, (short) 1, (byte) 0, (byte) 0, (byte) 0);
                     }
                     spawnMobDrop(idrop, calcDropPos(pos, mob.getPosition()), mob, chr, de.onlySelf ? 0 : droptype, de.questid);
                     d++;
@@ -1669,7 +1669,7 @@ public final class MapleMap {
         if (GameConstants.getInventoryType(itemid) == MapleInventoryType.EQUIP) {
             idrop = ii.randomizeStats((Equip) ii.getEquipById(itemid));
         } else {
-            idrop = new Item(itemid, (byte) 0, (short) 1, (byte) 0);
+            idrop = new Item(itemid, (byte) 0, (short) 1, (byte) 0, (byte) 0, (byte) 0);
         }
         final MapleMapItem mdrop = new MapleMapItem(pos, idrop);
         spawnAndAddRangedMapObject(mdrop, c -> c.getSession().write(MaplePacketCreator.dropItemFromMapObject(mdrop, pos, pos, (byte) 1)), null);

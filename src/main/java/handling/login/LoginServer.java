@@ -53,7 +53,7 @@ public class LoginServer {
     public static int PORT = 8484;
     private static InetSocketAddress InetSocketadd;
     private static IoAcceptor acceptor;
-    private static Map<Integer, Integer> load = new HashMap<Integer, Integer>();
+    private static Map<Integer, Integer> load = new HashMap<>();
     private static String serverName, eventMessage;
     private static byte flag;
     private static int maxCharacters, userLimit, usersOn = 0;

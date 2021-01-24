@@ -152,7 +152,7 @@ public class CashShop implements Serializable {
             }
             ret = eq.copy();
         } else {
-            Item item = new Item(cItem.getId(), (byte) 0, (short) cItem.getCount(), (byte) 0, uniqueid);
+            Item item = new Item(cItem.getId(), (byte) 0, (short) cItem.getCount(), (byte) 0, uniqueid, (byte) 0, (byte) 0);
             item.setExpiration(System.currentTimeMillis() + (period * 24 * 60 * 60 * 1000));
             item.setGiftFrom(gift);
             if (GameConstants.isPet(cItem.getId())) {
@@ -206,7 +206,7 @@ public class CashShop implements Serializable {
             }
             ret = eq.copy();
         } else {
-            Item item = new Item(cItem.getId(), (byte) 0, (short) cItem.getCount(), (byte) 0, uniqueid);
+            Item item = new Item(cItem.getId(), (byte) 0, (short) cItem.getCount(), (byte) 0, uniqueid, (byte) 0, (byte) 0);
             if (period > 0) {
                 item.setExpiration(System.currentTimeMillis() + (period * 24 * 60 * 60 * 1000));
             }
@@ -330,7 +330,7 @@ public class CashShop implements Serializable {
             }
             ret = eq.copy();
         } else {
-            Item item = new Item(cItem.getId(), (byte) 0, (short) cItem.getCount(), (byte) 0, uniqueid);
+            Item item = new Item(cItem.getId(), (byte) 0, (short) cItem.getCount(), (byte) 0, uniqueid, (byte) 0, (byte) 0);
             item.setGiftFrom(gift);
             if (GameConstants.isPet(cItem.getId())) {
                 final MaplePet pet = MaplePet.createPet(cItem.getId(), uniqueid);

@@ -104,7 +104,7 @@ public class ReactorActionManager extends AbstractPlayerInteraction {
             } else {
                 IItem drop;
                 if (GameConstants.getInventoryType(d.itemId) != MapleInventoryType.EQUIP) {
-                    drop = new Item(d.itemId, (byte) 0, (short) 1, (byte) 0);
+                    drop = new Item(d.itemId, (byte) 0, (short) 1, (byte) 0, (byte) 0, (byte) 0);
                 } else {
                     drop = ii.randomizeStats((Equip) ii.getEquipById(d.itemId));
                 }

@@ -384,7 +384,7 @@ public class CharLoginHandler {
 //                newchar.getInventory(MapleInventoryType.ETC).addItem(new Item(4161048, (byte) 0, (short) 1, (byte) 0));//- 战童指南 - 战童专用指南。\n#c双击道具，可以把书打开。#
                 break;
         }
-        newchar.getInventory(MapleInventoryType.USE).addItem(new Item(2022336, (byte) 0, (short) 1, (byte) 0));//5530000//- 秘密箱子 - 新手礼包
+        newchar.getInventory(MapleInventoryType.USE).addItem(new Item(2022336, (byte) 0, (short) 1, (byte) 0, (byte) 0, (byte) 0));//5530000//- 秘密箱子 - 新手礼包
         //获取玩家的名称 字符
         //从WZ的XML中  即 Etc.wz\ForbiddenName.img 中 获取限制字符
         //如果玩家的名称字符 不等于 从XML节点中获取到的限制字符.即名称符合标准

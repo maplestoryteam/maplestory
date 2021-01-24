@@ -1669,7 +1669,7 @@ public class MapleMonster extends AbstractLoadedMapleLife {
                         Equip eq = (Equip) MapleItemInformationProvider.getInstance().getEquipById(d.itemId);
                         idrop = MapleItemInformationProvider.getInstance().randomizeStats(eq);
                     } else {
-                        idrop = new Item(d.itemId, (byte) 0, (short) (d.Maximum != 1 ? Randomizer.nextInt(d.Maximum - d.Minimum) + d.Minimum : 1), (byte) 0);
+                        idrop = new Item(d.itemId, (byte) 0, (short) (d.Maximum != 1 ? Randomizer.nextInt(d.Maximum - d.Minimum) + d.Minimum : 1), (byte) 0, (byte) 0, (byte) 0);
                     }
                     stolen = d.itemId;
                     map.spawnMobDrop(idrop, map.calcDropPos(getPosition(), getTruePosition()), this, chr, (byte) 0, (short) 0);

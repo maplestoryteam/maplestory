@@ -39,20 +39,20 @@ public class Equip extends Item implements IEquip, Serializable {
     private byte itemLevel;
 
     public Equip(int id, short position) {
-        super(id, position, (short) 1, (byte) 0);
+        super(id, position, (short) 1, (byte) 0, (byte) 0, (byte) 0);
     }
 
-    public Equip(int id, short position, byte flag) {
-        super(id, position, (short) 1, flag);
+    public Equip(int id, short position, byte flag, byte jiandaoFlag, byte qianghuaFlag) {
+        super(id, position, (short) 1, flag, jiandaoFlag, qianghuaFlag);
     }
 
-    public Equip(int id, short position, int uniqueid, byte flag) {
-        super(id, position, (short) 1, flag, uniqueid);
+    public Equip(int id, short position, int uniqueid, byte flag, byte jiandaoFlag, byte qianghuaFlag) {
+        super(id, position, (short) 1, flag, uniqueid, jiandaoFlag, qianghuaFlag);
     }
 
     @Override
     public IItem copy() {
-        Equip ret = new Equip(getItemId(), getPosition(), getUniqueId(), getFlag());
+        Equip ret = new Equip(getItemId(), getPosition(), getUniqueId(), getFlag(), getJiandaoFlag(), getQianghuaFlag());
         ret.str = str;
         ret.dex = dex;
         ret._int = _int;

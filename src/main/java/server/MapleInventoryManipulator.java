@@ -137,7 +137,7 @@ public class MapleInventoryManipulator {
                     short newQ = (short) Math.min(quantity, slotMax);
                     if (newQ != 0) {
                         quantity -= newQ;
-                        nItem = new Item(itemId, (byte) 0, newQ, (byte) 0, uniqueid);
+                        nItem = new Item(itemId, (byte) 0, newQ, (byte) 0, uniqueid, (byte) 0, (byte) 0);
 
                         newSlot = c.getPlayer().getInventory(type).addItem(nItem);
                         if (newSlot == -1) {
@@ -173,7 +173,7 @@ public class MapleInventoryManipulator {
                 }
             } else {
                 // Throwing Stars and Bullets - Add all into one slot regardless of quantity.
-                final Item nItem = new Item(itemId, (byte) 0, quantity, (byte) 0, uniqueid);
+                final Item nItem = new Item(itemId, (byte) 0, quantity, (byte) 0, uniqueid, (byte) 0, (byte) 0);
                 newSlot = c.getPlayer().getInventory(type).addItem(nItem);
 
                 if (newSlot == -1) {
@@ -261,7 +261,7 @@ public class MapleInventoryManipulator {
                     short newQ = (short) Math.min(quantity, slotMax);
                     if (newQ != 0) {
                         quantity -= newQ;
-                        nItem = new Item(itemId, (byte) 0, newQ, (byte) 0);
+                        nItem = new Item(itemId, (byte) 0, newQ, (byte) 0, (byte) 0, (byte) 0);
                         final short newSlot = c.getPlayer().getInventory(type).addItem(nItem);
                         if (newSlot == -1 && recieved) {
                             return nItem;
@@ -283,7 +283,7 @@ public class MapleInventoryManipulator {
                 }
             } else {
                 // Throwing Stars and Bullets - Add all into one slot regardless of quantity.
-                final Item nItem = new Item(itemId, (byte) 0, quantity, (byte) 0);
+                final Item nItem = new Item(itemId, (byte) 0, quantity, (byte) 0, (byte) 0, (byte) 0);
                 final short newSlot = c.getPlayer().getInventory(type).addItem(nItem);
 
                 if (newSlot == -1) {
@@ -355,7 +355,7 @@ public class MapleInventoryManipulator {
                 while (quantity > 0) {
                     final short newQ = (short) Math.min(quantity, slotMax);
                     quantity -= newQ;
-                    final Item nItem = new Item(item.getItemId(), (byte) 0, newQ, item.getFlag());
+                    final Item nItem = new Item(item.getItemId(), (byte) 0, newQ, item.getFlag(), item.getJiandaoFlag(), item.getQianghuaFlag());
                     nItem.setExpiration(item.getExpiration());
                     nItem.setOwner(item.getOwner());
                     nItem.setPet(item.getPet());
@@ -370,7 +370,7 @@ public class MapleInventoryManipulator {
                 }
             } else {
                 // Throwing Stars and Bullets - Add all into one slot regardless of quantity.
-                final Item nItem = new Item(item.getItemId(), (byte) 0, quantity, item.getFlag());
+                final Item nItem = new Item(item.getItemId(), (byte) 0, quantity, item.getFlag(), item.getJiandaoFlag(), item.getQianghuaFlag());
                 nItem.setExpiration(item.getExpiration());
                 nItem.setOwner(item.getOwner());
                 nItem.setPet(item.getPet());
@@ -468,7 +468,7 @@ public class MapleInventoryManipulator {
                 while (quantity > 0) {
                     final short newQ = (short) Math.min(quantity, slotMax);
                     quantity -= newQ;
-                    final Item nItem = new Item(item.getItemId(), (byte) 0, newQ, item.getFlag());
+                    final Item nItem = new Item(item.getItemId(), (byte) 0, newQ, item.getFlag(), item.getJiandaoFlag(), item.getQianghuaFlag());
                     nItem.setExpiration(item.getExpiration());
                     nItem.setOwner(item.getOwner());
                     nItem.setPet(item.getPet());
@@ -483,7 +483,7 @@ public class MapleInventoryManipulator {
                 }
             } else {
                 // Throwing Stars and Bullets - Add all into one slot regardless of quantity.
-                final Item nItem = new Item(item.getItemId(), (byte) 0, quantity, item.getFlag());
+                final Item nItem = new Item(item.getItemId(), (byte) 0, quantity, item.getFlag(), item.getJiandaoFlag(), item.getQianghuaFlag());
                 nItem.setExpiration(item.getExpiration());
                 nItem.setOwner(item.getOwner());
                 nItem.setPet(item.getPet());
@@ -576,7 +576,7 @@ public class MapleInventoryManipulator {
                 while (quantity > 0) {
                     final short newQ = (short) Math.min(quantity, slotMax);
                     quantity -= newQ;
-                    final Item nItem = new Item(item.getItemId(), (byte) 0, newQ, item.getFlag());
+                    final Item nItem = new Item(item.getItemId(), (byte) 0, newQ, item.getFlag(), item.getJiandaoFlag(), item.getQianghuaFlag());
                     nItem.setExpiration(item.getExpiration());
                     nItem.setOwner(item.getOwner());
                     nItem.setPet(item.getPet());
@@ -591,7 +591,7 @@ public class MapleInventoryManipulator {
                 }
             } else {
                 // Throwing Stars and Bullets - Add all into one slot regardless of quantity.
-                final Item nItem = new Item(item.getItemId(), (byte) 0, quantity, item.getFlag());
+                final Item nItem = new Item(item.getItemId(), (byte) 0, quantity, item.getFlag(), item.getJiandaoFlag(), item.getQianghuaFlag());
                 nItem.setExpiration(item.getExpiration());
                 nItem.setOwner(item.getOwner());
                 nItem.setPet(item.getPet());

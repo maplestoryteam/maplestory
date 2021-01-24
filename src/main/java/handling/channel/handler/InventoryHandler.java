@@ -1708,20 +1708,31 @@ public class InventoryHandler {
                 break;
             }
             case 5520000: { // Karma
+                // 装备剪刀逻辑：
+                // 1、每个装备最多只能剪一次
                 final MapleInventoryType type = MapleInventoryType.getByType((byte) slea.readInt());
                 final IItem item = c.getPlayer().getInventory(type).getItem((byte) slea.readInt());
                 if (item != null && !ItemFlag.KARMA_EQ.check(item.getFlag()) && !ItemFlag.KARMA_USE.check(item.getFlag())) {
-                    if (itemId == 5520000 && MapleItemInformationProvider.getInstance().isKarmaEnabled(item.getItemId()) || MapleItemInformationProvider.getInstance().isPKarmaEnabled(item.getItemId())) {
-                        byte flag = item.getFlag();
-                        if (type == MapleInventoryType.EQUIP) {
-                            flag |= ItemFlag.KARMA_EQ.getValue();
-                        } else {
-                            flag |= ItemFlag.KARMA_USE.getValue();
-                        }
-                        item.setFlag(flag);
+                    if (itemId == 5520000 && MapleItemInformationProvider.getInstance().isKarmaEnabled(item.getItemId())
+                            || MapleItemInformationProvider.getInstance().isPKarmaEnabled(item.getItemId())) {
 
-                        c.getPlayer().forceReAddItem_Flag(item, type);
-                        used = true;
+                        // 判断装备是否已经被剪刀剪了一次
+                        if (item.getJiandaoFlag() != 0) {
+                            c.getPlayer().dropMessage(1, "此装备已经剪过一次。");
+                            break;
+                        } else {
+                            byte flag = item.getFlag();
+                            if (type == MapleInventoryType.EQUIP) {
+                                flag |= ItemFlag.KARMA_EQ.getValue();
+                            } else {
+                                flag |= ItemFlag.KARMA_USE.getValue();
+                            }
+                            item.setFlag(flag);
+                            item.setJiandaoFlag((byte) 1);
+                            c.getPlayer().forceReAddItem_Flag(item, type);
+                            used = true;
+                        }
+
                     }
                 }
                 break;

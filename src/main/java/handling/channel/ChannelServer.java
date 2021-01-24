@@ -102,7 +102,7 @@ public class ChannelServer implements Serializable {
     private final ReentrantReadWriteLock merchLock = new ReentrantReadWriteLock(); //merchant
     private final ReentrantReadWriteLock squadLock = new ReentrantReadWriteLock(); //squad
     private int eventmap = -1;
-    private final Map<MapleEventType, MapleEvent> events = new EnumMap<MapleEventType, MapleEvent>(MapleEventType.class);
+    private final Map<MapleEventType, MapleEvent> events = new EnumMap<>(MapleEventType.class);
     private final boolean debugMode = false;
     private int instanceId = 0;
 
@@ -122,7 +122,7 @@ public class ChannelServer implements Serializable {
     }
 
     public static Set<Integer> getAllInstance() {
-        return new HashSet<Integer>(instances.keySet());
+        return new HashSet<>(instances.keySet());
     }
 
     public final void loadEvents() {

@@ -239,7 +239,7 @@ public class MapleItemInformationProvider {
             item.equipStats = new HashMap<>();
         }
 
-        item.eq = new Equip(itemId, (byte) 0, -1, (byte) 0);
+        item.eq = new Equip(itemId, (byte) 0, -1, (byte) 0, (byte) 0, (byte) 0);
         short stats = GameConstants.getStat(itemId, 0);
         if (stats > 0) {
             item.eq.setStr(stats);
@@ -1182,7 +1182,7 @@ public class MapleItemInformationProvider {
     }
 
     public final IItem getEquipById(final int equipId, final int ringId) {
-        final Equip nEquip = new Equip(equipId, (byte) 0, ringId, (byte) 0);
+        final Equip nEquip = new Equip(equipId, (byte) 0, ringId, (byte) 0, (byte) 0, (byte) 0);
         nEquip.setQuantity((short) 1);
         final Map<String, Integer> stats = getEquipStats(equipId);
         if (stats != null) {

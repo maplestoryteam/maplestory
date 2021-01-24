@@ -58,7 +58,7 @@ public class MapleRing implements Serializable {
 
             MapleRing ret = new MapleRing(ring.getItemId(), rs.getInt("partnerRingId"), rs.getInt("partnerChrId"), rs.getInt("itemid"), rs.getString("partnerName"));
             ret.setEquipped(false);
-            Equip eq = new Equip(ring.getItemId(), ring.getPosition(), ring.getUniqueId(), ring.getFlag());
+            Equip eq = new Equip(ring.getItemId(), ring.getPosition(), ring.getUniqueId(), ring.getFlag(), ring.getJiandaoFlag(), ring.getQianghuaFlag());
             rs.close();
             ps.close();
 

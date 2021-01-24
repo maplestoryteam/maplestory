@@ -1432,10 +1432,10 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
     }
 
     public void saveInventory(final Connection con) throws SQLException {
-        List<Pair<IItem, MapleInventoryType>> listing = new ArrayList<Pair<IItem, MapleInventoryType>>();
+        List<Pair<IItem, MapleInventoryType>> listing = new ArrayList<>();
         for (final MapleInventory iv : inventory) {
             for (final IItem item : iv.list()) {
-                listing.add(new Pair<IItem, MapleInventoryType>(item, iv.getType()));
+                listing.add(new Pair<>(item, iv.getType()));
             }
         }
         if (con != null) {
