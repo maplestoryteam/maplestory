@@ -1738,24 +1738,23 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
                 World.Broadcast.broadcastSmega(MaplePacketCreator.serverNotice(11, this.c.getChannel(), "[组队征集令] : " + msg).getBytes());
                 break;
             case 2:
-                World.Broadcast.broadcastSmega(MaplePacketCreator.serverNotice(12, this.c.getChannel(), "[组队征集令]: " + msg).getBytes());
+                World.Broadcast.broadcastSmega(MaplePacketCreator.serverNotice(12, this.c.getChannel(), "[组队征集令] : " + msg).getBytes());
                 break;
             case 3:
-                World.Broadcast.broadcastSmega(MaplePacketCreator.serverNotice(3, this.c.getChannel(), "[组队征集令]: " + msg).getBytes());
+                World.Broadcast.broadcastSmega(MaplePacketCreator.serverNotice(3, this.c.getChannel(), "[组队征集令] : " + msg).getBytes());
         }
     }
 
     public void 喇叭(int lx, String msg) {
-        lx = 10;
-        World.Broadcast.broadcastSmega(MaplePacketCreator.serverNotice(11, this.c.getChannel(), "[全服公告] : " + msg).getBytes());
         switch (lx) {
             case 1:
+                World.Broadcast.broadcastSmega(MaplePacketCreator.serverNotice(11, this.c.getChannel(), "[全服公告] : " + msg).getBytes());
                 break;
             case 2:
-                World.Broadcast.broadcastSmega(MaplePacketCreator.serverNotice(12, this.c.getChannel(), "[全服公告]: " + msg).getBytes());
+                World.Broadcast.broadcastSmega(MaplePacketCreator.serverNotice(12, this.c.getChannel(), "[全服公告] : " + msg).getBytes());
                 break;
             case 3:
-                World.Broadcast.broadcastSmega(MaplePacketCreator.serverNotice(3, this.c.getChannel(), "[全服公告]: " + msg).getBytes());
+                World.Broadcast.broadcastSmega(MaplePacketCreator.serverNotice(3, this.c.getChannel(), "[全服公告] : " + msg).getBytes());
                 break;
         }
     }

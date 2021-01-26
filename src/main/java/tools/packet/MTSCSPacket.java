@@ -68,6 +68,9 @@ public class MTSCSPacket {
         final Collection<CashModInfo> cmi = CashItemFactory.getInstance().getAllModInfo();
         mplew.writeShort(cmi.size());
         for (CashModInfo cm : cmi) {
+            if (ServerConstants.调试输出封包) {
+                System.out.println("addModCashItemInfo--------------------");
+            }
             addModCashItemInfo(mplew, cm);
         }
         mplew.writeShort(0);
@@ -3989,9 +3992,6 @@ public class MTSCSPacket {
     }
 
     public static void addModCashItemInfo(MaplePacketLittleEndianWriter mplew, CashModInfo item) {
-        if (ServerConstants.调试输出封包) {
-            System.out.println("addModCashItemInfo--------------------");
-        }
         int flags = item.flags;
         mplew.writeInt(item.sn);
         mplew.writeInt(flags);

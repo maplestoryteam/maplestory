@@ -541,6 +541,9 @@ public class MapleServerHandler extends IoHandlerAdapter implements MapleServerH
                 final int playerid = slea.readInt();
                 if (cs) {
                     CashShopOperation.EnterCS(playerid, c);
+                    if (ServerConstants.调试输出封包) {
+                        System.out.println("进入商城");
+                    }
                 } else {
                     InterServerHandler.Loggedin(playerid, c);
                 }
@@ -548,6 +551,9 @@ public class MapleServerHandler extends IoHandlerAdapter implements MapleServerH
             case ENTER_CASH_SHOP:
                 slea.readInt();
                 InterServerHandler.EnterCS(c, c.getPlayer(), false);
+                if (ServerConstants.调试输出封包) {
+                    System.out.println("进入商城ENTER_CASH_SHOP");
+                }
                 break;
             case ENTER_MTS:
                 InterServerHandler.EnterMTS(c, c.getPlayer(), true);

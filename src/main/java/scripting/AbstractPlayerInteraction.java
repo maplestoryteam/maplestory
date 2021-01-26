@@ -1922,7 +1922,6 @@ public abstract class AbstractPlayerInteraction {
         this.c.getPlayer().resetGamePointsPS();
     }
 
-
     public final void 移动(final int mapid) {
         warp(mapid);
     }
