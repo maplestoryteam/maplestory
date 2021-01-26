@@ -62,29 +62,28 @@ public abstract class AbstractScriptManager {
 //                engine = c.getScriptEngine(path);
 //            }
 //            if (engine == null) {
-                File scriptFile = new File(path);
-                if (!scriptFile.exists()) {
-                    return null;
-                }
-                engine = sem.getEngineByName("javascript");
+            File scriptFile = new File(path);
+            if (!scriptFile.exists()) {
+                return null;
+            }
+            engine = sem.getEngineByName("nashorn");
 
-                if (c != null) {
-                    c.setScriptEngine(path, engine);
-                }
-                fr = new FileInputStream(scriptFile);
+            if (c != null) {
+                c.setScriptEngine(path, engine);
+            }
+            fr = new FileInputStream(scriptFile);
 //                InputStreamReader reader = new InputStreamReader(fr, EncodingDetect.getJavaEncode(scriptFile));
 //                BufferedReader bf = new BufferedReader(reader);
-                //jdk8 添加 try{load("nashorn:mozilla_compat.js");}catch (e){}
-                String encoding = EncodingDetect.getJavaEncode(scriptFile);
-                List<String> readLines = IOUtils.readLines(fr, encoding);
-                String scrhead = "try{load(\"nashorn:mozilla_compat.js\");}catch(e){};";
-                StringBuffer buffer = new StringBuffer();
-                buffer.append(scrhead);
-                readLines.stream().forEach(s -> {
-                    buffer.append("\r\n");
-                    buffer.append(s);
-                });
-                engine.eval(buffer.toString());
+            //jdk8 添加 try{load("nashorn:mozilla_compat.js");}catch (e){}
+            String encoding = EncodingDetect.getJavaEncode(scriptFile);
+            List<String> readLines = IOUtils.readLines(fr, encoding);
+            engine.eval("try{load(\"nashorn:mozilla_compat.js\");}catch(e){};");
+            StringBuffer buffer = new StringBuffer();
+            readLines.stream().forEach(s -> {
+                buffer.append("\r\n");
+                buffer.append(s);
+            });
+            engine.eval(buffer.toString());
 //            } else if (c != null && npc) {
 //                NPCScriptManager.getInstance().dispose(c);
 //                c.getSession().write(MaplePacketCreator.enableActions());

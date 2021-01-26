@@ -1699,29 +1699,22 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
         MapleMap warpMap = c.getChannelServer().getMapFactory().getMap(mid);
         c.getPlayer().changeMap(warpMap, warpMap.getPortal(0));
         c.sendPacket(MaplePacketCreator.getClock(time));
-        Timer.EventTimer.getInstance().schedule(new Runnable() {
-
-            @Override
-            public void run() {
-                MapleMap warpMap = c.getChannelServer().getMapFactory().getMap(retmap);
-                if (c.getPlayer() != null) {
-                    c.sendPacket(MaplePacketCreator.stopClock());
-                    c.getPlayer().changeMap(warpMap, warpMap.getPortal(0));
-                    c.getPlayer().dropMessage(6, "到达目的地ヘ!");
-                }
+        Timer.EventTimer.getInstance().schedule(() -> {
+            MapleMap warpMap1 = c.getChannelServer().getMapFactory().getMap(retmap);
+            if (c.getPlayer() != null) {
+                c.sendPacket(MaplePacketCreator.stopClock());
+                c.getPlayer().changeMap(warpMap1, warpMap1.getPortal(0));
+                c.getPlayer().dropMessage(6, "到达目的地!");
             }
         }, 1000 * time);
     }
 
     public void warpMapWithClock(final int mid, int seconds) {
         c.getPlayer().getMap().broadcastMessage(MaplePacketCreator.getClock(seconds));
-        Timer.MapTimer.getInstance().schedule(new Runnable() {
-
-            public void run() {
-                if (c.getPlayer() != null) {
-                    for (MapleCharacter chr : c.getPlayer().getMap().getCharactersThreadsafe()) {
-                        chr.changeMap(mid);
-                    }
+        Timer.MapTimer.getInstance().schedule(() -> {
+            if (c.getPlayer() != null) {
+                for (MapleCharacter chr : c.getPlayer().getMap().getCharactersThreadsafe()) {
+                    chr.changeMap(mid);
                 }
             }
         }, seconds * 1000);
@@ -1742,26 +1735,28 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
     public void 组队征集喇叭(int lx, String msg) {
         switch (lx) {
             case 1:
-                World.Broadcast.broadcastSmega(MaplePacketCreator.serverNotice(11, this.c.getChannel(), "组队征集令] : " + msg).getBytes());
+                World.Broadcast.broadcastSmega(MaplePacketCreator.serverNotice(11, this.c.getChannel(), "[组队征集令] : " + msg).getBytes());
                 break;
             case 2:
-                World.Broadcast.broadcastSmega(MaplePacketCreator.serverNotice(12, this.c.getChannel(), "组队征集令]: " + msg).getBytes());
+                World.Broadcast.broadcastSmega(MaplePacketCreator.serverNotice(12, this.c.getChannel(), "[组队征集令]: " + msg).getBytes());
                 break;
             case 3:
-                World.Broadcast.broadcastSmega(MaplePacketCreator.serverNotice(3, this.c.getChannel(), "组队征集令]: " + msg).getBytes());
+                World.Broadcast.broadcastSmega(MaplePacketCreator.serverNotice(3, this.c.getChannel(), "[组队征集令]: " + msg).getBytes());
         }
     }
 
     public void 喇叭(int lx, String msg) {
+        lx = 10;
+        World.Broadcast.broadcastSmega(MaplePacketCreator.serverNotice(11, this.c.getChannel(), "[全服公告] : " + msg).getBytes());
         switch (lx) {
             case 1:
-                World.Broadcast.broadcastSmega(MaplePacketCreator.serverNotice(11, this.c.getChannel(), "全服公告] : " + msg).getBytes());
                 break;
             case 2:
-                World.Broadcast.broadcastSmega(MaplePacketCreator.serverNotice(12, this.c.getChannel(), "全服公告]: " + msg).getBytes());
+                World.Broadcast.broadcastSmega(MaplePacketCreator.serverNotice(12, this.c.getChannel(), "[全服公告]: " + msg).getBytes());
                 break;
             case 3:
-                World.Broadcast.broadcastSmega(MaplePacketCreator.serverNotice(3, this.c.getChannel(), "全服公告]: " + msg).getBytes());
+                World.Broadcast.broadcastSmega(MaplePacketCreator.serverNotice(3, this.c.getChannel(), "[全服公告]: " + msg).getBytes());
+                break;
         }
     }
 

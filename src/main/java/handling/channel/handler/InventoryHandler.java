@@ -2032,10 +2032,10 @@ public class InventoryHandler {
                         return;
                     }
                     if (c.getPlayer().isPlayer()) {
-                        World.Broadcast.broadcastSmega(MaplePacketCreator.serverNotice(0x0B, c.getChannel(), sb.toString(), ear).getBytes());
+                        World.Broadcast.broadcastSmega(MaplePacketCreator.serverNotice(11, c.getChannel(), sb.toString(), ear).getBytes());
                         System.out.println("[玩家廣播頻道 " + c.getPlayer().getName() + "] : " + message);
                     } else if (c.getPlayer().isGM()) {
-                        World.Broadcast.broadcastSmega(MaplePacketCreator.serverNotice(0x0B, c.getChannel(), sb.toString(), ear).getBytes());
+                        World.Broadcast.broadcastSmega(MaplePacketCreator.serverNotice(11, c.getChannel(), sb.toString(), ear).getBytes());
                         System.out.println("[ＧＭ廣播頻道 " + c.getPlayer().getName() + "] : " + message);
                     }
                     used = true;
