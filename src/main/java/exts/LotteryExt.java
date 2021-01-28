@@ -12,11 +12,11 @@ import java.util.List;
 
 public interface LotteryExt {
 
-    static boolean queryItemExists(int characterId, int itemId) {
+    static boolean queryItemExists(int characterId, int type, int itemId) {
         Connection conn = DatabaseConnection.getConnection();
         PreparedStatement ps;
         try {
-            ps = conn.prepareStatement(String.format("SELECT COUNT(*) FROM lottery AS l WHERE l.`character_id` = %d AND l.`item_id` = %d", characterId, itemId));
+            ps = conn.prepareStatement(String.format("SELECT COUNT(*) FROM lottery AS l WHERE l.`character_id` = %d AND l.`type` = %d AND l.`item_id` = %d", characterId, type, itemId));
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 return rs.getInt(1) > 0;
@@ -45,11 +45,11 @@ public interface LotteryExt {
         return false;
     }
 
-    static boolean updateItem(int characterId, int itemId, int itemCount) {
+    static boolean updateItem(int characterId, int type, int itemId, int itemCount) {
         Connection conn = DatabaseConnection.getConnection();
         PreparedStatement ps;
         try {
-            ps = conn.prepareStatement(String.format("UPDATE lottery AS l SET l.`item_count` = l.`item_count` + %d WHERE l.`character_id` = %d AND l.`item_id` = %d", itemCount, characterId, itemId));
+            ps = conn.prepareStatement(String.format("UPDATE lottery AS l SET l.`item_count` = l.`item_count` + %d WHERE l.`character_id` = %d AND l.`type` = %d AND l.`item_id` = %d", itemCount, characterId, type, itemId));
             int rt = ps.executeUpdate();
             ps.close();
             conn.close();
@@ -60,15 +60,16 @@ public interface LotteryExt {
         return false;
     }
 
-    static boolean deleteItem(int characterId, int itemId, int itemCount) {
+    static boolean deleteItem(int characterId, int type, int itemId, int itemCount) {
         Connection conn = DatabaseConnection.getConnection();
         PreparedStatement ps;
         try {
-            ps = conn.prepareStatement(String.format("UPDATE lottery AS l SET l.`item_count` = l.`item_count` - %d WHERE l.`character_id` = %d AND l.`item_id` = %d", itemCount, characterId, itemId));
+            ps = conn.prepareStatement(String.format("UPDATE lottery AS l SET l.`item_count` = l.`item_count` - %d WHERE l.`character_id` = %d AND l.`type` = %d AND l.`item_id` = %d", itemCount, characterId, type, itemId));
             ps.executeUpdate();
             ps.close();
 
-            ps = conn.prepareStatement(String.format("DELETE lottery WHERE `item_count` <= 0 AND l.`character_id` = %d AND l.`item_id` = %d", itemCount, characterId, itemId));
+            ps = conn.prepareStatement(String.format("DELETE FROM lottery WHERE `item_count` <= 0 AND `character_id` = %d AND `type` = %d AND `item_id` = %d", characterId, type, itemId));
+            ps.executeUpdate();
             ps.close();
 
             conn.close();

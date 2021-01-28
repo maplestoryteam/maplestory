@@ -2012,9 +2012,9 @@ public abstract class AbstractPlayerInteraction {
 
     public final void 抽奖增加(int type, int itemId, int count, int itemType) {
         int characterId = c.getPlayer().getId();
-        boolean b = LotteryExt.queryItemExists(characterId, itemId);
+        boolean b = LotteryExt.queryItemExists(characterId, type, itemId);
         if (b) {
-            LotteryExt.updateItem(characterId, itemId, count);
+            LotteryExt.updateItem(characterId, type, itemId, count);
         } else {
             LotteryExt.addItem(characterId, type, itemId, count, itemType);
         }
@@ -2028,8 +2028,8 @@ public abstract class AbstractPlayerInteraction {
         return LotteryExt.query(c.getPlayer().getId(), itemId);
     }
 
-    public final void 抽奖删除(int itemId, int count) {
-        LotteryExt.deleteItem(c.getPlayer().getId(), itemId, count);
+    public final void 抽奖删除(int type, int itemId, int count) {
+        LotteryExt.deleteItem(c.getPlayer().getId(), type, itemId, count);
     }
 
     public final List<LotteryItem> 抽奖物品查询(int type) {

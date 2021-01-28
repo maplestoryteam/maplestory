@@ -4,6 +4,10 @@
 # Log file
 *.log
 
+日志/
+log/
+logs/
+
 # BlueJ files
 *.ctxt
 
