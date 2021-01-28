@@ -20,25 +20,18 @@
  */
 package scripting;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import client.MapleClient;
+import org.apache.commons.io.IOUtils;
+import tools.FileoutputUtil;
 
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
-
-import client.MapleClient;
-
-import java.io.*;
-import java.nio.file.Files;
-import java.util.Arrays;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
-
-import org.apache.commons.io.IOUtils;
-import org.apache.mina.core.IoUtil;
-import tools.FileoutputUtil;
-import tools.MaplePacketCreator;
 
 /**
  * @author Matze
@@ -75,10 +68,11 @@ public abstract class AbstractScriptManager {
 //                InputStreamReader reader = new InputStreamReader(fr, EncodingDetect.getJavaEncode(scriptFile));
 //                BufferedReader bf = new BufferedReader(reader);
             //jdk8 添加 try{load("nashorn:mozilla_compat.js");}catch (e){}
+            StringBuilder buffer = new StringBuilder();
             String encoding = EncodingDetect.getJavaEncode(scriptFile);
             List<String> readLines = IOUtils.readLines(fr, encoding);
             engine.eval("try{load(\"nashorn:mozilla_compat.js\");}catch(e){};");
-            StringBuffer buffer = new StringBuffer();
+            readLines.add(new String(IOUtils.toByteArray(new FileInputStream("scripts/script.js")), "UTF-8"));
             readLines.stream().forEach(s -> {
                 buffer.append("\r\n");
                 buffer.append(s);

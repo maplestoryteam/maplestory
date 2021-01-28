@@ -38,7 +38,7 @@ import constants.ServerConstants;
 import database.DatabaseConnection;
 import database.DatabaseException;
 import exts.FishExt;
-import exts.FishReward;
+import exts.model.FishReward;
 import handling.MaplePacket;
 import handling.channel.ChannelServer;
 import handling.login.LoginServer;

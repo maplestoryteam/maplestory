@@ -1,4 +1,4 @@
-package exts;
+package exts.model;
 
 public class FishReward {
     private int itemId;

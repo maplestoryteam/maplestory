@@ -1,6 +1,7 @@
 package exts;
 
 import database.DatabaseConnection;
+import exts.model.FishReward;
 import server.Randomizer;
 
 import java.sql.Connection;
@@ -10,10 +11,10 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FishExt {
-    public static List<FishReward> fishRewards = new ArrayList<>();
+public interface FishExt {
+    List<FishReward> fishRewards = new ArrayList<>();
 
-    public synchronized static void refreshFishRewareds() {
+    static void refreshFishRewareds() {
         try {
             System.out.println("开始读取抽奖物品");
             Connection conn = DatabaseConnection.getConnection();
@@ -39,7 +40,7 @@ public class FishExt {
         }
     }
 
-    public synchronized static FishReward randomItem() {
+    static FishReward randomItem() {
         if (fishRewards.size() <= 0) {
             return null;
         }

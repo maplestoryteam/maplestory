@@ -35,7 +35,7 @@ public class MapleStorage implements Serializable {
     private int meso;
     private byte slots;
     private boolean changed = false;
-    private final Map<MapleInventoryType, List<IItem>> typeItems = new EnumMap<MapleInventoryType, List<IItem>>(MapleInventoryType.class);
+    private final Map<MapleInventoryType, List<IItem>> typeItems = new EnumMap<>(MapleInventoryType.class);
 
     private MapleStorage(int id, byte slots, int meso, int accountId) {
         this.id = id;

@@ -20,49 +20,40 @@
  */
 package scripting;
 
-import kinms.db.CherryMSLottery;
-import kinms.db.CherryMScustomEventFactory;
-
-import java.awt.Point;
-import java.util.List;
-
-import server.Timer.*;
-import client.inventory.Equip;
-import client.SkillFactory;
-import constants.GameConstants;
-import client.ISkill;
-import client.MapleCharacter;
-import client.MapleClient;
-import client.inventory.MapleInventoryType;
-import client.inventory.MaplePet;
-import client.MapleQuestStatus;
+import client.*;
 import client.inventory.*;
+import constants.GameConstants;
+import exts.LotteryExt;
+import exts.LotteryItemExt;
+import exts.model.Lottery;
+import exts.model.LotteryItem;
 import handling.channel.ChannelServer;
 import handling.world.MapleParty;
 import handling.world.MaplePartyCharacter;
+import handling.world.World;
 import handling.world.guild.MapleGuild;
-import server.Randomizer;
+import kinms.db.CherryMSLottery;
+import kinms.db.CherryMScustomEventFactory;
 import server.MapleInventoryManipulator;
 import server.MapleItemInformationProvider;
-import server.maps.MapleMap;
-import server.maps.MapleReactor;
-import server.maps.MapleMapObject;
-import server.maps.SavedLocationType;
-import server.maps.Event_DojoAgent;
-import server.life.MapleMonster;
+import server.MaplePortal;
+import server.Randomizer;
+import server.Timer.EtcTimer;
+import server.Timer.MapTimer;
+import server.events.MapleEvent;
+import server.events.MapleEventType;
 import server.life.MapleLifeFactory;
+import server.life.MapleMonster;
+import server.life.OverrideMonsterStats;
+import server.maps.*;
 import server.quest.MapleQuest;
 import tools.MaplePacketCreator;
 import tools.packet.PetPacket;
 import tools.packet.UIPacket;
-import handling.world.World;
 
+import java.awt.*;
 import java.util.LinkedHashSet;
-
-import server.*;
-import server.events.MapleEvent;
-import server.events.MapleEventType;
-import server.life.OverrideMonsterStats;
+import java.util.List;
 
 public abstract class AbstractPlayerInteraction {
 
@@ -137,7 +128,7 @@ public abstract class AbstractPlayerInteraction {
     public final void warp(final int map, final int portal) {
         final MapleMap mapz = getWarpMap(map);
         if (portal != 0 && map == c.getPlayer().getMapId()) { //test
-            final Point portalPos = new Point(c.getPlayer().getMap().getPortal(portal).getPosition());
+//            final Point portalPos = new Point(c.getPlayer().getMap().getPortal(portal).getPosition());
             /*
              * if (portalPos.distanceSq(getPlayer().getPosition()) < 90000.0) {
              * //estimation
@@ -2017,5 +2008,35 @@ public abstract class AbstractPlayerInteraction {
 
     public final int 剩余背包(byte type) {
         return c.getPlayer().getInventory(MapleInventoryType.getByType(type)).getNumFreeSlot();
+    }
+
+    public final void 抽奖增加(int type, int itemId, int count, int itemType) {
+        int characterId = c.getPlayer().getId();
+        boolean b = LotteryExt.queryItemExists(characterId, itemId);
+        if (b) {
+            LotteryExt.updateItem(characterId, itemId, count);
+        } else {
+            LotteryExt.addItem(characterId, type, itemId, count, itemType);
+        }
+    }
+
+    public final List<Lottery> 抽奖查询1(int type, int itemType) {
+        return LotteryExt.query(c.getPlayer().getId(), type, itemType);
+    }
+
+    public final int 抽奖查询2(int itemId) {
+        return LotteryExt.query(c.getPlayer().getId(), itemId);
+    }
+
+    public final void 抽奖删除(int itemId, int count) {
+        LotteryExt.deleteItem(c.getPlayer().getId(), itemId, count);
+    }
+
+    public final List<LotteryItem> 抽奖物品查询(int type) {
+        return LotteryItemExt.query(type);
+    }
+
+    public final int 抽奖开始(int type) {
+        return LotteryItemExt.lottery(type);
     }
 }
