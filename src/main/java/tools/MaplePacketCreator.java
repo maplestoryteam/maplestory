@@ -492,6 +492,21 @@ public class MaplePacketCreator {
         return mplew.getPacket();
     }
 
+    public static MaplePacket getGachaponMega(final String message, int channel) {
+        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
+
+        if (ServerConstants.调试输出封包) {
+            System.out.println("getGachaponMega--------------------");
+        }
+        mplew.writeShort(SendPacketOpcode.SERVERMESSAGE.getValue());
+        mplew.write(/*
+         * rareness == 2 ? 15 :
+         */14);
+        mplew.writeMapleAsciiString(message);
+        mplew.writeInt(channel - 1); // 0~3 i think
+        return mplew.getPacket();
+    }
+
     public static MaplePacket tripleSmega(List<String> message, boolean ear, int channel) {
         MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 
@@ -715,7 +730,7 @@ public class MaplePacketCreator {
                                                    final int Equipment_Bonus_EXP,
                                                    final int Premium_Bonus_EXP,
                                                    final int activityEXP // 活动经验
-                                                   ) {
+    ) {
         final MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 
         if (ServerConstants.调试输出封包) {

@@ -5,20 +5,11 @@ import java.sql.SQLException;
 
 
 public class Lottery {
-    private int id;
     private int type;
     private int characterId;
     private int itemId;
     private int itemType;
     private int itemCount;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public int getType() {
         return type;
@@ -60,8 +51,7 @@ public class Lottery {
         this.itemCount = itemCount;
     }
 
-    public Lottery(int id, int type, int characterId, int itemId, int itemType, int itemCount) {
-        this.id = id;
+    public Lottery(int type, int characterId, int itemId, int itemType, int itemCount) {
         this.type = type;
         this.characterId = characterId;
         this.itemId = itemId;
@@ -69,16 +59,14 @@ public class Lottery {
         this.itemCount = itemCount;
     }
 
-
     public Lottery(ResultSet rs) {
         try {
-            this.id = rs.getInt(1);
-            this.type = rs.getInt(2);
+            //  type  character_id  item_id  item_type  item_count
+            this.type = rs.getInt(1);
+            this.characterId = rs.getInt(2);
             this.itemId = rs.getInt(3);
-            this.characterId = rs.getInt(4);
-            this.itemId = rs.getInt(5);
-            this.itemType = rs.getInt(6);
-            this.itemCount = rs.getInt(7);
+            this.itemType = rs.getInt(4);
+            this.itemCount = rs.getInt(5);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

@@ -20,48 +20,31 @@
  */
 package handling.channel.handler;
 
-import java.awt.Point;
-import java.util.List;
-
-import client.inventory.IItem;
-import client.ISkill;
-import client.SkillFactory;
-import client.SkillMacro;
-import constants.GameConstants;
-import client.inventory.MapleInventoryType;
-import client.MapleBuffStat;
-import client.MapleClient;
-import client.MapleCharacter;
-import client.PlayerStats;
+import client.*;
 import client.anticheat.CheatingOffense;
+import client.inventory.IItem;
+import client.inventory.MapleInventoryType;
+import constants.GameConstants;
 import constants.MapConstants;
 import handling.channel.ChannelServer;
-
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-
-import server.AutobanManager;
-import server.MapleInventoryManipulator;
-import server.MapleItemInformationProvider;
-import server.MapleStatEffect;
-import server.MaplePortal;
-import server.Randomizer;
+import server.*;
 import server.Timer.CloneTimer;
 import server.events.MapleSnowball.MapleSnowballs;
-import server.life.MapleMonster;
-import server.life.MobAttackInfo;
-import server.life.MobAttackInfoFactory;
-import server.life.MobSkill;
-import server.life.MobSkillFactory;
-import server.maps.MapleMap;
+import server.life.*;
 import server.maps.FieldLimitType;
+import server.maps.MapleMap;
 import server.maps.MapleMapObjectType;
 import server.movement.LifeMovementFragment;
 import server.quest.MapleQuest;
 import tools.MaplePacketCreator;
-import tools.packet.MobPacket;
-import tools.packet.MTSCSPacket;
 import tools.data.input.SeekableLittleEndianAccessor;
+import tools.packet.MTSCSPacket;
+import tools.packet.MobPacket;
+
+import java.awt.*;
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PlayerHandler {
 
@@ -492,11 +475,7 @@ public class PlayerHandler {
     }
 
     public static final void UseItemEffect(SeekableLittleEndianAccessor slea, MapleClient c, MapleCharacter chr) {
-        System.out.println("啊啊啊啊AA");
         int itemId = slea.readInt();
-        if (itemId == 4270000) {
-            System.out.println("ss");
-        }
         IItem toUse;
         if ((itemId == 4290001) || (itemId == 4290000)) //倒霉鸡  金鸡  效果
         {

@@ -691,7 +691,6 @@ public class MapleStatEffect implements Serializable {
     /**
      * @param applyto
      * @param obj
-     * @param attack  damage done by the skill
      */
     public final void applyPassive(final MapleCharacter applyto, final MapleMapObject obj) {
         if (makeChanceResult()) {

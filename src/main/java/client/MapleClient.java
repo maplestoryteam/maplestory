@@ -37,7 +37,6 @@ import server.quest.MapleQuest;
 import server.shops.IMaplePlayerShop;
 import tools.FileoutputUtil;
 import tools.MapleAESOFB;
-import tools.MaplePacketCreator;
 import tools.packet.LoginPacket;
 
 import javax.script.ScriptEngine;
@@ -164,7 +163,7 @@ public class MapleClient implements Serializable {
     }
 
     public List<String> loadCharacterNames(int serverId) {
-        List<String> chars = new LinkedList<String>();
+        List<String> chars = new LinkedList<>();
         for (CharNameAndId cni : loadCharactersInternal(serverId)) {
             chars.add(cni.name);
         }
@@ -423,13 +422,6 @@ public class MapleClient implements Serializable {
         }
     }
 
-    /**
-     * Returns 0 on success, a state to be used for
-     * {@link MaplePacketCreator#getLoginFailed(int)} otherwise.
-     *
-     * @param success
-     * @return The state of the login.
-     */
     public int finishLogin() {
         login_mutex.lock();
         try {

@@ -21,29 +21,27 @@
 package handling.world;
 
 import client.*;
-
-import java.io.Externalizable;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import client.inventory.MapleMount;
 import client.inventory.MaplePet;
 import server.quest.MapleQuest;
 import tools.Pair;
 
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CharacterTransfer implements Externalizable {
 
     public int characterid, accountid, exp,
-            beans, meso, hair, face, mapid, guildid,
+            beans, meso, hair, face, mapid, guildid, sg, qiandao,
             partyid, messengerid, mBookCover, dojo, ACash, MaplePoints,
             mount_itemid, mount_exp, points, vpoints, marriageId,
-            familyid, seniorid, junior1, junior2, currentrep, totalrep, expression, constellation, blood, month, day, battleshipHP, prefix, mount_id, skillzq, bosslog, grname, jzname, mrsjrw, mrsgrw, mrsbossrw, mrfbrw, hythd, mrsgrwa, mrsbossrwa, mrfbrwa, mrsgrws, mrsbossrws, mrfbrws, mrsgrwas, mrsbossrwas, mrfbrwas, ddj, vip, djjl, qiandao;
+            familyid, seniorid, junior1, junior2, currentrep, totalrep, expression, constellation, blood, month, day, battleshipHP, prefix, mount_id, skillzq, bosslog, grname, jzname, mrsjrw, mrsgrw, mrsbossrw, mrfbrw, hythd, mrsgrwa, mrsbossrwa, mrfbrwa, mrsgrws, mrsbossrws, mrfbrws, mrsgrwas, mrsbossrwas, mrfbrwas, ddj, vip, djjl;
     public byte channel, dojoRecord, gender, gmLevel, guildrank, alliancerank, clonez, fairyExp, buddysize, world, initialSpawnPoint, skinColor, mount_level, mount_Fatigue, subcategory;
     public long lastfametime, TranferTime, lastGainHM;
     public String tempIP;
@@ -65,6 +63,12 @@ public class CharacterTransfer implements Externalizable {
     }
 
     public CharacterTransfer(final MapleCharacter chr) {
+        // FIX 切换商城坐骑消失
+        this.mount_id = chr.getMountId();
+        // FIX 杀怪
+        this.sg = chr.getsg();
+        // FIX 签到
+        this.qiandao = chr.getqiandao();
         this.characterid = chr.getId();
         this.accountid = chr.getAccountID();
         this.accountname = chr.getClient().getAccountName();
@@ -168,11 +172,6 @@ public class CharacterTransfer implements Externalizable {
         } else {
             this.messengerid = 0;
         }
-
-        /*
-         * for (final Integer zz : chr.getFinishedAchievements()) {
-         * this.finishedAchievements.add(zz); }
-         */
         this.mBookCover = chr.getMonsterBookCover();
         this.dojo = chr.getDojo();
         this.dojoRecord = (byte) chr.getDojoRecord();

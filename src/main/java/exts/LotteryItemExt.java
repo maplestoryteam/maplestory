@@ -1,13 +1,13 @@
 package exts;
 
-import database.DatabaseConnection;
 import exts.model.LotteryItem;
 import server.Randomizer;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public interface LotteryItemExt {
@@ -16,22 +16,15 @@ public interface LotteryItemExt {
         return LotteryItemLoad.lotterItemMap.get(type);
     }
 
-    static int lottery(int type) {
+    static LotteryItem lottery(int type) {
         List<LotteryItem> items = LotteryItemLoad.lotterItemMap.get(type);
-        long count = items.parallelStream().filter(i -> {
-            if (Randomizer.nextInt(i.getChance() + 1) == i.getChance()) {
-                return true;
-            }
-            return false;
-        }).count();
-        int itemId = 0;//meso
-        if (count <= 0) {
-            Optional<LotteryItem> op = items.parallelStream().sorted(Comparator.comparingInt(LotteryItem::getChance)).findFirst();
-            if (op.isPresent()) {
-                itemId = op.get().getItemId();
+        for (int i = 0; i < items.size(); i++) {
+            LotteryItem item = items.get(Randomizer.nextInt(items.size()));
+            if (Randomizer.nextInt(item.getChance() + 1) == item.getChance()) {
+                return item;
             }
         }
-        return itemId;
+        return null;
     }
 
     class LotteryItemLoad {
@@ -40,15 +33,13 @@ public interface LotteryItemExt {
         static {
             List<LotteryItem> lotteryItems = new ArrayList<>();
             try {
-                Connection conn = DatabaseConnection.getConnection();
-                PreparedStatement ps = conn.prepareStatement("SELECT li.`type`,li.`item_id`,li.`item_level`,li.`item_type`,li.`chance` FROM lottery_item AS li");
+                PreparedStatement ps = ConnExt.getConn().prepareStatement("SELECT li.`type`,li.`item_id`,li.`item_level`,li.`item_type`,li.`chance` FROM lottery_item AS li");
                 ResultSet rs = ps.executeQuery();
                 while (rs.next()) {
                     lotteryItems.add(new LotteryItem(rs));
                 }
                 rs.close();
                 ps.close();
-                conn.close();
             } catch (Exception e) {
                 e.printStackTrace();
             }

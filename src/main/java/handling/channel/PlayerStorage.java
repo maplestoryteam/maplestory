@@ -20,25 +20,17 @@
  */
 package handling.channel;
 
-import java.util.Map;
-import java.util.HashMap;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.concurrent.locks.Lock;
-import java.util.Collections;
-import java.util.Collection;
-
-import client.MapleCharacterUtil;
 import client.MapleCharacter;
+import client.MapleCharacterUtil;
 import handling.MaplePacket;
 import handling.world.CharacterTransfer;
 import handling.world.CheaterData;
 import handling.world.World;
-
-import java.util.concurrent.locks.ReentrantReadWriteLock;
-
 import server.Timer.PingTimer;
+
+import java.util.*;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class PlayerStorage {
 
@@ -46,9 +38,9 @@ public class PlayerStorage {
     private final Lock rL = mutex.readLock(), wL = mutex.writeLock();
     private final ReentrantReadWriteLock mutex2 = new ReentrantReadWriteLock();
     private final Lock rL2 = mutex2.readLock(), wL2 = mutex2.writeLock();
-    private final Map<String, MapleCharacter> nameToChar = new HashMap<String, MapleCharacter>();
-    private final Map<Integer, MapleCharacter> idToChar = new HashMap<Integer, MapleCharacter>();
-    private final Map<Integer, CharacterTransfer> PendingCharacter = new HashMap<Integer, CharacterTransfer>();
+    private final Map<String, MapleCharacter> nameToChar = new HashMap<>();
+    private final Map<Integer, MapleCharacter> idToChar = new HashMap<>();
+    private final Map<Integer, CharacterTransfer> pendingCharacter = new HashMap<>();
     private final int channel;
 
     public PlayerStorage(int channel) {
@@ -80,7 +72,7 @@ public class PlayerStorage {
     public final void registerPendingPlayer(final CharacterTransfer chr, final int playerid) {
         wL2.lock();
         try {
-            PendingCharacter.put(playerid, chr);//new Pair(System.currentTimeMillis(), chr));
+            pendingCharacter.put(playerid, chr);//new Pair(System.currentTimeMillis(), chr));
         } finally {
             wL2.unlock();
         }
@@ -111,7 +103,7 @@ public class PlayerStorage {
     public final void deregisterPendingPlayer(final int charid) {
         wL2.lock();
         try {
-            PendingCharacter.remove(charid);
+            pendingCharacter.remove(charid);
         } finally {
             wL2.unlock();
         }
@@ -121,7 +113,7 @@ public class PlayerStorage {
         final CharacterTransfer toreturn;
         rL2.lock();
         try {
-            toreturn = PendingCharacter.get(charid);//.right;
+            toreturn = pendingCharacter.get(charid);//.right;
         } finally {
             rL2.unlock();
         }
@@ -140,15 +132,6 @@ public class PlayerStorage {
         }
     }
 
-    /*
-     public MapleCharacter getPendingCharacter(int id) {
-     for (MapleCharacter chr : pendingCharacter) {
-     if (chr.getId() == id) {
-     return chr;
-     }
-     }
-     return null;
-     }*/
     public final MapleCharacter getCharacterById(final int id) {
         rL.lock();
         try {
@@ -293,7 +276,7 @@ public class PlayerStorage {
     }
 
     public final int pendingCharacterSize() {
-        return PendingCharacter.size();
+        return pendingCharacter.size();
     }
 
     public class PersistingTask implements Runnable {
@@ -303,7 +286,7 @@ public class PlayerStorage {
             wL2.lock();
             try {
                 final long currenttime = System.currentTimeMillis();
-                final Iterator<Map.Entry<Integer, CharacterTransfer>> itr = PendingCharacter.entrySet().iterator();
+                final Iterator<Map.Entry<Integer, CharacterTransfer>> itr = pendingCharacter.entrySet().iterator();
 
                 while (itr.hasNext()) {
                     if (currenttime - itr.next().getValue().TranferTime > 40000) { // 40 sec

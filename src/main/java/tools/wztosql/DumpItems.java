@@ -253,7 +253,7 @@ public class DumpItems {
         ps.setString(15, scrollReqs.toString());
         ps.setString(16, consumeItem.toString());
         Map<Integer, Map<String, Integer>> equipStats = new HashMap<>();
-        equipStats.put(-1, new HashMap<String, Integer>());
+        equipStats.put(-1, new HashMap<>());
         dat = iz.getChildByPath("mob");
         if (dat != null) {
             for (MapleData child : dat) {

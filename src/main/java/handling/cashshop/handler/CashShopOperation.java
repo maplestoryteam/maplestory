@@ -1,35 +1,27 @@
 package handling.cashshop.handler;
 
-import java.rmi.RemoteException;
-import java.sql.SQLException;
-import java.util.Map;
-import java.util.HashMap;
-
-import constants.GameConstants;
-import client.MapleClient;
 import client.MapleCharacter;
 import client.MapleCharacterUtil;
+import client.MapleClient;
 import client.inventory.*;
+import constants.GameConstants;
 import constants.OtherSettings;
 import handling.cashshop.CashShopServer;
 import handling.channel.ChannelServer;
 import handling.login.LoginServer;
 import handling.world.CharacterTransfer;
 import handling.world.World;
-
-import java.net.InetAddress;
-import java.util.List;
-
-import server.CashItemFactory;
-import server.CashItemInfo;
-import server.MTSStorage;
-import server.MapleInventoryManipulator;
-import server.MapleItemInformationProvider;
+import server.*;
 import tools.FileoutputUtil;
 import tools.MaplePacketCreator;
-import tools.packet.MTSCSPacket;
 import tools.Pair;
 import tools.data.input.SeekableLittleEndianAccessor;
+import tools.packet.MTSCSPacket;
+
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class CashShopOperation {
 
@@ -472,16 +464,33 @@ public class CashShopOperation {
                 MapleInventoryType type = MapleInventoryType.getByType(slea.readByte());
                 IItem item = c.getPlayer().getInventory(type).findByUniqueId(uniqueid);
                 if (item != null && item.getQuantity() > 0 && item.getUniqueId() > 0 && c.getPlayer().getCashInventory().getItemsSize() < 100) {
-                    IItem item_ = item.copy();
-                    c.getPlayer().getInventory(type).removeItem(item.getPosition(), item.getQuantity(), false);
-                    int sn = CashItemFactory.getInstance().getItemSN(item_.getItemId());
-                    if (item_.getPet() != null) {
-                        c.getPlayer().removePet(item_.getPet(), false);
+                    // 如果点装有属性，则禁止放入购物车
+                    if (item.getType() == MapleInventoryType.EQUIP.getType() && item instanceof Equip) {
+                        Equip ie = (Equip) item;
+
+                        boolean haveProp = false;
+                        // Str', 'Dex', 'Int', 'Luk', 'Hp', 'Mp', 'Watk', 'Matk'
+                        if (ie.getStr() > 0 || ie.getDex() > 0 || ie.getInt() > 0 || ie.getLuk() > 0 || ie.getHp() > 0 || ie.getWatk() > 0 || ie.getMatk() > 0) {
+                            haveProp = true;
+                        }
+
+                        if (haveProp) {
+                            c.getSession().write(MaplePacketCreator.serverNotice(1, "这个物品禁止放入"));
+                            break;
+                        }
+
+                    } else {
+                        IItem item_ = item.copy();
+                        c.getPlayer().getInventory(type).removeItem(item.getPosition(), item.getQuantity(), false);
+                        int sn = CashItemFactory.getInstance().getItemSN(item_.getItemId());
+                        if (item_.getPet() != null) {
+                            c.getPlayer().removePet(item_.getPet(), false);
+                        }
+                        item_.setPosition((byte) 0);
+                        item_.setGMLog("购物商场购买: " + FileoutputUtil.CurrentReadable_Time());
+                        c.getPlayer().getCashInventory().addToInventory(item_);
+                        c.sendPacket(MTSCSPacket.confirmToCSInventory(item, c.getAccID(), sn));
                     }
-                    item_.setPosition((byte) 0);
-                    item_.setGMLog("购物商场购买: " + FileoutputUtil.CurrentReadable_Time());
-                    c.getPlayer().getCashInventory().addToInventory(item_);
-                    c.sendPacket(MTSCSPacket.confirmToCSInventory(item, c.getAccID(), sn));
                 } else {
                     c.sendPacket(MTSCSPacket.sendCSFail(0xB1));
                 }

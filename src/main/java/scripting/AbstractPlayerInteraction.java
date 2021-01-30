@@ -25,8 +25,11 @@ import client.inventory.*;
 import constants.GameConstants;
 import exts.LotteryExt;
 import exts.LotteryItemExt;
+import exts.TimeSaleItemExt;
+import exts.WorkingExt;
 import exts.model.Lottery;
 import exts.model.LotteryItem;
+import exts.model.TimeSaleItem;
 import handling.channel.ChannelServer;
 import handling.world.MapleParty;
 import handling.world.MaplePartyCharacter;
@@ -52,6 +55,7 @@ import tools.packet.PetPacket;
 import tools.packet.UIPacket;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 
@@ -2036,7 +2040,64 @@ public abstract class AbstractPlayerInteraction {
         return LotteryItemExt.query(type);
     }
 
-    public final int 抽奖开始(int type) {
-        return LotteryItemExt.lottery(type);
+    public final static int defaultLotteryItemId = 4310165;
+
+    public final String 抽奖开始(int type, int count) {
+        synchronized (c.getPlayer()) {
+            if (count <= 0) {
+                count = 1;
+            }
+            if (count >= 100) {
+                count = 100;
+            }
+            List<LotteryItem> items = new ArrayList<>();
+            for (int i = 0; i < count; i++) {
+                LotteryItem lotteryItem = LotteryItemExt.lottery(type);
+                if (lotteryItem != null) {
+                    items.add(lotteryItem);
+                    // 稀有度大于50的物品 发喇叭消息
+                    if (lotteryItem.getItemLevel() > 50) {
+//                        String msg = LotteryExt.getLotteryMessage(type, c.getPlayer().getName(), count);
+//                        MaplePacket packet = MaplePacketCreator.getGachaponMega(msg, c.getChannel());
+//                        World.Broadcast.broadcastMessage(packet.getBytes());
+                    }
+                } else {
+                    // 没有抽到
+                    // 4310165
+                    items.add(new LotteryItem(type, defaultLotteryItemId, 1, 4, 1));
+                }
+            }
+            items.parallelStream().forEach(i -> 抽奖增加(type, i.getItemId(), 1, i.getItemType()));
+            return LotteryExt.getLotteryResultString(items);
+        }
     }
+
+    public final int[] 打工查询() {
+        return WorkingExt.query(c.getPlayer().getId());
+    }
+
+    public final void 打工修改(int times, int itemId, int itemCount) {
+        WorkingExt.update(c.getPlayer().getId(), itemId, itemCount, times);
+    }
+
+    public final void 打工累计(int delta) {
+        WorkingExt.updateTotal(c.getPlayer().getId(), delta);
+    }
+
+    public final List<TimeSaleItem> 抢购查询1(int type) {
+        return TimeSaleItemExt.query(type);
+    }
+
+    public final int 抢购查询2(int itemId) {
+        TimeSaleItem tsi = TimeSaleItemExt.queryOne(itemId);
+        if (tsi == null) {
+            return 0;
+        }
+        return tsi.getItemCount();
+    }
+
+    public final void 抢购减少(int itemId, int timeCount) {
+        TimeSaleItemExt.update(itemId, timeCount);
+    }
+
 }

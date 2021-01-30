@@ -1,10 +1,8 @@
 package exts;
 
-import database.DatabaseConnection;
 import exts.model.FishReward;
 import server.Randomizer;
 
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -17,8 +15,7 @@ public interface FishExt {
     static void refreshFishRewareds() {
         try {
             System.out.println("开始读取抽奖物品");
-            Connection conn = DatabaseConnection.getConnection();
-            Statement stmt = conn.createStatement();
+            Statement stmt = ConnExt.getConn().createStatement();
             ResultSet rs = stmt.executeQuery("SELECT t.itemid,t.chance,t.count,t.name FROM fishing_rewards AS t");
             fishRewards.clear();
             while (rs.next()) {

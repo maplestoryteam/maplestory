@@ -117,10 +117,10 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
     private byte dojoRecord, gmLevel, gender, initialSpawnPoint, skinColor, guildrank = 5, allianceRank = 5, world, fairyExp = 30, numClones, subcategory; // Make this a quest record, TODO : Transfer it somehow with the current data
     private short level, mulung_energy, combo, availableCP, totalCP, fame, hpApUsed, job, remainingAp;
     private int accountid, id, meso, exp, hair, face, mapid, bookCover, dojo, sg,
-            guildid = 0, fallcounter = 0, maplepoints, acash, chair, itemEffect, points, vpoints,
-            rank = 1, rankMove = 0, jobRank = 1, jobRankMove = 0, marriageId, marriageItemId = 0,
-            currentrep, totalrep, coconutteam = 0, followid = 0, battleshipHP = 0,
-            expression, constellation, blood, month, day, beans, beansNum, beansRange, prefix;
+            guildid, fallcounter, maplepoints, acash, chair, itemEffect, points, vpoints,
+            rank = 1, rankMove, jobRank = 1, jobRankMove, marriageId, marriageItemId,
+            currentrep, totalrep, coconutteam, followid, battleshipHP,
+            expression, constellation, blood, month, day, beans, beansNum, beansRange, prefix, mount_id;
     private boolean canSetBeansNum;
     public long npcCooldownTime;
     private Point old = new Point(0, 0);
@@ -307,6 +307,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
             ret.client.setChannel(ct.channel);
         }
 
+        ret.sg = ct.sg;
         ret.mount_id = ct.mount_id;
         ret.DebugMessage = ct.DebugMessage;
         ret.id = ct.characterid;
@@ -687,11 +688,6 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
                     if (rs.getTimestamp("lastlogon") != null) {
                         final Calendar cal = Calendar.getInstance();
                         cal.setTimeInMillis(rs.getTimestamp("lastlogon").getTime());
-                        /*
-                         * if (cal.get(Calendar.DAY_OF_WEEK) + 1 ==
-                         * Calendar.getInstance().get(Calendar.DAY_OF_WEEK)) {
-                         * ret.acash += 500; }
-                         */
                     }
                     rs.close();
                     ps.close();
@@ -1077,7 +1073,6 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
 
             //FIXED 骑宠存档
             ps = con.prepareStatement("UPDATE characters SET level = ?, fame = ?, str = ?, dex = ?, luk = ?, `int` = ?, exp = ?, hp = ?, mp = ?, maxhp = ?, maxmp = ?, sp = ?, ap = ?, gm = ?, skincolor = ?, gender = ?, job = ?, hair = ?, face = ?, map = ?, meso = ?, hpApUsed = ?, spawnpoint = ?, party = ?, buddyCapacity = ?, monsterbookcover = ?, dojo_pts = ?, dojoRecord = ?, pets = ?, subcategory = ?, marriageId = ?, currentrep = ?, totalrep = ?, charmessage = ?, expression = ?, constellation = ?, blood = ?, month = ?, day = ?, beans = ?, prefix = ?, skillzq = ?, bosslog = ?, grname = ?,djjl = ?, qiandao = ?, jzname = ?, mrfbrw = ?, mrsjrw = ?, mrsgrw = ?, mrsbossrw = ?, hythd = ?, mrsgrwa = ?, mrfbrwa = ?, mrsbossrwa = ?, mrsgrws = ?,  mrsbossrws = ?, mrfbrws = ?, mrsgrwas = ?,  mrsbossrwas = ?, mrfbrwas = ?, ddj = ?, vip = ?, sg = ?, name = ?, mountid = ? WHERE id = ?", DatabaseConnection.RETURN_GENERATED_KEYS);
-            ps.setInt(1, mount_id);
             ps.setInt(1, level);
             ps.setShort(2, fame);
             ps.setShort(3, stats.getStr());
@@ -7059,25 +7054,11 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
         return Integer.parseInt(stat.getCustomData());
     }
 
-    /* public void updatePetEquip() {
-        if (getIntNoRecord(122221) > 0) {
-            client.getSession().write(MaplePacketCreator.petAutoHP(getIntRecord(122221)));
-        }
-        if (getIntNoRecord(122222) > 0) {
-            client.getSession().write(MaplePacketCreator.petAutoMP(getIntRecord(122222)));
-        }
-    }*/
     public void spawnBomb() {
         final MapleMonster bomb = MapleLifeFactory.getMonster(9300166);
         bomb.changeLevel(250, true);
         getMap().spawnMonster_sSack(bomb, getPosition(), -2);
-        EventTimer.getInstance().schedule(new Runnable() {
-
-            @Override
-            public void run() {
-                map.killMonster(bomb, client.getPlayer(), false, false, (byte) 1);
-            }
-        }, 10 * 1000);
+        EventTimer.getInstance().schedule(() -> map.killMonster(bomb, client.getPlayer(), false, false, (byte) 1), 10 * 1000);
     }
 
     public boolean isAriantPQMap() {
@@ -7109,8 +7090,6 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
             return 0;
         }
     }
-
-    private int mount_id = 0;
 
     public int getMountId() {
         return mount_id;
