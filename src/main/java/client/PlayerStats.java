@@ -20,35 +20,31 @@
  */
 package client;
 
+import client.inventory.*;
 import constants.GameConstants;
-import client.inventory.MapleInventoryType;
-import client.inventory.IItem;
-import client.inventory.Equip;
-import client.inventory.IEquip;
-import client.inventory.MapleWeaponType;
-
-import java.lang.ref.WeakReference;
-import java.util.Map;
-import java.util.List;
-import java.util.ArrayList;
-import java.io.Serializable;
-import java.util.Calendar;
-import java.util.HashMap;
-
-import java.util.Iterator;
-import java.util.Map.Entry;
-import java.util.concurrent.locks.ReentrantLock;
-
-import server.MapleInventoryManipulator;
-import server.MapleItemInformationProvider;
-import server.MapleStatEffect;
-import server.StructPotentialItem;
-import server.StructSetItem;
+import server.*;
 import server.StructSetItem.SetItem;
 import tools.MaplePacketCreator;
 import tools.data.output.MaplePacketLittleEndianWriter;
 
+import java.io.Serializable;
+import java.lang.ref.WeakReference;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.concurrent.locks.ReentrantLock;
+
 public class PlayerStats implements Serializable {
+    @Override
+    public String toString() {
+        return "PlayerStats{" +
+                "hp=" + hp +
+                ", maxhp=" + maxhp +
+                ", mp=" + mp +
+                ", maxmp=" + maxmp +
+                ", localmaxhp=" + localmaxhp +
+                ", localmaxmp=" + localmaxmp +
+                '}';
+    }
 
     private static final long serialVersionUID = -679541993413738569L;
     private final transient WeakReference<MapleCharacter> chr;

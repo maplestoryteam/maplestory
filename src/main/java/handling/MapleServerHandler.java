@@ -833,10 +833,10 @@ public class MapleServerHandler extends IoHandlerAdapter implements MapleServerH
                 BBSHandler.BBSOperatopn(slea, c);
                 break;
             case PARTY_OPERATION:
-                PartyHandler.PartyOperatopn(slea, c);
+                PartyHandler.partyOperatopn(slea, c);
                 break;
             case DENY_PARTY_REQUEST:
-                PartyHandler.DenyPartyRequest(slea, c);
+                PartyHandler.denyPartyRequest(slea, c);
                 break;
             case BUDDYLIST_MODIFY:
                 BuddyListHandler.BuddyOperation(slea, c);

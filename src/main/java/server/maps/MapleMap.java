@@ -1761,7 +1761,6 @@ public final class MapleMap {
         } finally {
             mapobjectlocks.get(MapleMapObjectType.PLAYER).writeLock().unlock();
         }
-
         charactersLock.writeLock().lock();
         try {
             characters.add(chr);
@@ -1802,21 +1801,8 @@ public final class MapleMap {
             }
         }
         if (!chr.isClone()) {
-            //屏蔽地图动画
-            /*
-             * if (!onFirstUserEnter.equals("")) { if (getCharactersSize() == 1)
-             * { MapScriptMethods.startScript_FirstUser(chr.getClient(),
-             * onFirstUserEnter); } }
-             */
             sendObjectPlacement(chr);
-
             chr.getClient().getSession().write(MaplePacketCreator.spawnPlayerMapobject(chr));
-            //屏蔽地图动画
-            /*
-             * if (!onUserEnter.equals("")) {
-             * MapScriptMethods.startScript_User(chr.getClient(), onUserEnter);
-             * }
-             */
             if (ServerConstants.封包显示 || 进入地图开启显示数据) {
                 System.out.println("进入地图加载数据D");
             }
@@ -1828,13 +1814,6 @@ public final class MapleMap {
                 case 109080010:
                     chr.getClient().getSession().write(MaplePacketCreator.showEventInstructions());
                     break;
-                /*
-                 * case 109080000: // coconut shit case 109080001: case
-                 * 109080002: case 109080003: case 109080010: case 109080011:
-                 * case 109080012:
-                 * chr.getClient().getSession().write(MaplePacketCreator.showEquipEffect(chr.getCoconutTeam()));
-                 * break;
-                 */
                 case 809000101:
                 case 809000201:
                     chr.getClient().getSession().write(MaplePacketCreator.showEquipEffect());
@@ -1860,22 +1839,15 @@ public final class MapleMap {
             chr.getClient().getSession().write(MaplePacketCreator.spawnTutorialSummon(1));
         }
         //FIXED 过图显示
-//        chr.startMapEffect(chr.getMap().getMapName(), 5120016, 5000);
         if (!onUserEnter.equals("")) {
             MapScriptMethods.startScript_User(chr.getClient(), onUserEnter);
-            //  MapScriptManager.getInstance().getMapScript(chr.getClient(), onUserEnter, false);
         }
         if (!onFirstUserEnter.equals("")) {
             if (getCharacters().size() == 1) {
                 MapScriptMethods.startScript_FirstUser(chr.getClient(), onFirstUserEnter);
-                //   MapScriptManager.getInstance().getMapScript(chr.getClient(), onFirstUserEnter, true);
             }
         }
-        /*
-         * if (hasForcedEquip()) {
-         * chr.getClient().getSession().write(MaplePacketCreator.showForcedEquip());
-         * }
-         */
+
         final MapleStatEffect stat = chr.getStatForBuff(MapleBuffStat.SUMMON);
         if (stat != null && !chr.isClone()) {
             final MapleSummon summon = chr.getSummons().get(stat.getSourceId());
@@ -1934,112 +1906,12 @@ public final class MapleMap {
             }
         }
         if (chr.getParty() != null && !chr.isClone()) {
-            //chr.silentPartyUpdate();
-            //chr.getClient().getSession().write(MaplePacketCreator.updateParty(chr.getClient().getChannel(), chr.getParty(), PartyOperation.SILENT_UPDATE, null));
-            chr.updatePartyMemberHP();
             chr.receivePartyMemberHP();
+            chr.updatePartyMemberHP();
             if (ServerConstants.封包显示 || 进入地图开启显示数据) {
                 System.out.println("进入地图加载数据G");
             }
         }
-        /*
-         * if (mapEffect != null) { mapEffect.sendStartData(chr.getClient()); }
-         */
-        /*
-         * if (timeLimit > 0 && getForcedReturnMap() != null && !chr.isClone())
-         * { chr.startMapTimeLimitTask(timeLimit, getForcedReturnMap()); if
-         * (ServerConstants.封包显示 || 进入地图开启显示数据) {
-         * System.out.println("进入地图加载数据I"); } } if
-         * (chr.getBuffedValue(MapleBuffStat.MONSTER_RIDING) != null) { if
-         * (FieldLimitType.Mount.check(fieldLimit)) {
-         * chr.cancelBuffStats(MapleBuffStat.MONSTER_RIDING); if
-         * (ServerConstants.封包显示 || 进入地图开启显示数据) {
-         * System.out.println("进入地图加载数据J"); } } }
-         */
-        /*
-         * if (!chr.isClone()) { if (chr.getEventInstance() != null &&
-         * chr.getEventInstance().isTimerStarted() && !chr.isClone()) {
-         * chr.getClient().getSession().write(MaplePacketCreator.getClock((int)
-         * (chr.getEventInstance().getTimeLeft() / 1000))); if
-         * (ServerConstants.封包显示 || 进入地图开启显示数据) {
-         * System.out.println("进入地图加载数据K"); } } if (hasClock()) { final Calendar
-         * cal = Calendar.getInstance();
-         * chr.getClient().getSession().write((MaplePacketCreator.getClockTime(cal.get(Calendar.HOUR_OF_DAY),
-         * cal.get(Calendar.MINUTE), cal.get(Calendar.SECOND)))); if
-         * (ServerConstants.封包显示 || 进入地图开启显示数据) {
-         * System.out.println("进入地图加载数据L"); } } if (chr.getCarnivalParty() !=
-         * null && chr.getEventInstance() != null) {
-         * chr.getEventInstance().onMapLoad(chr); if (ServerConstants.封包显示 ||
-         * 进入地图开启显示数据) { System.out.println("进入地图加载数据M"); } }
-         * MapleEvent.mapLoad(chr, channel); if (ServerConstants.封包显示 ||
-         * 进入地图开启显示数据) { System.out.println("进入地图加载数据N"); } if (getSquadBegin()
-         * != null && getSquadBegin().getTimeLeft() > 0 &&
-         * getSquadBegin().getStatus() == 1) {
-         * chr.getClient().getSession().write(MaplePacketCreator.getClock((int)
-         * (getSquadBegin().getTimeLeft() / 1000))); if (ServerConstants.封包显示 ||
-         * 进入地图开启显示数据) { System.out.println("进入地图加载数据O"); } }
-         */
-        /*
-         * if (mapid / 1000 != 105100 && mapid / 100 != 8020003 && mapid / 100
-         * != 8020008) { //no boss_balrog/2095/coreblaze/auf. but coreblaze/auf
-         * does AFTER final MapleSquad sqd = getSquadByMap(); //for all squads
-         * if (!squadTimer && sqd != null &&
-         * chr.getName().equals(sqd.getLeaderName()) && !chr.isClone()) {
-         * //leader? display doShrine(false); squadTimer = true; } if
-         * (ServerConstants.封包显示 || 进入地图开启显示数据) {
-         * System.out.println("进入地图加载数据P"); } }
-         */
-        /*
-         * if (getNumMonsters() > 0 && (mapid == 280030001 || mapid == 240060201
-         * || mapid == 280030000 || mapid == 240060200 || mapid == 220080001 ||
-         * mapid == 541020800 || mapid == 541010100)) { String music =
-         * "Bgm09/TimeAttack"; switch (mapid) { case 240060200: case 240060201:
-         * music = "Bgm14/HonTale"; break; case 280030000: case 280030001: music
-         * = "Bgm06/FinalFight"; break; case 200090000: case 200090010: music =
-         * "Bgm04/ArabPirate"; break; }
-         * chr.getClient().getSession().write(MaplePacketCreator.musicChange(music));
-         * if (ServerConstants.封包显示 || 进入地图开启显示数据) {
-         * System.out.println("进入地图加载数据Q"); } //maybe timer too for zak/ht }
-         */
-        /*
-         * for (final WeakReference<MapleCharacter> chrz : chr.getClones()) { if
-         * (chrz.get() != null) { chrz.get().setPosition(new
-         * Point(chr.getPosition())); chrz.get().setMap(this);
-         * addPlayer(chrz.get()); } if (ServerConstants.封包显示 || 进入地图开启显示数据) {
-         * System.out.println("进入地图加载数据R"); } }
-         */
-        //  if (mapid == 914000000) {
-        ///     chr.getClient().getSession().write(MaplePacketCreator.addTutorialStats());
-        //   if (ServerConstants.封包显示 || 进入地图开启显示数据) {
-        //       System.out.println("进入地图加载数据S");
-        //  }
-        // }
-        /*
-         * else if (mapid == 105100300 && chr.getLevel() >= 91) {
-         * chr.getClient().getSession().write(MaplePacketCreator.temporaryStats_Balrog(chr));
-         * if (ServerConstants.封包显示 || 进入地图开启显示数据) {
-         * System.out.println("进入地图加载数据T"); } }
-         */
-        //  else if (mapid == 140090000 || mapid == 105100301 || mapid == 105100401 || mapid == 105100100) {
-        //  chr.getClient().getSession().write(MaplePacketCreator.temporaryStats_Reset());
-        //   if (ServerConstants.封包显示 || 进入地图开启显示数据) {
-        //      System.out.println("进入地图加载数据U");
-        //  }
-        // }
-        //  }
-        /*
-         * if (GameConstants.isEvan(chr.getJob()) && chr.getJob() >= 2200 &&
-         * chr.getBuffedValue(MapleBuffStat.MONSTER_RIDING) == null) { if
-         * (chr.getDragon() == null) { chr.makeDragon(); }
-         * spawnDragon(chr.getDragon()); if (!chr.isClone()) {
-         * updateMapObjectVisibility(chr, chr.getDragon()); } }
-         */
-        // if ((mapid == 10000 && chr.getJob() == 0) || (mapid == 130030000 && chr.getJob() == 1000) || (mapid == 914000000 && chr.getJob() == 2000) || (mapid == 900010000 && chr.getJob() == 2001)) {
-//            chr.getClient().getSession().write(MaplePacketCreator.startMapEffect("Welcome to " + chr.getClient().getChannelServer().getServerName() + "!", 5122000, true));
-//            chr.dropMessage(1, "Welcome to " + chr.getClient().getChannelServer().getServerName() + ", " + chr.getName() + " ! \r\nUse @joyce to collect your Item Of Appreciation once you're level 10! \r\nUse @help for commands. \r\nGood luck and have fun!");
-        //   chr.dropMessage(1, "新手技能記得在一轉之前點完 十等之後可以去自由市場找禮物盒領東西");
-//            chr.dropMessage(5, "Use @joyce to collect your Item Of Appreciation once you're level 10! Use @help for commands. Good luck and have fun!");
-        //    }
         if (permanentWeather > 0) {
             chr.getClient().getSession().write(MaplePacketCreator.startMapEffect("", permanentWeather, false)); //snow, no msg
         }

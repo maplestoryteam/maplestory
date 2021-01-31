@@ -20,23 +20,22 @@
  */
 package server.maps;
 
-import java.awt.Point;
-
 import client.MapleClient;
 import client.MapleQuestStatus;
 import client.SkillFactory;
 import scripting.EventManager;
 import scripting.NPCScriptManager;
-import server.Randomizer;
 import server.MapleItemInformationProvider;
+import server.Randomizer;
 import server.life.MapleLifeFactory;
 import server.life.MapleMonster;
 import server.life.OverrideMonsterStats;
 import server.quest.MapleQuest;
 import server.quest.MapleQuest.MedalQuest;
-import tools.FileoutputUtil;
 import tools.MaplePacketCreator;
 import tools.packet.UIPacket;
+
+import java.awt.*;
 
 public class MapScriptMethods {
 
@@ -425,7 +424,7 @@ public class MapScriptMethods {
                 c.getPlayer().getMap().resetFully();
                 c.getSession().write(MaplePacketCreator.showEffect("killing/bonus/bonus"));
                 c.getSession().write(MaplePacketCreator.showEffect("killing/bonus/stage"));
-                Point pos1 = null, pos2 = null, pos3 = null;
+                Point pos1, pos2, pos3;
                 int spawnPer = 0;
                 int mobId = 0;
                 //9700019, 9700029
@@ -751,7 +750,7 @@ public class MapScriptMethods {
                         MapleQuest.getInstance(m.questid - 1995).forceStart(c.getPlayer(), 0, String.valueOf(number));
                         c.getPlayer().dropMessage(5, "访问 " + number + "/" + m.maps.length + " 个地区.");
                         c.getPlayer().dropMessage(5, "称号 " + m + " 已完成了");
-                        c.getSession().write(MaplePacketCreator.showQuestMsg("称号 " + m + " 已完成访问 " + number + "/" + m.maps.length + " 个地区"));
+//                        c.getSession().write(MaplePacketCreator.showQuestMsg("称号 " + m + " 已完成访问 " + number + "/" + m.maps.length + " 个地区"));
                     }
                 }
                 break;

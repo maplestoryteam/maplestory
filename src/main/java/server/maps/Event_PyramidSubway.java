@@ -111,12 +111,9 @@ public class Event_PyramidSubway {
         if (type != -1 && (stage == 4 || stage == 5)) { //yetis. temporary
             final Point pos = c.getPosition();
             final MapleMap map = c.getMap();
-            yetiSchedule = MapTimer.getInstance().register(new Runnable() {
-
-                public void run() {
-                    if (map.countMonsterById(9300021) <= (stage == 4 ? 1 : 2)) {
-                        map.spawnMonsterOnGroundBelow(MapleLifeFactory.getMonster(9300021), new Point(pos));
-                    }
+            yetiSchedule = MapTimer.getInstance().register(() -> {
+                if (map.countMonsterById(9300021) <= (stage == 4 ? 1 : 2)) {
+                    map.spawnMonsterOnGroundBelow(MapleLifeFactory.getMonster(9300021), new Point(pos));
                 }
             }, 10000L);
         }

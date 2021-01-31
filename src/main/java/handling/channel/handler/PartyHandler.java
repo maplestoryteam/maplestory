@@ -34,7 +34,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 
 public class PartyHandler {
 
-    public static final void DenyPartyRequest(final SeekableLittleEndianAccessor slea, final MapleClient c) {
+    public static final void denyPartyRequest(final SeekableLittleEndianAccessor slea, final MapleClient c) {
         final int action = slea.readByte();
         final int partyid = slea.readInt();
 
@@ -61,10 +61,9 @@ public class PartyHandler {
         } else {
             c.getPlayer().dropMessage(5, "您已经有一个组队，无法加入其他组队!");
         }
-
     }
 
-    public static final void PartyOperatopn(final SeekableLittleEndianAccessor slea, final MapleClient c) {
+    public static final void partyOperatopn(final SeekableLittleEndianAccessor slea, final MapleClient c) {
         final int operation = slea.readByte();
         MapleParty party = c.getPlayer().getParty();
         MaplePartyCharacter partyplayer = new MaplePartyCharacter(c.getPlayer());
@@ -173,6 +172,12 @@ public class PartyHandler {
                 if (partyplayer.equals(party.getLeader()) && 新的队长 != null) {//如果申请改变队长的人，是这个队伍的队长，并且，新的将被任命的队长是存在在这个队伍里的
                     party.setLeader(新的队长);//给予其队长
                     World.Party.updateParty(party.getId(), PartyOperation.SILENT_UPDATE, 新的队长);//通知客户端更新队伍新队长的信息
+                    party.getMembers().parallelStream().forEach(m -> {
+                        MapleCharacter mch = c.getPlayer().getMap().getCharacterById_InMap(m.getId());
+                        if (mch != null) {
+                            mch.getClient().getPlayer().dropMessage(5, 新的队长.getName() + " 现在已经是队长了。");
+                        }
+                    });
                 }
                 break;
             default:

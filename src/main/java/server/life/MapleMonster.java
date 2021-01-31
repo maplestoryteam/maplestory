@@ -835,13 +835,7 @@ public class MapleMonster extends AbstractLoadedMapleLife {
             }
         }
         final MobTimer timerManager = MobTimer.getInstance();
-        final Runnable cancelTask = new Runnable() {
-
-            @Override
-            public final void run() {
-                cancelStatus(stat);
-            }
-        };
+        final Runnable cancelTask = () -> cancelStatus(stat);
 
         if (poison && getHp() > 1) {
             if (poison) {

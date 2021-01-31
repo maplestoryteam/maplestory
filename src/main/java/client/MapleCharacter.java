@@ -67,6 +67,7 @@ import java.sql.*;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -76,6 +77,7 @@ import provider.MapleDataProviderFactory;
 import scripting.EventInstanceManager;
 import scripting.NPCScriptManager;
 import server.*;
+import server.Timer;
 import server.Timer.BuffTimer;
 import server.Timer.EtcTimer;
 import server.Timer.EventTimer;
@@ -1658,8 +1660,6 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
         final int time = GameConstants.getFishingTime(VIP, isGM());
         cancelFishingTask();
 
-        //no real reason for clone.
-//        fishing =
         EtcTimer.getInstance().register(() -> {
             final boolean expMulti = haveItem(2300001, 1, false, true);
             if (!expMulti && !haveItem(2300000, 1, false, true)) {
@@ -1669,57 +1669,13 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
                 return;
             }
             MapleInventoryManipulator.removeById(client, MapleInventoryType.USE, expMulti ? 2300001 : 2300000, 1, false, false);
-
-//            final int randval = RandomRewards.getInstance().getFishingReward();
-            final int randval = 3;
-            switch (randval) {
-                // 从数据库读取钓鱼物品
-                case 3:
-                    FishExt.refreshFishRewareds();
-                    FishReward fishReward = FishExt.randomItem();
-                    if (null == fishReward) {
-                        dropMessage(5, "服务器缺少钓鱼奖励物品。");
-                        break;
-                    }
-                    dropMessage(5, "恭喜您获得" + fishReward.getCount() + "个" + fishReward.getItemName() + "。");
-                    gainItem(fishReward.getItemId(), fishReward.getCount());
-                    break;
-                case 0: // Meso
-                    final int money = Randomizer.rand(expMulti ? 15 : 10, expMulti ? 75000 : 50000);
-                    gainMeso(money, true);
-                    client.getSession().write(UIPacket.fishingUpdate((byte) 1, money));
-                    if (getItemQuantity(5340001, true) == 1) {
-                        dropMessage(5, "使用高级鱼竿钓鱼。\r\n获得金币：" + money);
-                        getClient().getSession().write(MaplePacketCreator.sendHint("使用高级鱼竿钓鱼。\r\n获得金币：" + money, 200, 200));
-                    } else if (getItemQuantity(5340000, true) == 1) {
-                        dropMessage(5, "使用普通鱼竿钓鱼。\r\n获得金币：" + money);
-                        getClient().getSession().write(MaplePacketCreator.sendHint("使用普通鱼竿钓鱼。\r\n获得金币：" + money, 200, 200));
-                    }
-                    break;
-                case 1: // EXP
-                    final int experi = Randomizer.nextInt(Math.abs(GameConstants.getExpNeededForLevel(level) / 600) + 1);
-                    gainExp(expMulti ? (experi * 3 / 2) : experi, true, false, true);
-                    client.getSession().write(UIPacket.fishingUpdate((byte) 2, experi));
-                    if (getItemQuantity(5340001, true) == 1) {
-                        dropMessage(5, "使用高级鱼竿钓鱼。\r\n获得经验：" + experi);
-                        getClient().getSession().write(MaplePacketCreator.sendHint("使用高级鱼竿钓鱼。\r\n获得经验：" + experi, 200, 200));
-                    } else if (getItemQuantity(5340000, true) == 1) {
-                        dropMessage(5, "使用普通鱼竿钓鱼。\r\n获得经验：" + experi);
-                        getClient().getSession().write(MaplePacketCreator.sendHint("使用普通鱼竿钓鱼。\r\n获得经验：" + experi, 200, 200));
-                    }
-                    break;
-                default:
-                    if (getItemQuantity(5340001, true) == 1) {
-                        dropMessage(5, "使用高级鱼竿钓鱼。\r\n获得经验：" + randval);
-                        getClient().getSession().write(MaplePacketCreator.sendHint("使用高级鱼竿钓鱼。\r\n获得经验：" + randval, 200, 200));
-                    } else if (getItemQuantity(5340000, true) == 1) {
-                        dropMessage(5, "使用普通鱼竿钓鱼。\r\n获得经验：" + randval);
-                        getClient().getSession().write(MaplePacketCreator.sendHint("使用普通鱼竿钓鱼。\r\n获得经验：" + randval, 200, 200));
-                    }
-                    MapleInventoryManipulator.addById(client, randval, (short) 1, (byte) 0);
-                    client.getSession().write(UIPacket.fishingUpdate((byte) 0, randval));
-                    break;
+            FishExt.refreshFishRewareds();
+            FishReward fishReward = FishExt.randomItem();
+            if (null == fishReward) {
+                dropMessage(5, "服务器缺少钓鱼奖励物品。");
             }
+            dropMessage(5, "恭喜您获得" + fishReward.getCount() + "个" + fishReward.getItemName() + "。");
+            gainItem(fishReward.getItemId(), fishReward.getCount());
             map.broadcastMessage(UIPacket.fishingCaught(id));
         }, time, time);
     }
@@ -2572,7 +2528,6 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
         final boolean pyramid = pyramidSubway != null;
         if (map.getId() == nowmapid) {
             client.getSession().write(warpPacket);
-
             map.removePlayer(this);
             if (!isClone() && client.getChannelServer().getPlayerStorage().getCharacterById(getId()) != null) {
                 map = to;
@@ -2583,13 +2538,12 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
         }
         if (party != null) {
             silentPartyUpdate();
-            getClient().getSession().write(MaplePacketCreator.updateParty(getClient().getChannel(), party, PartyOperation.SILENT_UPDATE, null));
+            getClient().sendPacket(MaplePacketCreator.updateParty(getClient().getChannel(), party, PartyOperation.SILENT_UPDATE, null));
             updatePartyMemberHP();
         }
         if (pyramid && pyramidSubway != null) { //checks if they had pyramid before AND after changing
             pyramidSubway.onChangeMap(this, to.getId());
         }
-
     }
 
     public void leaveMap() {
@@ -2951,9 +2905,68 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
         }
     }
 
+    // 把自己的血条发送给队友
+    public void updatePartyMemberHP2() {
+        if (party == null) {
+            return;
+        }
+
+        if (1 > 0) {
+            return;
+        }
+        if (ServerConstants.调试输出封包) {
+            System.out.println("updatePartyMemberHP call--------------------");
+        }
+        party.getMembers().parallelStream().forEach(mpc -> {
+
+            ChannelServer.getInstance(client.getChannel())
+                    .getPlayerStorage()
+                    .getCharacterById(mpc.getId())
+                    .getClient()
+                    .getSession()
+                    .write(MaplePacketCreator.updatePartyMemberHP(getId(), stats.getHp(), stats.getCurrentMaxHp()));
+
+            MapleCharacter cc = ChannelServer.getInstance(client.getChannel()).getPlayerStorage().getCharacterById(mpc.getId());
+            PlayerStats stat = cc.getStat();
+            if (ServerConstants.调试输出封包) {
+                System.out.println("updatePartyMemberHP stats : " + cc.getName() + " " + stat.toString());
+            }
+            getClient().getSession().write(MaplePacketCreator.updatePartyMemberHP(mpc.getId(), stat.getHp(), stat.getCurrentMaxHp()));
+        });
+    }
+
+    // 把队友的血条发送给自己
+    public void receivePartyMemberHP2() {
+        if (party == null) {
+            return;
+        }
+        if (1 > 0) {
+            return;
+        }
+
+        if (ServerConstants.调试输出封包) {
+            System.out.println("receivePartyMemberHP call--------------------");
+        }
+        party.getMembers().parallelStream().forEach(mpc -> {
+            MapleCharacter cc = ChannelServer.getInstance(client.getChannel()).getPlayerStorage().getCharacterById(mpc.getId());
+            PlayerStats stat = cc.getStat();
+            if (ServerConstants.调试输出封包) {
+                System.out.println("receivePartyMemberHP stats : " + cc.getName() + " " + stat.toString());
+            }
+            ChannelServer.getInstance(client.getChannel())
+                    .getPlayerStorage()
+                    .getCharacterById(mpc.getId())
+                    .getClient()
+                    .getSession()
+                    .write(MaplePacketCreator.updatePartyMemberHP(getId(), stats.getHp(), stats.getCurrentMaxHp()));
+            getClient().getSession().write(MaplePacketCreator.updatePartyMemberHP(mpc.getId(), stat.getHp(), stat.getCurrentMaxHp()));
+        });
+    }
+
+
     public void updatePartyMemberHP() {
         if (party != null) {
-            final int channel = client.getChannel();
+            int channel = client.getChannel();
             for (MaplePartyCharacter partychar : party.getMembers()) {
                 if (partychar.getMapid() == getMapId() && partychar.getChannel() == channel) {
                     MapleCharacter other = ChannelServer.getInstance(channel).getPlayerStorage().getCharacterByName(partychar.getName());
@@ -2974,22 +2987,19 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
             if (partychar.getMapid() == getMapId() && partychar.getChannel() == channel) {
                 MapleCharacter other = ChannelServer.getInstance(channel).getPlayerStorage().getCharacterByName(partychar.getName());
                 if (other != null) {
-                    client.getSession().write(MaplePacketCreator.updatePartyMemberHP(other.getId(), other.getStat().getHp(), other.getStat().getCurrentMaxHp()));
+                    client.sendPacket(MaplePacketCreator.updatePartyMemberHP(other.getId(), other.getStat().getHp(), other.getStat().getCurrentMaxHp()));
                 }
             }
         }
     }
 
+
     public void healHP(int delta) {
         addHP(delta);
-//        client.getSession().write(MaplePacketCreator.showOwnHpHealed(delta));
-//        getMap().broadcastMessage(this, MaplePacketCreator.showHpHealed(getId(), delta), false);
     }
 
     public void healMP(int delta) {
         addMP(delta);
-//        client.getSession().write(MaplePacketCreator.showOwnHpHealed(delta));
-//        getMap().broadcastMessage(this, MaplePacketCreator.showHpHealed(getId(), delta), false);
     }
 
     /**
@@ -3109,11 +3119,6 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
      * @param itemReaction
      */
     public void updateSingleStat(MapleStat stat, int newval, boolean itemReaction) {
-        /*
-         * if (stat == MapleStat.AVAILABLESP) {
-         * client.getSession().write(MaplePacketCreator.updateSp(this,
-         * itemReaction, false)); return; }
-         */
         Pair<MapleStat, Integer> statpair = new Pair<MapleStat, Integer>(stat, Integer.valueOf(newval));
         client.getSession().write(MaplePacketCreator.updatePlayerStats(Collections.singletonList(statpair), itemReaction, getJob()));
     }
