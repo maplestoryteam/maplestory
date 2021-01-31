@@ -23,6 +23,7 @@ package handling.channel.handler;
 import client.MapleCharacter;
 import client.MapleClient;
 import constants.GameConstants;
+import exts.MapExt;
 import handling.world.MapleParty;
 import handling.world.MaplePartyCharacter;
 import handling.world.PartyOperation;
@@ -95,6 +96,9 @@ public class PartyHandler {
                             c.getPlayer().getEventInstance().disbandParty();//判断是否是副本状态下。是的话那么队长解散队伍的话，结束此次副本，全员传送出去。
                         }
                         World.Party.updateParty(party.getId(), PartyOperation.DISBAND, partyplayer);//向客户端发送更新队伍信息，通知解散队伍
+
+                        // 移除组队副本币
+                        MapExt.remove(party.getId());
                     } else {
                         if (GameConstants.is武陵道场(c.getPlayer().getMapId())) {//如果是在武陵道场的地图
                             Event_DojoAgent.道场任务失败(c.getPlayer());//那么队员退组的话，结束此次道场挑战，全员传送出去。

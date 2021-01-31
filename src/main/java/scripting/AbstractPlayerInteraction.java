@@ -23,10 +23,7 @@ package scripting;
 import client.*;
 import client.inventory.*;
 import constants.GameConstants;
-import exts.LotteryExt;
-import exts.LotteryItemExt;
-import exts.TimeSaleItemExt;
-import exts.WorkingExt;
+import exts.*;
 import exts.model.Lottery;
 import exts.model.LotteryItem;
 import exts.model.TimeSaleItem;
@@ -2098,5 +2095,26 @@ public abstract class AbstractPlayerInteraction {
                 .parallelStream()
                 .filter(ch -> getMap().getCharacterById(ch.getId()).getBossLog(bossid) < count)
                 .count() == c.getPlayer().getParty().getMembers().size();
+    }
+
+    public final boolean 副本币保存() {
+        if (getPlayer().getParty() == null) {
+            return false;
+        }
+        return MapExt.add(getParty().getId());
+    }
+
+    public final boolean 副本币移除() {
+        if (getPlayer().getParty() == null) {
+            return false;
+        }
+        return MapExt.remove(getParty().getId());
+    }
+
+    public final boolean 副本币查询() {
+        if (getPlayer().getParty() == null) {
+            return false;
+        }
+        return MapExt.query(getParty().getId());
     }
 }
