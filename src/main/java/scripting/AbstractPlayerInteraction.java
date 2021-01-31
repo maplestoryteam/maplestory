@@ -2088,16 +2088,15 @@ public abstract class AbstractPlayerInteraction {
         return TimeSaleItemExt.query(type);
     }
 
-    public final int 抢购查询2(int itemId) {
-        TimeSaleItem tsi = TimeSaleItemExt.queryOne(itemId);
+    public final int 抢购查询2(int type, int itemId) {
+        TimeSaleItem tsi = TimeSaleItemExt.query(type, itemId);
         if (tsi == null) {
             return 0;
         }
         return tsi.getItemCount();
     }
 
-    public final void 抢购减少(int itemId, int timeCount) {
-        TimeSaleItemExt.update(itemId, timeCount);
+    public final void 抢购减少(int type, int itemId, int itemCount) {
+        TimeSaleItemExt.update(type, itemId, itemCount);
     }
-
 }
