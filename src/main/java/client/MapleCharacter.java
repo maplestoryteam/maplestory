@@ -5202,7 +5202,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
         try {
             int ret_count = 0;
             PreparedStatement ps;
-            ps = con1.prepareStatement("select count(*) from bosslog where characterid = ? and bossid = ? and lastattempt >= subtime(current_timestamp, '1 0:0:0.0')");
+            ps = con1.prepareStatement("SELECT COUNT(*) FROM bosslog WHERE characterid = ? AND bossid = ? AND lastattempt BETWEEN CONCAT(DATE_FORMAT(NOW(),'%Y-%m-%d'),' 00:00:00') AND NOW()");
             ps.setInt(1, id);
             ps.setString(2, bossid);
             ResultSet rs = ps.executeQuery();
@@ -6332,7 +6332,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
         List<Pair<Integer, Integer>> used = new ArrayList<Pair<Integer, Integer>>();
         for (MapleFamilyBuffEntry buff : MapleFamilyBuff.getBuffEntry()) {
             if (!canUseFamilyBuff(buff)) {
-                used.add(new Pair<Integer, Integer>(buff.index, buff.count));
+                used.add(new Pair<>(buff.index, buff.count));
             }
         }
         return used;

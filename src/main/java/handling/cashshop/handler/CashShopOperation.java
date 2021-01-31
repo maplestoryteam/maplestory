@@ -140,7 +140,7 @@ public class CashShopOperation {
              * Type 1: A-Cash, Type 2: Maple Points Type 3: Item.. use SN Type
              * 4: A-Cash Coupon that can be used over and over Type 5: Mesos
              */
-            Map<Integer, IItem> itemz = new HashMap<Integer, IItem>();
+            Map<Integer, IItem> itemz = new HashMap<>();
             int maplePoints = 0, mesos = 0;
             switch (type) {
                 case 1:
@@ -623,7 +623,7 @@ public class CashShopOperation {
                         return;
                     }
 
-                    Map<Integer, IItem> ccz = new HashMap<Integer, IItem>();
+                    Map<Integer, IItem> ccz = new HashMap<>();
                     for (CashItemInfo i : ccc) {
                         for (int iz : GameConstants.cashBlock) {
                             if (i.getId() == iz) {
@@ -641,7 +641,7 @@ public class CashShopOperation {
                     chr.modifyCSPoints(type, -item.getPrice(), false);
                 }
                 //  c.sendPacket(MTSCSPacket.showBoughtCSPackage(ccz, c.getAccID()));
-//            Map<Integer, IItem> ccz = new HashMap<Integer, IItem>();
+//            Map<Integer, IItem> ccz = new HashMap<>();
 //            for (CashItemInfo i : ccc) {
 //                IItem itemz = c.getPlayer().getCashInventory().toItem(i);
 //                if (itemz == null || itemz.getUniqueId() <= 0 || itemz.getItemId() != i.getId()) {

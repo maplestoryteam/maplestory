@@ -270,13 +270,12 @@ public class CherryMSLotteryImpl
             this.allpeichu += peiNX;
             this.characters.removeAll(drawchars);
         }
-        int peoplecount = 0;
+        int peopleCount = 0;
         if (drawchars != null) {
-            peoplecount = drawchars.size();
+            peopleCount = drawchars.size();
         }
-
-        getChannelServer().broadcastPacket(MaplePacketCreator.serverNotice(6, "所有赌场玩家请不要离开一线，否则无法，正常参与赌场游戏。1线为赌场线"));
-        getChannelServer().broadcastPacket(MaplePacketCreator.serverNotice(6, "[竞猜系统]中奖名单:" + zjNames6 + zjNames3 + zjNames2 + " "));
+        if (peopleCount > 0) {
+            getChannelServer().broadcastPacket(MaplePacketCreator.serverNotice(6, "[竞猜系统]中奖名单:" + zjNames6 + zjNames3 + zjNames2 + " "));
+        }
     }
-
 }

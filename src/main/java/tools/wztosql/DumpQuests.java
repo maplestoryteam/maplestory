@@ -165,7 +165,7 @@ public class DumpQuests {
                         if (req.getName().equals("job")) {
                             final List<MapleData> child = req.getChildren();
                             for (int x = 0; x < child.size(); x++) {
-                                dataStore.add(new Pair<Integer, Integer>(i, MapleDataTool.getInt(child.get(x), -1)));
+                                dataStore.add(new Pair<>(i, MapleDataTool.getInt(child.get(x), -1)));
                             }
                         } else if (req.getName().equals("skill")) {
                             final List<MapleData> child = req.getChildren();
@@ -174,7 +174,7 @@ public class DumpQuests {
                                 if (childdata == null) {
                                     continue;
                                 }
-                                dataStore.add(new Pair<Integer, Integer>(MapleDataTool.getInt(childdata.getChildByPath("id"), 0),
+                                dataStore.add(new Pair<>(MapleDataTool.getInt(childdata.getChildByPath("id"), 0),
                                         MapleDataTool.getInt(childdata.getChildByPath("acquire"), 0)));
                             }
                         } else if (req.getName().equals("quest")) {
@@ -184,7 +184,7 @@ public class DumpQuests {
                                 if (childdata == null) {
                                     continue;
                                 }
-                                dataStore.add(new Pair<Integer, Integer>(MapleDataTool.getInt(childdata.getChildByPath("id"), 0),
+                                dataStore.add(new Pair<>(MapleDataTool.getInt(childdata.getChildByPath("id"), 0),
                                         MapleDataTool.getInt(childdata.getChildByPath("state"), 0)));
                             }
                         } else if (req.getName().equals("item") || req.getName().equals("mob")) {
@@ -194,7 +194,7 @@ public class DumpQuests {
                                 if (childdata == null) {
                                     continue;
                                 }
-                                dataStore.add(new Pair<Integer, Integer>(MapleDataTool.getInt(childdata.getChildByPath("id"), 0),
+                                dataStore.add(new Pair<>(MapleDataTool.getInt(childdata.getChildByPath("id"), 0),
                                         MapleDataTool.getInt(childdata.getChildByPath("count"), 0)));
                             }
                         } else if (req.getName().equals("mbcard")) {
@@ -204,7 +204,7 @@ public class DumpQuests {
                                 if (childdata == null) {
                                     continue;
                                 }
-                                dataStore.add(new Pair<Integer, Integer>(MapleDataTool.getInt(childdata.getChildByPath("id"), 0),
+                                dataStore.add(new Pair<>(MapleDataTool.getInt(childdata.getChildByPath("id"), 0),
                                         MapleDataTool.getInt(childdata.getChildByPath("min"), 0)));
                             }
                         } else if (req.getName().equals("pet")) {
@@ -214,7 +214,7 @@ public class DumpQuests {
                                 if (childdata == null) {
                                     continue;
                                 }
-                                dataStore.add(new Pair<Integer, Integer>(i,
+                                dataStore.add(new Pair<>(i,
                                         MapleDataTool.getInt(childdata.getChildByPath("id"), 0)));
                             }
                         }

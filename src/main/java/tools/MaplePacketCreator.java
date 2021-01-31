@@ -78,8 +78,8 @@ public class MaplePacketCreator {
         mplew.writeShort(SendPacketOpcode.SERVER_IP.getValue());
         mplew.writeShort(0);
         try {
-            mplew.write(InetAddress.getByName(ServerProperties.getProperty("ZlhssMS.IP")).getAddress());
-            //System.out.println("[getServerIP] " +ServerProperties.getProperty("ZlhssMS.IP"));
+            mplew.write(InetAddress.getByName(ServerProperties.getProperty("KingMS.IP")).getAddress());
+            //System.out.println("[getServerIP] " +ServerProperties.getProperty("KingMS.IP"));
             //mplew.write(InetAddress.getByName(ServerConstants.Gateway_IP_String).getAddress());
         } catch (UnknownHostException e) {
             System.out.println("登录服务器IP：" + e);
@@ -103,9 +103,9 @@ public class MaplePacketCreator {
         try {
             //  byte[] addr = inetAddr.getAddress();
             //  mplew.write(addr);
-            mplew.write(InetAddress.getByName(ServerProperties.getProperty("ZlhssMS.IP")).getAddress());
+            mplew.write(InetAddress.getByName(ServerProperties.getProperty("KingMS.IP")).getAddress());
             mplew.writeShort(port);
-            //   System.out.println(InetAddress.getByName(ServerProperties.getProperty("ZlhssMS.IP")).getAddress());
+            //   System.out.println(InetAddress.getByName(ServerProperties.getProperty("KingMS.IP")).getAddress());
             //mplew.write(InetAddress.getByName(ServerConstants.Gateway_IP_String).getAddress());
         } catch (UnknownHostException e) {
             System.out.println("频道服务器IP：" + e);

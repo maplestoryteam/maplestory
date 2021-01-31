@@ -286,7 +286,7 @@ public class DumpItems {
                 }
                 final int lv = Integer.parseInt(info.getName());
                 if (equipStats.get(lv) == null) {
-                    equipStats.put(lv, new HashMap<String, Integer>());
+                    equipStats.put(lv, new HashMap<>());
                 }
                 for (MapleData data : info) {
                     if (data.getName().length() > 3) {

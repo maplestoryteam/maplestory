@@ -36,7 +36,7 @@ public class MapleMonsterStats {
     private int exp, mp, removeAfter, buffToGive, fixedDamage, selfDestruction_hp, dropItemPeriod, point;
     private boolean boss, undead, ffaLoot, firstAttack, isExplosiveReward, mobile, fly, onlyNormalAttack, friendly, noDoom;
     private String name;
-    private final Map<Element, ElementalEffectiveness> resistance = new HashMap<Element, ElementalEffectiveness>();
+    private final Map<Element, ElementalEffectiveness> resistance = new HashMap<>();
     private List<Integer> revives = new ArrayList<Integer>();
     private final List<Pair<Integer, Integer>> skills = new ArrayList<Pair<Integer, Integer>>();
     private BanishInfo banish;

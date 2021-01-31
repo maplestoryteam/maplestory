@@ -21,63 +21,34 @@
 package scripting;
 
 import client.*;
-
-import java.sql.ResultSet;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Connection;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import client.inventory.Equip;
-import client.inventory.IItem;
-import constants.GameConstants;
-import client.inventory.ItemFlag;
-import client.inventory.MapleInventory;
-import client.inventory.MapleInventoryType;
 import client.inventory.*;
-import server.MapleCarnivalParty;
-import server.Randomizer;
-import server.MapleInventoryManipulator;
-import server.MapleShopFactory;
-import server.MapleSquad;
-import server.maps.MapleMap;
-import server.maps.Event_DojoAgent;
-import server.maps.AramiaFireWorks;
-import server.quest.MapleQuest;
-import tools.MaplePacketCreator;
-import tools.Pair;
-import tools.packet.PlayerShopPacket;
-import server.MapleItemInformationProvider;
+import constants.GameConstants;
+import database.DatabaseConnection;
 import handling.channel.ChannelServer;
 import handling.channel.MapleGuildRanking;
-import database.DatabaseConnection;
-import handling.channel.handler.HiredMerchantHandler;
 import handling.world.MapleParty;
 import handling.world.MaplePartyCharacter;
 import handling.world.World;
 import handling.world.guild.MapleGuild;
-import server.MapleCarnivalChallenge;
-
-import java.util.HashMap;
-
 import handling.world.guild.MapleGuildAlliance;
-
-import java.rmi.RemoteException;
-import java.util.Arrays;
-import java.util.LinkedHashSet;
-import javax.script.Invocable;
-
+import server.Timer;
 import server.*;
-import server.MapleSquad.MapleSquadType;
-import server.maps.SpeedRunType;
 import server.Timer.CloneTimer;
 import server.life.*;
 import server.maps.*;
+import server.quest.MapleQuest;
+import tools.MaplePacketCreator;
+import tools.Pair;
 import tools.StringUtil;
+import tools.packet.PlayerShopPacket;
+
+import javax.script.Invocable;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.*;
+import java.util.Map.Entry;
 
 public class NPCConversationManager extends AbstractPlayerInteraction {
 
@@ -1183,7 +1154,7 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
         if (SpeedRunner.getInstance().getSpeedRunData(type) != null) {
             return SpeedRunner.getInstance().getSpeedRunData(type);
         }
-        return new Pair<String, Map<Integer, String>>("", new HashMap<Integer, String>());
+        return new Pair<String, Map<Integer, String>>("", new HashMap<>());
     }
 
     public boolean getSR(Pair<String, Map<Integer, String>> ma, int sel) {
@@ -1570,17 +1541,13 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
                         name.append("当前怪物 #o").append(mobId).append("# 的爆率为:\r\n");
                         name.append("--------------------------------------\r\n");
                     }
-                    String namez = new StringBuilder().append("#z").append(itemId).append("#").toString();
-                    if (itemId == 0) {
-                        itemId = 4031041;
-                        namez = new StringBuilder().append(de.Minimum * getClient().getChannelServer().getMesoRate()).append(" - ").append(de.Maximum * getClient().getChannelServer().getMesoRate()).append(" 的金币").toString();
-                    }
-                    ch = de.chance * rate;
-                    //  if (getPlayer().isAdmin()) {
-                    name.append(num + 1).append(") #v").append(itemId).append("#").append(namez).append(" - ").append(Integer.valueOf(ch >= 999999 ? 1000000 : ch).doubleValue() / 10000.0D).append("%的爆率. ").append((de.questid > 0) && (MapleQuest.getInstance(de.questid).getName().length() > 0) ? new StringBuilder().append("需要接受任务: ").append(MapleQuest.getInstance(de.questid).getName()).toString() : "").append("\r\n");
-                    // } else {
-                    //     name.append(num + 1).append(") #v").append(itemId).append("#").append(namez).append((de.questid > 0) && (MapleQuest.getInstance(de.questid).getName().length() > 0) ? new StringBuilder().append("需要接受任务: ").append(MapleQuest.getInstance(de.questid).getName()).toString() : "").append("\r\n");
-                    // }
+                    name.append(num + 1).append(") #v")
+                            .append(itemId)
+                            .append("#")
+                            .append("#z")
+                            .append(itemId)
+                            .append("#")
+                            .append("\r\n");
                     num++;
                 }
             }

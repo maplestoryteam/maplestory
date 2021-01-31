@@ -2032,8 +2032,8 @@ public abstract class AbstractPlayerInteraction {
         return LotteryExt.query(c.getPlayer().getId(), itemId);
     }
 
-    public final void 抽奖删除(int type, int itemId, int count) {
-        LotteryExt.deleteItem(c.getPlayer().getId(), type, itemId, count);
+    public final boolean 抽奖删除(int type, int itemId, int count) {
+        return LotteryExt.deleteItem(c.getPlayer().getId(), type, itemId, count);
     }
 
     public final List<LotteryItem> 抽奖物品查询(int type) {
@@ -2098,5 +2098,15 @@ public abstract class AbstractPlayerInteraction {
 
     public final void 抢购减少(int type, int itemId, int itemCount) {
         TimeSaleItemExt.update(type, itemId, itemCount);
+    }
+
+    //查询组队BossLog("文本",次数)  //反正 ture/false   如果  查询的次数>=次数  就返回false
+    public final boolean 查询组队BossLog(String bossid, int count) {
+        return c.getPlayer()
+                .getParty()
+                .getMembers()
+                .parallelStream()
+                .filter(ch -> getMap().getCharacterById(ch.getId()).getBossLog(bossid) < count)
+                .count() == c.getPlayer().getParty().getMembers().size();
     }
 }

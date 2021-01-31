@@ -51,27 +51,6 @@ class BytesEncodingDetect extends Encoding {
         initialize_frequencies();
     }
 
-    public static void main(String[] argc) {
-        BytesEncodingDetect sinodetector;
-        int result = OTHER;
-        int i;
-        sinodetector = new BytesEncodingDetect();
-        for (i = 0; i < argc.length; i++) {
-            if (argc[i].startsWith("http://") == true) {
-                try {
-                    result = sinodetector.detectEncoding(new URL(argc[i]));
-                } catch (Exception e) {
-                    System.err.println("Bad URL " + e.toString());
-                }
-            } else if (argc[i].equals("-d")) {
-                sinodetector.debug = true;
-                continue;
-            } else {
-                result = sinodetector.detectEncoding(new File(argc[i]));
-            }
-            System.out.println(nicename[result]);
-        }
-    }
 
     /**
      * Function : detectEncoding Aruguments: URL Returns : One of the encodings

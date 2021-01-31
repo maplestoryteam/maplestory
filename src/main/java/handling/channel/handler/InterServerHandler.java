@@ -149,7 +149,7 @@ public class InterServerHandler {
     }
 
     public static void Loggedin(final int playerid, final MapleClient c) {
-        // if (!GameConstants.绑定IP.equals(ServerProperties.getProperty("ZlhssMS.IP"))) {
+        // if (!GameConstants.绑定IP.equals(ServerProperties.getProperty("KingMS.IP"))) {
         // }
 
         final ChannelServer channelServer = c.getChannelServer();
@@ -336,7 +336,7 @@ public class InterServerHandler {
             player.dropMessage(5, "您装备了精灵吊坠！打猎时可以额外获得30%的道具佩戴经验奖励！");
         }
         if (player.haveItem(2022336)) {//背包里是否有神秘箱子-新手礼包
-            player.dropMessage(5, "欢迎来到" + ServerProperties.getProperty("ZlhssMS.ServerName") + "冒险岛,请按“I”键，打开背包，双击使用神秘箱子，领取新人礼包");
+            player.dropMessage(5, "欢迎来到" + ServerProperties.getProperty("KingMS.ServerName") + "冒险岛,请按“I”键，打开背包，双击使用神秘箱子，领取新人礼包");
             return;
         }
         System.out.println("[冒险岛][名字:" + c.getPlayer().getName() + "][等级:" + c.getPlayer().getLevel() + "][IP:" + c.getSessionIPAddress() + "]登录.");

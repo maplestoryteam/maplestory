@@ -52,10 +52,10 @@ public class MapleLifeFactory {
     private static final MapleData mobStringData = stringDataWZ.getData("Mob.img");
     private static final MapleData npcStringData = stringDataWZ.getData("Npc.img");
     private static final MapleData npclocData = etcDataWZ.getData("NpcLocation.img");
-    private static final Map<Integer, String> npcNames = new HashMap<Integer, String>();
-    private static final Map<Integer, MapleMonsterStats> monsterStats = new HashMap<Integer, MapleMonsterStats>();
-    private static final Map<Integer, Integer> NPCLoc = new HashMap<Integer, Integer>();
-    private static final Map<Integer, List<Integer>> questCount = new HashMap<Integer, List<Integer>>();
+    private static final Map<Integer, String> npcNames = new HashMap<>();
+    private static final Map<Integer, MapleMonsterStats> monsterStats = new HashMap<>();
+    private static final Map<Integer, Integer> NPCLoc = new HashMap<>();
+    private static final Map<Integer, List<Integer>> questCount = new HashMap<>();
 
     public static AbstractLoadedMapleLife getLife(int id, String type) {
         if (type.equalsIgnoreCase("n")) {
@@ -213,7 +213,7 @@ public class MapleLifeFactory {
                 int i = 0;
                 List<Pair<Integer, Integer>> skills = new ArrayList<Pair<Integer, Integer>>();
                 while (monsterSkillData.getChildByPath(Integer.toString(i)) != null) {
-                    skills.add(new Pair<Integer, Integer>(Integer.valueOf(MapleDataTool.getInt(i + "/skill", monsterSkillData, 0)), Integer.valueOf(MapleDataTool.getInt(i + "/level", monsterSkillData, 0))));
+                    skills.add(new Pair<>(Integer.valueOf(MapleDataTool.getInt(i + "/skill", monsterSkillData, 0)), Integer.valueOf(MapleDataTool.getInt(i + "/level", monsterSkillData, 0))));
                     i++;
                 }
                 stats.setSkills(skills);

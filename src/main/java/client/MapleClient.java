@@ -60,8 +60,8 @@ public class MapleClient implements Serializable {
             CASH_SHOP_TRANSITION = 4,
             LOGIN_CS_LOGGEDIN = 5,
             CHANGE_CHANNEL = 6;
-    //ZlhssMS.MaxCharacters
-    public static final int DEFAULT_CHARSLOT = Integer.parseInt(ServerProperties.getProperty("ZlhssMS.MaxCharacters"));//最大角色数量
+    //KingMS.MaxCharacters
+    public static final int DEFAULT_CHARSLOT = Integer.parseInt(ServerProperties.getProperty("KingMS.MaxCharacters"));//最大角色数量
     public static final String CLIENT_KEY = "CLIENT";
     private final transient MapleAESOFB send;
     private final transient MapleAESOFB receive;
@@ -77,16 +77,15 @@ public class MapleClient implements Serializable {
     public boolean gm;
     private byte greason = 1, gender = -1;
     public transient short loginAttempt = 0;
-    private final transient List<Integer> allowedChar = new LinkedList<Integer>();
-    private final transient Set<String> macs = new HashSet<String>();
-    private final transient Map<String, ScriptEngine> engines = new HashMap<String, ScriptEngine>();
+    private final transient List<Integer> allowedChar = new LinkedList<>();
+    private final transient Set<String> macs = new HashSet<>();
+    private final transient Map<String, ScriptEngine> engines = new HashMap<>();
     private transient ScheduledFuture<?> idleTask = null;
     private transient String secondPassword, salt2; // To be used only on login
     private final transient Lock mutex = new ReentrantLock(true);
     private final transient Lock npc_mutex = new ReentrantLock();
     private final static Lock login_mutex = new ReentrantLock(true);
     private transient String tempIP = "";
-    private DebugWindow debugWindow;
 
     public MapleClient(MapleAESOFB send, MapleAESOFB receive, IoSession session) {
         this.send = send;
@@ -100,15 +99,6 @@ public class MapleClient implements Serializable {
 
     public final MapleAESOFB getSendCrypto() {
         return send;
-    }
-
-    public void StartWindow() {
-        if (this.debugWindow != null) {
-            this.debugWindow.dispose();
-        }
-        this.debugWindow = new DebugWindow();
-        this.debugWindow.setVisible(true);
-        this.debugWindow.setC(this);
     }
 
     public final IoSession getSession() {

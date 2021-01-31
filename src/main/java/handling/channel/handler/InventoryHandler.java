@@ -20,64 +20,33 @@
  */
 package handling.channel.handler;
 
-import java.util.Map;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ArrayList;
-import java.awt.Point;
-
-import client.inventory.Equip;
-import client.inventory.IEquip;
-import client.inventory.IEquip.ScrollResult;
-import client.inventory.IItem;
-import client.ISkill;
-import client.inventory.ItemFlag;
-import client.inventory.MaplePet;
-import client.inventory.MaplePet.PetFlag;
-import client.inventory.MapleMount;
-import client.MapleCharacter;
-import client.MapleClient;
-import client.inventory.MapleInventoryType;
-import client.inventory.MapleInventory;
-import client.MapleStat;
-import client.PlayerStats;
-import constants.GameConstants;
-import client.SkillFactory;
+import client.*;
 import client.anticheat.CheatingOffense;
+import client.inventory.*;
+import client.inventory.IEquip.ScrollResult;
+import client.inventory.MaplePet.PetFlag;
+import constants.GameConstants;
 import handling.world.MaplePartyCharacter;
 import handling.world.World;
-
-import java.awt.Rectangle;
-import java.util.Collections;
-import java.util.concurrent.locks.Lock;
-
-import server.AutobanManager;
-import server.Randomizer;
-import server.RandomRewards;
-import server.MapleShopFactory;
-import server.MapleItemInformationProvider;
-import server.MapleInventoryManipulator;
-import server.StructRewardItem;
-import server.quest.MapleQuest;
-import server.maps.SavedLocationType;
-import server.maps.FieldLimitType;
-import server.maps.MapleMap;
-import server.maps.MapleMapItem;
-import server.maps.MapleMapObject;
-import server.maps.MapleMapObjectType;
-import server.life.MapleMonster;
-import server.life.MapleLifeFactory;
 import scripting.NPCScriptManager;
 import server.*;
+import server.life.MapleLifeFactory;
+import server.life.MapleMonster;
 import server.maps.*;
+import server.quest.MapleQuest;
 import server.shops.HiredMerchant;
 import server.shops.IMaplePlayerShop;
+import tools.MaplePacketCreator;
 import tools.Pair;
+import tools.data.input.SeekableLittleEndianAccessor;
 import tools.packet.MTSCSPacket;
 import tools.packet.PetPacket;
-import tools.data.input.SeekableLittleEndianAccessor;
-import tools.MaplePacketCreator;
 import tools.packet.PlayerShopPacket;
+
+import java.awt.*;
+import java.util.List;
+import java.util.*;
+import java.util.concurrent.locks.Lock;
 
 public class InventoryHandler {
 
@@ -154,7 +123,7 @@ public class InventoryHandler {
         c.getPlayer().updateTick(slea.readInt());
         final byte mode = slea.readByte();
         if (mode == 0x05) {
-            c.getPlayer().dropMessage(1, "特殊栏道具暂不开放以种类排列.");
+          //  c.getPlayer().dropMessage(1, "特殊栏道具暂不开放以种类排列.");
             c.getSession().write(MaplePacketCreator.finishedGather(mode));
             c.getSession().write(MaplePacketCreator.enableActions());
             return;

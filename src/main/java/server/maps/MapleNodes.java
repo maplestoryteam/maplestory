@@ -20,16 +20,11 @@
  */
 package server.maps;
 
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
 import tools.Pair;
+
+import java.awt.*;
+import java.util.List;
+import java.util.*;
 
 public class MapleNodes {
 
@@ -137,7 +132,7 @@ public class MapleNodes {
         if (nodes.size() <= 0 || nodeStart < 0) {
             return;
         }
-        Map<Integer, MapleNodeInfo> unsortedNodes = new HashMap<Integer, MapleNodeInfo>(nodes);
+        Map<Integer, MapleNodeInfo> unsortedNodes = new HashMap<>(nodes);
         final int nodeSize = unsortedNodes.size();
         nodes.clear();
         int nextNode = getNextNode(unsortedNodes.get(nodeStart));
@@ -207,7 +202,7 @@ public class MapleNodes {
     }
 
     public final void addMobSpawn(int mobId, int spendCP) {
-        this.mobsToSpawn.add(new Pair<Integer, Integer>(mobId, spendCP));
+        this.mobsToSpawn.add(new Pair<>(mobId, spendCP));
     }
 
     public final List<Pair<Integer, Integer>> getMobsToSpawn() {

@@ -46,7 +46,7 @@ import tools.MaplePacketCreator;
 
 public class PlayerNPC extends MapleNPC {
 
-    private Map<Byte, Integer> equips = new HashMap<Byte, Integer>();
+    private Map<Byte, Integer> equips = new HashMap<>();
     private final int mapid;
     private int face;
     private int hair;
@@ -150,7 +150,7 @@ public class PlayerNPC extends MapleNPC {
         setGender(chr.getGender());
         setPets(chr.getPets());
 
-        equips = new HashMap<Byte, Integer>();
+        equips = new HashMap<>();
         for (IItem item : chr.getInventory(MapleInventoryType.EQUIPPED).list()) {
             if (item.getPosition() < -128) {
                 continue;

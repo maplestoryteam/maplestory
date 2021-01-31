@@ -57,14 +57,14 @@ public interface LotteryExt {
         PreparedStatement ps;
         try {
             ps = ConnExt.getConn().prepareStatement(String.format("UPDATE lottery AS l SET l.`item_count` = l.`item_count` - %d WHERE l.`character_id` = %d AND l.`type` = %d AND l.`item_id` = %d", itemCount, characterId, type, itemId));
-            ps.executeUpdate();
+            int ret = ps.executeUpdate();
             ps.close();
 
             ps = ConnExt.getConn().prepareStatement(String.format("DELETE FROM lottery WHERE `item_count` <= 0 AND `character_id` = %d AND `type` = %d AND `item_id` = %d", characterId, type, itemId));
             ps.executeUpdate();
             ps.close();
 
-            return true;
+            return ret > 0;
         } catch (SQLException e) {
             e.printStackTrace();
         }

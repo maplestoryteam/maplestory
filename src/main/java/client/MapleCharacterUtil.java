@@ -232,7 +232,7 @@ public class MapleCharacterUtil {
                 ps.close();
                 return null;
             }
-            Pair<Integer, Pair<Integer, Integer>> id = new Pair<Integer, Pair<Integer, Integer>>(rs.getInt("id"), new Pair<Integer, Integer>(rs.getInt("accountid"), rs.getInt("gender")));
+            Pair<Integer, Pair<Integer, Integer>> id = new Pair<Integer, Pair<Integer, Integer>>(rs.getInt("id"), new Pair<>(rs.getInt("accountid"), rs.getInt("gender")));
             rs.close();
             ps.close();
             return id;

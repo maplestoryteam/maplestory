@@ -4,12 +4,12 @@
 // Source File Name:   set.java
 package constants;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.util.Properties;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class OtherSettings {
 
@@ -25,7 +25,7 @@ public class OtherSettings {
     public OtherSettings() {
         itempb_cfg = new Properties();
         try {
-            InputStreamReader is = new FileReader("服务端配置.ini");
+            InputStreamReader is = new FileReader("server.ini");
             itempb_cfg.load(is);
             is.close();
             itempb_id = itempb_cfg.getProperty("cashban").split(",");

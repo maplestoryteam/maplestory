@@ -31,7 +31,7 @@ public class MapleReactorStats {
     private byte facingDirection;
     private Point tl;
     private Point br;
-    private final Map<Byte, StateData> stateInfo = new HashMap<Byte, StateData>();
+    private final Map<Byte, StateData> stateInfo = new HashMap<>();
 
     public final void setFacingDirection(final byte facingDirection) {
         this.facingDirection = facingDirection;

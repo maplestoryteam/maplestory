@@ -21,23 +21,6 @@
 package server.maps;
 
 import database.DatabaseConnection;
-
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.io.File;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.concurrent.locks.ReentrantLock;
-
 import provider.MapleData;
 import provider.MapleDataProvider;
 import provider.MapleDataProviderFactory;
@@ -51,26 +34,22 @@ import server.maps.MapleNodes.MapleNodeInfo;
 import server.maps.MapleNodes.MaplePlatform;
 import tools.StringUtil;
 
+import java.awt.*;
+import java.io.File;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.*;
+import java.util.concurrent.locks.ReentrantLock;
+
 public class MapleMapFactory {
 
     private static final MapleDataProvider source = MapleDataProviderFactory.getDataProvider(new File(System.getProperty("net.sf.odinms.wzpath", "wz") + "/Map.wz"));
     private static final MapleData nameData = MapleDataProviderFactory.getDataProvider(new File(System.getProperty("net.sf.odinms.wzpath", "wz") + "/String.wz")).getData("Map.img");
     private final Map<Integer, MapleMap> maps = new HashMap<>();
-    private final Map<Integer, Integer> DeStorymaps = new HashMap<Integer, Integer>() {
-        {
-            // put(230000000, 0);// 水下世界
-            // put(211000000, 0);//冰封雪域
-            //put(200082200, 0);//通天塔底下1层
-            // put(221000000, 0);//地球防御本部
-            // put(222000000, 0);//童话村
-            // put(240000000, 0);//神木村
-            //put(260000000, 0);//阿里安特
-            //put(261000000, 0);//玛家提亚
-            //put(250000000, 0);//武陵
-            //  put(541010000, 0);//幽灵船
-            //  put(240010501, 0);//祭司之林
-        }
-    };
+    private final Map<Integer, Integer> DeStorymaps = new HashMap<>();
     private final Map<Integer, MapleMap> instanceMap = new HashMap<>();
     private static final Map<Integer, MapleNodes> mapInfos = new HashMap<>();
     private static final Map<Integer, List<AbstractLoadedMapleLife>> customLife = new HashMap<>();

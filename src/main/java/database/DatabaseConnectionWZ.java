@@ -72,11 +72,11 @@ public class DatabaseConnectionWZ {
     private static Connection connectToDB() {
         if (!propsInited) {
             try {
-                FileReader fR = new FileReader("服务端配置.ini");
+                FileReader fR = new FileReader("server.ini");
                 dbProps.load(fR);
                 fR.close();
             } catch (IOException ex) {
-                System.out.println("[WZDB信息] Unable to start server: Error reading from 服务端配置.ini.");
+                System.out.println("[WZDB信息] Unable to start server: Error reading from server.ini.");
             }
             dbDriver = dbProps.getProperty("driver");
             dbUrl = dbProps.getProperty("wzurl");

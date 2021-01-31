@@ -37,8 +37,8 @@ import server.Timer.WorldTimer;
 
 public class RankingWorker {
 /*
-    private final Map<Integer, List<RankingInformation>> rankings = new HashMap<Integer, List<RankingInformation>>();
-    private final Map<String, Integer> jobCommands = new HashMap<String, Integer>();
+    private final Map<Integer, List<RankingInformation>> rankings = new HashMap<>();
+    private final Map<String, Integer> jobCommands = new HashMap<>();
     private static RankingWorker instance;
     private Connection con;
 

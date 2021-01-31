@@ -20,18 +20,6 @@
  */
 package handling.channel;
 
-import kinms.db.AutoCherryMSEventManager;
-
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
 import client.MapleCharacter;
 import client.MapleClient;
 import handling.ByteArrayMaplePacket;
@@ -41,40 +29,31 @@ import handling.cashshop.CashShopServer;
 import handling.login.LoginServer;
 import handling.mina.MapleCodecFactory;
 import handling.world.CheaterData;
-
-import java.util.concurrent.locks.ReentrantReadWriteLock;
-
+import kinms.db.AutoCherryMSEventManager;
+import org.apache.mina.core.buffer.IoBuffer;
+import org.apache.mina.core.buffer.SimpleBufferAllocator;
+import org.apache.mina.core.service.IoAcceptor;
+import org.apache.mina.filter.codec.ProtocolCodecFilter;
+import org.apache.mina.transport.socket.SocketSessionConfig;
+import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
 import scripting.EventScriptManager;
 import server.MapleSquad;
 import server.MapleSquad.MapleSquadType;
-import server.maps.MapleMapFactory;
-import server.shops.HiredMerchant;
-import tools.MaplePacketCreator;
-import server.life.PlayerNPC;
-import org.apache.mina.filter.codec.ProtocolCodecFilter;
-
-import java.io.Serializable;
-import java.util.EnumMap;
-import java.util.HashSet;
-import java.util.Set;
-
-import org.apache.mina.core.buffer.IoBuffer;
-import org.apache.mina.core.buffer.SimpleBufferAllocator;
-import org.apache.mina.core.filterchain.IoFilter;
-import org.apache.mina.core.service.IoAcceptor;
-import org.apache.mina.transport.socket.SocketSessionConfig;
-import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
 import server.ServerProperties;
 import server.Timer;
-import server.events.MapleCoconut;
-import server.events.MapleEvent;
-import server.events.MapleEventType;
-import server.events.MapleFitness;
-import server.events.MapleOla;
-import server.events.MapleOxQuiz;
-import server.events.MapleSnowball;
+import server.events.*;
+import server.life.PlayerNPC;
+import server.maps.MapleMapFactory;
+import server.shops.HiredMerchant;
 import tools.CollectionUtil;
 import tools.ConcurrentEnumMap;
+import tools.MaplePacketCreator;
+
+import java.io.IOException;
+import java.io.Serializable;
+import java.net.InetSocketAddress;
+import java.util.*;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class ChannelServer implements Serializable {
 
@@ -140,26 +119,26 @@ public class ChannelServer implements Serializable {
     public final void run_startup_configurations() {
         setChannel(this.channel); //instances.put
         try {
-            expRate = Integer.parseInt(ServerProperties.getProperty("ZlhssMS.Exp"));
-            mesoRate = Integer.parseInt(ServerProperties.getProperty("ZlhssMS.Meso"));
-            dropRate = Integer.parseInt(ServerProperties.getProperty("ZlhssMS.Drop"));
-            BossdropRate = Integer.parseInt(ServerProperties.getProperty("ZlhssMS.BDrop"));
-            cashRate = Integer.parseInt(ServerProperties.getProperty("ZlhssMS.Cash"));
-            serverMessage = ServerProperties.getProperty("ZlhssMS.ServerMessage");
-            serverName = ServerProperties.getProperty("ZlhssMS.ServerName");
-            flags = Integer.parseInt(ServerProperties.getProperty("ZlhssMS.WFlags", "0"));
-            adminOnly = Boolean.parseBoolean(ServerProperties.getProperty("ZlhssMS.Admin", "false"));
-            eventSM = new EventScriptManager(this, ServerProperties.getProperty("ZlhssMS.Events").split(","));
-            port = Short.parseShort(ServerProperties.getProperty("ZlhssMS.Port" + this.channel, String.valueOf(DEFAULT_PORT + this.channel)));
+            expRate = Integer.parseInt(ServerProperties.getProperty("KingMS.Exp"));
+            mesoRate = Integer.parseInt(ServerProperties.getProperty("KingMS.Meso"));
+            dropRate = Integer.parseInt(ServerProperties.getProperty("KingMS.Drop"));
+            BossdropRate = Integer.parseInt(ServerProperties.getProperty("KingMS.BDrop"));
+            cashRate = Integer.parseInt(ServerProperties.getProperty("KingMS.Cash"));
+            serverMessage = ServerProperties.getProperty("KingMS.ServerMessage");
+            serverName = ServerProperties.getProperty("KingMS.ServerName");
+            flags = Integer.parseInt(ServerProperties.getProperty("KingMS.WFlags", "0"));
+            adminOnly = Boolean.parseBoolean(ServerProperties.getProperty("KingMS.Admin", "false"));
+            eventSM = new EventScriptManager(this, ServerProperties.getProperty("KingMS.Events").split(","));
+            port = Short.parseShort(ServerProperties.getProperty("KingMS.Port" + this.channel, String.valueOf(DEFAULT_PORT + this.channel)));
             //他不会去 启动 tms.Port  而是启动的 DEFAULT_PORT的yto
-            //   port = Short.parseShort(ServerProperties.getProperty("ZlhssMS.Port" + channel));
+            //   port = Short.parseShort(ServerProperties.getProperty("KingMS.Port" + channel));
             // port = Integer.parseInt(this.props.getProperty("net.sf.cherry.channel.net.port"));
 
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
-        ip = ServerProperties.getProperty("ZlhssMS.IP") + ":" + port;
+        ip = ServerProperties.getProperty("KingMS.IP") + ":" + port;
 
         IoBuffer.setUseDirectBuffer(false);
         IoBuffer.setAllocator(new SimpleBufferAllocator());
@@ -327,7 +306,7 @@ public class ChannelServer implements Serializable {
     //事件脚本启动
     public final void reloadEvents() {
         eventSM.cancel();
-        eventSM = new EventScriptManager(this, ServerProperties.getProperty("ZlhssMS.Events").split(","));
+        eventSM = new EventScriptManager(this, ServerProperties.getProperty("KingMS.Events").split(","));
         eventSM.init();
     }
 
@@ -402,7 +381,7 @@ public class ChannelServer implements Serializable {
 
     public static void startChannel_Main() {
         serverStartTime = System.currentTimeMillis();
-        int ch = Integer.parseInt(ServerProperties.getProperty("ZlhssMS.Count", "0"));
+        int ch = Integer.parseInt(ServerProperties.getProperty("KingMS.Count", "0"));
         if (ch > 10) {
             ch = 10;
         }
@@ -413,7 +392,7 @@ public class ChannelServer implements Serializable {
 
     public static final void startChannel(final int channel) {
         serverStartTime = System.currentTimeMillis();
-        for (int i = 0; i < Integer.parseInt(ServerProperties.getProperty("ZlhssMS.Count", "0")); i++) {
+        for (int i = 0; i < Integer.parseInt(ServerProperties.getProperty("KingMS.Count", "0")); i++) {
             if (channel == i + 1) {
 
                 //newInstance(ServerConstants.Channel_Key[i], i + 1).run_startup_configurations();
@@ -628,7 +607,7 @@ public class ChannelServer implements Serializable {
     }
 
     public static Map<Integer, Integer> getChannelLoad() {
-        Map<Integer, Integer> ret = new HashMap<Integer, Integer>();
+        Map<Integer, Integer> ret = new HashMap<>();
         for (ChannelServer cs : instances.values()) {
             ret.put(cs.getChannel(), cs.getConnectedClients());
         }
@@ -673,11 +652,7 @@ public class ChannelServer implements Serializable {
         System.out.println("[自动存档] 已经将频道 " + this.channel + " 的 " + ppl + " 个玩家保存到数据中.");
     }
 
-    public void AutoNx(int dy) {
-        mapFactory.getMap(910000000).AutoNx(dy);
-    }
-
-    public void AutoTime(int dy) {
+    public void AutoTime() {
         try {
             for (ChannelServer chan : ChannelServer.getAllInstances()) {
                 for (MapleCharacter chr : chan.getPlayerStorage().getAllCharacters()) {

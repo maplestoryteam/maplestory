@@ -41,7 +41,7 @@ import tools.FileoutputUtil;
 public class ReactorScriptManager extends AbstractScriptManager {
 
     private static final ReactorScriptManager instance = new ReactorScriptManager();
-    private final Map<Integer, List<ReactorDropEntry>> drops = new HashMap<Integer, List<ReactorDropEntry>>();
+    private final Map<Integer, List<ReactorDropEntry>> drops = new HashMap<>();
 
     public static final ReactorScriptManager getInstance() {
         return instance;

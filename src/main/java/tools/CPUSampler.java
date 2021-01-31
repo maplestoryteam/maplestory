@@ -30,7 +30,7 @@ public class CPUSampler {
 
     private static final CPUSampler instance = new CPUSampler();
     private final List<String> included = new LinkedList<String>();
-    private final Map<StackTrace, Integer> recorded = new HashMap<StackTrace, Integer>();
+    private final Map<StackTrace, Integer> recorded = new HashMap<>();
     private long interval = 5;
     private SamplerThread sampler = null;
     private int totalSamples = 0;

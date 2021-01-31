@@ -24,15 +24,14 @@ import client.MapleCharacter;
 import client.MapleQuestStatus;
 import handling.channel.ChannelServer;
 import handling.world.MaplePartyCharacter;
-
-import java.awt.Point;
-import java.util.concurrent.ScheduledFuture;
-
 import server.Randomizer;
 import server.Timer.MapTimer;
-import server.quest.MapleQuest;
 import server.life.MapleLifeFactory;
+import server.quest.MapleQuest;
 import tools.MaplePacketCreator;
+
+import java.awt.*;
+import java.util.concurrent.ScheduledFuture;
 
 public class Event_PyramidSubway {
 
@@ -55,19 +54,16 @@ public class Event_PyramidSubway {
         }
         if (c.getParty() == null || c.getParty().getLeader().equals(new MaplePartyCharacter(c))) {
             commenceTimerNextMap(c, 1);
-            energyBarDecrease = MapTimer.getInstance().register(new Runnable() {
-
-                public void run() {
-                    energybar -= (c.getParty() != null && c.getParty().getMembers().size() > 1 ? 10 : 5);
-                    if (broaded) {
-                        //broadcastUpdate(c);
-                        c.getMap().respawn(true);
-                    } else {
-                        broaded = true;
-                    }
-                    if (energybar <= 0) { //why
-                        fail(c);
-                    }
+            energyBarDecrease = MapTimer.getInstance().register(() -> {
+                energybar -= (c.getParty() != null && c.getParty().getMembers().size() > 1 ? 10 : 5);
+                if (broaded) {
+                    //broadcastUpdate(c);
+                    c.getMap().respawn(true);
+                } else {
+                    broaded = true;
+                }
+                if (energybar <= 0) { //why
+                    fail(c);
                 }
             }, 1000);
         }
@@ -124,18 +120,15 @@ public class Event_PyramidSubway {
                 }
             }, 10000L);
         }
-        timerSchedule = MapTimer.getInstance().schedule(new Runnable() {
-
-            public void run() {
-                boolean ret = false;
-                if (type == -1) {
-                    ret = warpNextMap_Subway(c);
-                } else {
-                    ret = warpNextMap_Pyramid(c, type);
-                }
-                if (!ret) {
-                    fail(c);
-                }
+        timerSchedule = MapTimer.getInstance().schedule(() -> {
+            boolean ret;
+            if (type == -1) {
+                ret = warpNextMap_Subway(c);
+            } else {
+                ret = warpNextMap_Pyramid(c, type);
+            }
+            if (!ret) {
+                fail(c);
             }
         }, time * 1000L);
     }

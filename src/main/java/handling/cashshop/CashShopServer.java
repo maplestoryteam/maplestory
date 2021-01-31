@@ -47,8 +47,8 @@ public class CashShopServer {
     private static boolean finishedShutdown = false;
 
     public static void run_startup_configurations() {
-        ip = ServerProperties.getProperty("ZlhssMS.IP");
-        port = Integer.valueOf(ServerProperties.getProperty("ZlhssMS.SCPort"));
+        ip = ServerProperties.getProperty("KingMS.IP");
+        port = Integer.valueOf(ServerProperties.getProperty("KingMS.SCPort"));
         IoBuffer.setUseDirectBuffer(false);
         IoBuffer.setAllocator(new SimpleBufferAllocator());
         acceptor = new NioSocketAcceptor();

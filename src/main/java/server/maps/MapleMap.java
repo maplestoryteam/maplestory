@@ -20,85 +20,48 @@
  */
 package server.maps;
 
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.locks.Lock;
-import java.util.Calendar;
-
-import client.inventory.Equip;
-import client.inventory.IItem;
-import client.inventory.Item;
-import constants.GameConstants;
 import client.MapleBuffStat;
 import client.MapleCharacter;
 import client.MapleClient;
-import client.inventory.MapleInventoryType;
-import client.inventory.MaplePet;
+import client.inventory.*;
 import client.status.MonsterStatus;
 import client.status.MonsterStatusEffect;
-import constants.OtherSettings;
+import constants.GameConstants;
 import constants.ServerConstants;
 import database.DatabaseConnection;
 import handling.MaplePacket;
 import handling.channel.ChannelServer;
-import handling.world.PartyOperation;
 import handling.world.MaplePartyCharacter;
 import handling.world.World;
-
-import java.lang.ref.WeakReference;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.util.EnumMap;
-import java.util.LinkedHashMap;
-import java.util.concurrent.locks.ReentrantLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
-
-import server.MapleItemInformationProvider;
-import server.MaplePortal;
-import server.MapleStatEffect;
-import server.Randomizer;
-import server.MapleInventoryManipulator;
-import server.life.MapleMonster;
-import server.life.MapleNPC;
-import server.life.MapleLifeFactory;
-import server.life.Spawns;
-import server.life.SpawnPoint;
-import server.life.SpawnPointAreaBoss;
-import server.life.MonsterDropEntry;
-import server.life.MonsterGlobalDropEntry;
-import server.life.MapleMonsterInformationProvider;
-import tools.FileoutputUtil;
-import tools.StringUtil;
-import tools.MaplePacketCreator;
-import tools.packet.PetPacket;
-import tools.packet.MobPacket;
 import scripting.EventManager;
-import server.MapleCarnivalFactory;
+import server.*;
 import server.MapleCarnivalFactory.MCSkill;
-import server.MapleSquad;
 import server.MapleSquad.MapleSquadType;
-import server.SpeedRunner;
 import server.Timer.MapTimer;
 import server.events.MapleEvent;
 import server.life.*;
-import server.maps.MapleMist;
 import server.maps.MapleNodes.MapleNodeInfo;
 import server.maps.MapleNodes.MaplePlatform;
 import server.maps.MapleNodes.MonsterPoint;
-import server.quest.MapleQuest;
+import tools.FileoutputUtil;
+import tools.MaplePacketCreator;
 import tools.Pair;
+import tools.StringUtil;
 import tools.packet.MTSCSPacket;
+import tools.packet.MobPacket;
+import tools.packet.PetPacket;
+
+import java.awt.*;
+import java.lang.ref.WeakReference;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.util.List;
+import java.util.*;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public final class MapleMap {
 
@@ -2915,21 +2878,10 @@ public final class MapleMap {
         addMapObject(love);
         broadcastMessage(love.makeSpawnData());
         final MapTimer tMan = MapTimer.getInstance();
-        //   TimerManager tMan = TimerManager.getInstance();
         tMan.schedule(() -> {
             removeMapObject(love);
             broadcastMessage(love.makeDestroyData());
         }, 1000 * 60 * 60);
-    }
-
-    public void AutoNx(int dy) {
-        for (MapleCharacter chr : characters) {
-            chr.gainExp(chr.getLevel() * 15, true, false, true);
-            int cashdy = 1 + Randomizer.nextInt(dy);
-            chr.modifyCSPoints(2, cashdy);
-            chr.getClient().getSession().write(MaplePacketCreator.serverNotice(5, "[系统奖励] 挂机获得[" + dy + "] 抵用卷!"));
-            chr.getClient().getSession().write(MaplePacketCreator.serverNotice(5, "[系统奖励] 挂机获得[" + chr.getLevel() * 15 + "] 经验!"));
-        }
     }
 
     public List<MapleCharacter> getCharactersIntersect(Rectangle box) {
@@ -3131,7 +3083,7 @@ public final class MapleMap {
             ps.close();
 
             if (SpeedRunner.getInstance().getSpeedRunData(type) == null) { //great, we just add it
-                SpeedRunner.getInstance().addSpeedRunData(type, SpeedRunner.getInstance().addSpeedRunData(new StringBuilder("#rThese are the speedrun times for " + type + ".#k\r\n\r\n"), new HashMap<Integer, String>(), z, leader, 1, time));
+                SpeedRunner.getInstance().addSpeedRunData(type, SpeedRunner.getInstance().addSpeedRunData(new StringBuilder("#rThese are the speedrun times for " + type + ".#k\r\n\r\n"), new HashMap<>(), z, leader, 1, time));
             } else {
                 //i wish we had a way to get the rank
                 //TODO revamp

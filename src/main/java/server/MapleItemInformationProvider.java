@@ -51,42 +51,42 @@ public class MapleItemInformationProvider {
     protected final MapleData insStringData = stringData.getData("Ins.img");
     protected final MapleData petStringData = stringData.getData("Pet.img");
     protected final Map<Integer, List<Integer>> scrollReqCache = new HashMap<>();
-    protected final Map<Integer, Short> slotMaxCache = new HashMap<Integer, Short>();
+    protected final Map<Integer, Short> slotMaxCache = new HashMap<>();
     protected final Map<Integer, Integer> getExpCache = new HashMap();
-    protected final Map<Integer, List<StructPotentialItem>> potentialCache = new HashMap<Integer, List<StructPotentialItem>>();
-    protected final Map<Integer, MapleStatEffect> itemEffects = new HashMap<Integer, MapleStatEffect>();
-    protected final Map<Integer, Map<String, Integer>> equipStatsCache = new HashMap<Integer, Map<String, Integer>>();
-    protected final Map<Integer, Map<String, Byte>> itemMakeStatsCache = new HashMap<Integer, Map<String, Byte>>();
-    protected final Map<Integer, Short> itemMakeLevel = new HashMap<Integer, Short>();
-    protected final Map<Integer, Equip> equipCache = new HashMap<Integer, Equip>();
-    protected final Map<Integer, Double> priceCache = new HashMap<Integer, Double>();
-    protected final Map<Integer, Integer> wholePriceCache = new HashMap<Integer, Integer>();
-    protected final Map<Integer, Integer> projectileWatkCache = new HashMap<Integer, Integer>();
-    protected final Map<Integer, Integer> monsterBookID = new HashMap<Integer, Integer>();
-    protected final Map<Integer, String> nameCache = new HashMap<Integer, String>();
-    protected final Map<Integer, String> descCache = new HashMap<Integer, String>();
-    protected final Map<Integer, String> msgCache = new HashMap<Integer, String>();
-    protected final Map<Integer, Map<String, Integer>> SkillStatsCache = new HashMap<Integer, Map<String, Integer>>();
-    protected final Map<Integer, Byte> consumeOnPickupCache = new HashMap<Integer, Byte>();
-    protected final Map<Integer, Boolean> dropRestrictionCache = new HashMap<Integer, Boolean>();
-    protected final Map<Integer, Boolean> accCache = new HashMap<Integer, Boolean>();
-    protected final Map<Integer, Boolean> pickupRestrictionCache = new HashMap<Integer, Boolean>();
-    protected final Map<Integer, Integer> stateChangeCache = new HashMap<Integer, Integer>();
-    protected final Map<Integer, Integer> mesoCache = new HashMap<Integer, Integer>();
-    protected final Map<Integer, Boolean> notSaleCache = new HashMap<Integer, Boolean>();
-    protected final Map<Integer, Integer> karmaEnabledCache = new HashMap<Integer, Integer>();
-    protected Map<Integer, Boolean> karmaCache = new HashMap<Integer, Boolean>();
-    protected final Map<Integer, Boolean> isQuestItemCache = new HashMap<Integer, Boolean>();
-    protected final Map<Integer, Boolean> blockPickupCache = new HashMap<Integer, Boolean>();
-    protected final Map<Integer, List<Integer>> petsCanConsumeCache = new HashMap<Integer, List<Integer>>();
-    protected final Map<Integer, Boolean> logoutExpireCache = new HashMap<Integer, Boolean>();
-    protected final Map<Integer, List<Pair<Integer, Integer>>> summonMobCache = new HashMap<Integer, List<Pair<Integer, Integer>>>();
+    protected final Map<Integer, List<StructPotentialItem>> potentialCache = new HashMap<>();
+    protected final Map<Integer, MapleStatEffect> itemEffects = new HashMap<>();
+    protected final Map<Integer, Map<String, Integer>> equipStatsCache = new HashMap<>();
+    protected final Map<Integer, Map<String, Byte>> itemMakeStatsCache = new HashMap<>();
+    protected final Map<Integer, Short> itemMakeLevel = new HashMap<>();
+    protected final Map<Integer, Equip> equipCache = new HashMap<>();
+    protected final Map<Integer, Double> priceCache = new HashMap<>();
+    protected final Map<Integer, Integer> wholePriceCache = new HashMap<>();
+    protected final Map<Integer, Integer> projectileWatkCache = new HashMap<>();
+    protected final Map<Integer, Integer> monsterBookID = new HashMap<>();
+    protected final Map<Integer, String> nameCache = new HashMap<>();
+    protected final Map<Integer, String> descCache = new HashMap<>();
+    protected final Map<Integer, String> msgCache = new HashMap<>();
+    protected final Map<Integer, Map<String, Integer>> SkillStatsCache = new HashMap<>();
+    protected final Map<Integer, Byte> consumeOnPickupCache = new HashMap<>();
+    protected final Map<Integer, Boolean> dropRestrictionCache = new HashMap<>();
+    protected final Map<Integer, Boolean> accCache = new HashMap<>();
+    protected final Map<Integer, Boolean> pickupRestrictionCache = new HashMap<>();
+    protected final Map<Integer, Integer> stateChangeCache = new HashMap<>();
+    protected final Map<Integer, Integer> mesoCache = new HashMap<>();
+    protected final Map<Integer, Boolean> notSaleCache = new HashMap<>();
+    protected final Map<Integer, Integer> karmaEnabledCache = new HashMap<>();
+    protected Map<Integer, Boolean> karmaCache = new HashMap<>();
+    protected final Map<Integer, Boolean> isQuestItemCache = new HashMap<>();
+    protected final Map<Integer, Boolean> blockPickupCache = new HashMap<>();
+    protected final Map<Integer, List<Integer>> petsCanConsumeCache = new HashMap<>();
+    protected final Map<Integer, Boolean> logoutExpireCache = new HashMap<>();
+    protected final Map<Integer, List<Pair<Integer, Integer>>> summonMobCache = new HashMap<>();
     protected final List<Pair<Integer, String>> itemNameCache = new ArrayList<Pair<Integer, String>>();
-    protected final Map<Integer, Map<Integer, Map<String, Integer>>> equipIncsCache = new HashMap<Integer, Map<Integer, Map<String, Integer>>>();
-    protected final Map<Integer, Map<Integer, List<Integer>>> equipSkillsCache = new HashMap<Integer, Map<Integer, List<Integer>>>();
-    protected final Map<Integer, Pair<Integer, List<StructRewardItem>>> RewardItem = new HashMap<Integer, Pair<Integer, List<StructRewardItem>>>();
-    protected final Map<Byte, StructSetItem> setItems = new HashMap<Byte, StructSetItem>();
-    protected final Map<Integer, Pair<Integer, List<Integer>>> questItems = new HashMap<Integer, Pair<Integer, List<Integer>>>();
+    protected final Map<Integer, Map<Integer, Map<String, Integer>>> equipIncsCache = new HashMap<>();
+    protected final Map<Integer, Map<Integer, List<Integer>>> equipSkillsCache = new HashMap<>();
+    protected final Map<Integer, Pair<Integer, List<StructRewardItem>>> RewardItem = new HashMap<>();
+    protected final Map<Byte, StructSetItem> setItems = new HashMap<>();
+    protected final Map<Integer, Pair<Integer, List<Integer>>> questItems = new HashMap<>();
     protected Map<Integer, MapleInventoryType> inventoryTypeCache = new HashMap();
     protected MapleDataProvider chrData;
     protected final Map<Integer, Map<Integer, StructItemOption>> socketCache = new HashMap<>(); // Grade, (id, data)
@@ -829,7 +829,7 @@ public class MapleItemInformationProvider {
             return null;
         }
         for (MapleData dat : info.getChildren()) {
-            Map<String, Integer> incs = new HashMap<String, Integer>();
+            Map<String, Integer> incs = new HashMap<>();
             for (MapleData data : dat.getChildren()) { //why we have to do this? check if number has skills or not
                 if (data.getName().length() > 3) {
                     incs.put(data.getName().substring(3), MapleDataTool.getIntConvert(data.getName(), dat, 0));
@@ -1291,7 +1291,7 @@ public class MapleItemInformationProvider {
         final List<Pair<Integer, Integer>> mobPairs = new ArrayList<Pair<Integer, Integer>>();
 
         for (final MapleData child : data.getChildren()) {
-            mobPairs.add(new Pair<Integer, Integer>(
+            mobPairs.add(new Pair<>(
                     MapleDataTool.getIntConvert("id", child),
                     MapleDataTool.getIntConvert("prob", child)));
         }

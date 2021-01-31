@@ -36,7 +36,7 @@ import java.io.ByteArrayOutputStream;
  */
 public class MaplePacketLittleEndianWriter extends GenericLittleEndianWriter {
 
-    private static final boolean debugMode = Boolean.parseBoolean(ServerProperties.getProperty("ZlhssMS.Debug", "false"));
+    private static final boolean debugMode = Boolean.parseBoolean(ServerProperties.getProperty("KingMS.Debug", "false"));
     private final ByteArrayOutputStream baos;
 
     /**

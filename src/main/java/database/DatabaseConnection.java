@@ -71,7 +71,7 @@ public class DatabaseConnection {
     private static Connection connectToDB() {
         if (!propsInited) {
             try {
-                FileReader fR = new FileReader("服务端配置.ini");
+                FileReader fR = new FileReader("server.ini");
                 dbProps.load(fR);
                 fR.close();
             } catch (IOException ex) {

@@ -43,8 +43,8 @@ public class AutobanManager implements Runnable {
         }
     }
 
-    private final Map<Integer, Integer> points = new HashMap<Integer, Integer>();
-    private final Map<Integer, List<String>> reasons = new HashMap<Integer, List<String>>();
+    private final Map<Integer, Integer> points = new HashMap<>();
+    private final Map<Integer, List<String>> reasons = new HashMap<>();
     private final Set<ExpirationEntry> expirations = new TreeSet<ExpirationEntry>();
     private static final int AUTOBAN_POINTS = 5000;
     private static final AutobanManager instance = new AutobanManager();

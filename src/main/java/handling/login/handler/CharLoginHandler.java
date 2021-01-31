@@ -20,31 +20,29 @@
  */
 package handling.login.handler;
 
-import java.util.List;
-import java.util.Calendar;
-
-import client.inventory.IItem;
-import client.inventory.Item;
-import client.LoginCrypto;
-import client.MapleClient;
 import client.MapleCharacter;
 import client.MapleCharacterUtil;
+import client.MapleClient;
+import client.inventory.IItem;
+import client.inventory.Item;
 import client.inventory.MapleInventory;
 import client.inventory.MapleInventoryType;
-import constants.GameConstants;
 import handling.channel.ChannelServer;
 import handling.login.LoginInformationProvider;
 import handling.login.LoginServer;
 import handling.login.LoginWorker;
 import server.MapleItemInformationProvider;
-import server.quest.MapleQuest;
 import server.ServerProperties;
+import server.quest.MapleQuest;
 import tools.FileoutputUtil;
-import tools.MaplePacketCreator;
-import tools.packet.LoginPacket;
 import tools.KoreanDateUtil;
+import tools.MaplePacketCreator;
 import tools.StringUtil;
 import tools.data.input.SeekableLittleEndianAccessor;
+import tools.packet.LoginPacket;
+
+import java.util.Calendar;
+import java.util.List;
 
 public class CharLoginHandler {
 
@@ -81,7 +79,7 @@ public class CharLoginHandler {
         final boolean banned = ipBan || macBan;
 
         int loginok = 0;
-        if (Boolean.parseBoolean(ServerProperties.getProperty("ZlhssMS.AutoRegister"))) {
+        if (Boolean.parseBoolean(ServerProperties.getProperty("KingMS.AutoRegister"))) {
 
             if (AutoRegister.autoRegister && !AutoRegister.getAccountExists(login) && (!banned)) {
                 if (pwd.equalsIgnoreCase("disconnect") || pwd.equalsIgnoreCase("fixme")) {
@@ -233,9 +231,9 @@ public class CharLoginHandler {
             return;
         }*/
         final int JobType = slea.readInt(); // 1 = 冒险家, 0 = 骑士团, 2 = 战神
-        boolean 冒险家 = Boolean.parseBoolean(ServerProperties.getProperty("ZlhssMS.冒险家", "false"));
-        boolean 骑士团 = Boolean.parseBoolean(ServerProperties.getProperty("ZlhssMS.骑士团", "false"));
-        boolean 战神 = Boolean.parseBoolean(ServerProperties.getProperty("ZlhssMS.战神", "false"));
+        boolean 冒险家 = Boolean.parseBoolean(ServerProperties.getProperty("KingMS.冒险家", "false"));
+        boolean 骑士团 = Boolean.parseBoolean(ServerProperties.getProperty("KingMS.骑士团", "false"));
+        boolean 战神 = Boolean.parseBoolean(ServerProperties.getProperty("KingMS.战神", "false"));
         if (!骑士团 && JobType == 0) {
             c.getSession().write(MaplePacketCreator.serverNotice(1, "骑士团职业未开放！"));
             return;//直接return可能会导致客户端收不到消息，假死状态,需重新登录方可

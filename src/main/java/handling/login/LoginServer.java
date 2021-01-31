@@ -96,13 +96,13 @@ public class LoginServer {
     }
 
     public static final void run_startup_configurations() {
-        userLimit = Integer.parseInt(ServerProperties.getProperty("ZlhssMS.UserLimit"));
-        serverName = ServerProperties.getProperty("ZlhssMS.ServerName");
-        eventMessage = ServerProperties.getProperty("ZlhssMS.EventMessage");
-        flag = Byte.parseByte(ServerProperties.getProperty("ZlhssMS.Flag"));
-        PORT = Integer.parseInt(ServerProperties.getProperty("ZlhssMS.LPort"));
-        adminOnly = Boolean.parseBoolean(ServerProperties.getProperty("ZlhssMS.Admin", "false"));
-        maxCharacters = Integer.parseInt(ServerProperties.getProperty("ZlhssMS.MaxCharacters"));
+        userLimit = Integer.parseInt(ServerProperties.getProperty("KingMS.UserLimit"));
+        serverName = ServerProperties.getProperty("KingMS.ServerName");
+        eventMessage = ServerProperties.getProperty("KingMS.EventMessage");
+        flag = Byte.parseByte(ServerProperties.getProperty("KingMS.Flag"));
+        PORT = Integer.parseInt(ServerProperties.getProperty("KingMS.LPort"));
+        adminOnly = Boolean.parseBoolean(ServerProperties.getProperty("KingMS.Admin", "false"));
+        maxCharacters = Integer.parseInt(ServerProperties.getProperty("KingMS.MaxCharacters"));
 
         IoBuffer.setUseDirectBuffer(false);
         IoBuffer.setAllocator(new SimpleBufferAllocator());
@@ -169,7 +169,7 @@ public class LoginServer {
 
     public static final int getUserLimit() {
         return userLimit;
-        //  return Integer.parseInt(ServerProperties.getProperty("ZlhssMS.UserLimit"));
+        //  return Integer.parseInt(ServerProperties.getProperty("KingMS.UserLimit"));
     }
 
     public static final int getUsersOn() {

@@ -762,7 +762,7 @@ public class MapleQuestAction implements Serializable {
                 break;
             case item:
                 // first check for randomness in item selection
-                Map<Integer, Integer> props = new HashMap<Integer, Integer>();
+                Map<Integer, Integer> props = new HashMap<>();
                 MapleData prop;
                 for (MapleData iEntry : data.getChildren()) {
                     prop = iEntry.getChildByPath("prop");
@@ -913,7 +913,7 @@ public class MapleQuestAction implements Serializable {
         switch (type) {
             case item: {
                 // first check for randomness in item selection
-                final Map<Integer, Integer> props = new HashMap<Integer, Integer>();
+                final Map<Integer, Integer> props = new HashMap<>();
 
                 for (MapleData iEntry : data.getChildren()) {
                     final MapleData prop = iEntry.getChildByPath("prop");
@@ -1015,7 +1015,7 @@ public class MapleQuestAction implements Serializable {
             }
             case item: {
                 // first check for randomness in item selection
-                Map<Integer, Integer> props = new HashMap<Integer, Integer>();
+                Map<Integer, Integer> props = new HashMap<>();
 
                 for (MapleData iEntry : data.getChildren()) {
                     final MapleData prop = iEntry.getChildByPath("prop");

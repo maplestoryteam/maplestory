@@ -22,7 +22,6 @@ package handling.world;
 
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -74,7 +73,7 @@ public class MapleParty implements Serializable {
     }
 
     public Collection<MaplePartyCharacter> getMembers() {
-        return new LinkedList<MaplePartyCharacter>(members);
+        return new LinkedList<>(members);
     }
 
     public int getId() {
