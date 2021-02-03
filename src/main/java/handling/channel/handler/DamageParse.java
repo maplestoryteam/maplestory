@@ -1,27 +1,16 @@
 package handling.channel.handler;
 
-import kinms.pvp.MaplePvp;
-
-import java.awt.Point;
-import java.util.ArrayList;
-import java.util.List;
-
-import client.ISkill;
-import constants.GameConstants;
-import client.inventory.IItem;
-import client.MapleBuffStat;
-import client.MapleCharacter;
-import client.inventory.MapleInventoryType;
-import client.PlayerStats;
-import client.SkillFactory;
+import client.*;
 import client.anticheat.CheatTracker;
 import client.anticheat.CheatingOffense;
+import client.inventory.IItem;
+import client.inventory.MapleInventoryType;
 import client.status.MonsterStatus;
 import client.status.MonsterStatusEffect;
+import constants.GameConstants;
+import exts.VarsExt;
 import handling.world.World;
-
-import java.util.Map;
-
+import kinms.pvp.MaplePvp;
 import server.MapleStatEffect;
 import server.Randomizer;
 import server.life.Element;
@@ -31,11 +20,16 @@ import server.maps.MapleMap;
 import server.maps.MapleMapItem;
 import server.maps.MapleMapObject;
 import server.maps.MapleMapObjectType;
-import tools.MaplePacketCreator;
 import tools.AttackPair;
 import tools.FileoutputUtil;
+import tools.MaplePacketCreator;
 import tools.Pair;
 import tools.data.input.LittleEndianAccessor;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class DamageParse {
 
@@ -271,7 +265,7 @@ public class DamageParse {
                     if (attack.skill != 1221011) {
                         monster.damage(player, totDamageToOneMonster, true, attack.skill);
                     } else {
-                        monster.damage(player, (monster.getStats().isBoss() ? 199999 : (monster.getHp() - 1)), true, attack.skill);
+                        monster.damage(player, (monster.getStats().isBoss() ? VarsExt.MAX_ATTACK : (monster.getHp() - 1)), true, attack.skill);
                     }
                     if (monster.isBuffed(MonsterStatus.反射物攻)) { //test
                         player.addHP(-(7000 + Randomizer.nextInt(8000))); //this is what it seems to be?
@@ -703,8 +697,8 @@ public class DamageParse {
         if (skill.getId() == 2301002) {
             elemMaxDamagePerMob *= 2;
         }
-        if (elemMaxDamagePerMob > 199999) {
-            elemMaxDamagePerMob = 199999;
+        if (elemMaxDamagePerMob > VarsExt.MAX_ATTACK) {
+            elemMaxDamagePerMob = VarsExt.MAX_ATTACK;
         } else if (elemMaxDamagePerMob < 0) {
             elemMaxDamagePerMob = 1;
         }
@@ -740,7 +734,7 @@ public class DamageParse {
 
     private static double CalculateMaxWeaponDamagePerHit(final MapleCharacter player, final MapleMonster monster, final AttackInfo attack, final ISkill theSkill, final MapleStatEffect attackEffect, double maximumDamageToMonster, final Integer CriticalDamagePercent) {
         if (player.getMapId() / 1000000 == 914) { //aran
-            return 199999;
+            return VarsExt.MAX_ATTACK;
         }
         List<Element> elements = new ArrayList<Element>();
         boolean defined = false;
@@ -769,15 +763,15 @@ public class DamageParse {
                     defined = true;
                     break;
                 case 4331003: //Owl Spirit
-                    maximumDamageToMonster = (monster.getStats().isBoss() ? 199999 : monster.getHp());
+                    maximumDamageToMonster = (monster.getStats().isBoss() ? VarsExt.MAX_ATTACK : monster.getHp());
                     defined = true;
                     break;
                 case 3221007: // Sniping
-                    maximumDamageToMonster = (monster.getStats().isBoss() ? 199999 : monster.getMobMaxHp());
+                    maximumDamageToMonster = (monster.getStats().isBoss() ? VarsExt.MAX_ATTACK : monster.getMobMaxHp());
                     defined = true;
                     break;
                 case 1221011://Heavens Hammer
-                    maximumDamageToMonster = (monster.getStats().isBoss() ? 199999 : monster.getHp() - 1);
+                    maximumDamageToMonster = (monster.getStats().isBoss() ? VarsExt.MAX_ATTACK : monster.getHp() - 1);
                     defined = true;
                     break;
                 case 4211006: // Meso Explosion
@@ -883,9 +877,9 @@ public class DamageParse {
         if (player.getDebugMessage()) {
             player.dropMessage("[伤害计算] 属性伤害:" + (int) elementalMaxDamagePerMonster);
         }
-        if (elementalMaxDamagePerMonster > 199999) {
+        if (elementalMaxDamagePerMonster > VarsExt.MAX_ATTACK) {
             if (!defined) {
-                elementalMaxDamagePerMonster = 199999;
+                elementalMaxDamagePerMonster = VarsExt.MAX_ATTACK;
             }
         } else if (elementalMaxDamagePerMonster < 0) {
             elementalMaxDamagePerMonster = 1;

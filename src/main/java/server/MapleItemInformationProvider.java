@@ -1,40 +1,26 @@
 package server;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
+import client.MapleCharacter;
+import client.MapleClient;
 import client.inventory.Equip;
 import client.inventory.IItem;
 import client.inventory.ItemFlag;
-import constants.GameConstants;
-import client.MapleCharacter;
-import client.MapleClient;
 import client.inventory.MapleInventoryType;
+import constants.GameConstants;
 import database.DatabaseConnection;
-import database.DatabaseConnectionWZ;
+import provider.*;
+import tools.Pair;
+import tools.Triple;
 
-import java.awt.Point;
+import java.awt.*;
+import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.LinkedList;
-
-import provider.MapleData;
-import provider.MapleDataDirectoryEntry;
-import provider.MapleDataEntry;
-import provider.MapleDataFileEntry;
-import provider.MapleDataProvider;
-import provider.MapleDataProviderFactory;
-import provider.MapleDataTool;
-import server.StructSetItem.SetItem;
-import tools.Pair;
-import tools.Triple;
+import java.util.List;
+import java.util.*;
+import java.util.Map.Entry;
 
 public class MapleItemInformationProvider {
 
@@ -81,7 +67,7 @@ public class MapleItemInformationProvider {
     protected final Map<Integer, List<Integer>> petsCanConsumeCache = new HashMap<>();
     protected final Map<Integer, Boolean> logoutExpireCache = new HashMap<>();
     protected final Map<Integer, List<Pair<Integer, Integer>>> summonMobCache = new HashMap<>();
-    protected final List<Pair<Integer, String>> itemNameCache = new ArrayList<Pair<Integer, String>>();
+    protected final List<Pair<Integer, String>> itemNameCache = new ArrayList<>();
     protected final Map<Integer, Map<Integer, Map<String, Integer>>> equipIncsCache = new HashMap<>();
     protected final Map<Integer, Map<Integer, List<Integer>>> equipSkillsCache = new HashMap<>();
     protected final Map<Integer, Pair<Integer, List<StructRewardItem>>> RewardItem = new HashMap<>();
@@ -96,84 +82,12 @@ public class MapleItemInformationProvider {
     protected final Map<Integer, Triple<Integer, List<Integer>, List<Integer>>> monsterBookSets = new HashMap<>();
 
     protected MapleItemInformationProvider() {
-        // System.out.println("加载 物品信息 :::");
     }
 
-    /* public final void load() {
-        if (setItems.size() != 0 || potentialCache.size() != 0) {
-            return;
-        }
-        getAllItems();
-    }*/
     public void runEtc() {
         if (!setItems.isEmpty() || !potentialCache.isEmpty() || !socketCache.isEmpty()) {
             return;
         }
-        /* List<Triple<String, Point, Point>> thePointK = new ArrayList<>();
-        List<Triple<String, Point, Point>> thePointA = new ArrayList<>();
-        
-        final MapleDataDirectoryEntry a = (MapleDataDirectoryEntry) chrData.getRoot().getEntry("Afterimage");
-        for (MapleDataEntry b : a.getFiles()) {
-            final MapleData iz = chrData.getData("Afterimage/" + b.getName());
-            List<Triple<String, Point, Point>> thePoint = new ArrayList<>();
-            Map<String, Pair<Point, Point>> dummy = new HashMap<>();
-            for (MapleData i : iz) {
-                for (MapleData xD : i) {
-                    if (xD.getName().contains("prone") || xD.getName().contains("double") || xD.getName().contains("triple")) {
-                        continue;
-                    }
-                    if ((b.getName().contains("bow") || b.getName().contains("Bow")) && !xD.getName().contains("shoot")) {
-                        continue;
-                    }
-                    if ((b.getName().contains("gun") || b.getName().contains("cannon")) && !xD.getName().contains("shot")) {
-                        continue;
-                    }
-                    if (dummy.containsKey(xD.getName())) {
-                        if (xD.getChildByPath("lt") != null) {
-                            Point lt = (Point) xD.getChildByPath("lt").getData();
-                            Point ourLt = dummy.get(xD.getName()).left;
-                            if (lt.x < ourLt.x) {
-                                ourLt.x = lt.x;
-                            }
-                            if (lt.y < ourLt.y) {
-                                ourLt.y = lt.y;
-                            }
-                        }
-                        if (xD.getChildByPath("rb") != null) {
-                            Point rb = (Point) xD.getChildByPath("rb").getData();
-                            Point ourRb = dummy.get(xD.getName()).right;
-                            if (rb.x > ourRb.x) {
-                                ourRb.x = rb.x;
-                            }
-                            if (rb.y > ourRb.y) {
-                                ourRb.y = rb.y;
-                            }
-                        }
-                    } else {
-                        Point lt = null, rb = null;
-                        if (xD.getChildByPath("lt") != null) {
-                            lt = (Point) xD.getChildByPath("lt").getData();
-                        }
-                        if (xD.getChildByPath("rb") != null) {
-                            rb = (Point) xD.getChildByPath("rb").getData();
-                        }
-                        dummy.put(xD.getName(), new Pair<>(lt, rb));
-                    }
-                }
-            }
-            for (Entry<String, Pair<Point, Point>> ez : dummy.entrySet()) {
-                if (ez.getKey().length() > 2 && ez.getKey().substring(ez.getKey().length() - 2, ez.getKey().length() - 1).equals("D")) { //D = double weapon
-                    thePointK.add(new Triple<>(ez.getKey(), ez.getValue().left, ez.getValue().right));
-                } else if (ez.getKey().contains("PoleArm")) { //D = double weapon
-                    thePointA.add(new Triple<>(ez.getKey(), ez.getValue().left, ez.getValue().right));
-                } else {
-                    thePoint.add(new Triple<>(ez.getKey(), ez.getValue().left, ez.getValue().right));
-                }
-            }
-            afterImage.put(b.getName().substring(0, b.getName().length() - 4), thePoint);
-        }
-        afterImage.put("katara", thePointK); //hackish
-        afterImage.put("aran", thePointA); //hackish*/
     }
 
     public void runItems() {

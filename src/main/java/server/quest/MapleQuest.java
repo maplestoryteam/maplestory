@@ -1,28 +1,19 @@
 package server.quest;
 
-import constants.GameConstants;
-
-import java.io.Serializable;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
 import client.MapleCharacter;
 import client.MapleQuestStatus;
+import constants.GameConstants;
 import database.DatabaseConnection;
-import database.DatabaseConnectionWZ;
+import scripting.NPCScriptManager;
+import tools.MaplePacketCreator;
+import tools.Pair;
 
+import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-
-import scripting.NPCScriptManager;
-import provider.MapleData;
-import tools.MaplePacketCreator;
-import tools.Pair;
+import java.util.*;
 
 public class MapleQuest implements Serializable {
 
@@ -119,101 +110,6 @@ public class MapleQuest implements Serializable {
         return ret;
     }
 
-    /**
-     * Creates a new instance of MapleQuest
-     */
-    /*private static boolean loadQuest(MapleQuest ret, int id) throws NullPointerException {
-        // read reqs
-        final MapleData basedata1 = requirements.getChildByPath(String.valueOf(id));
-        final MapleData basedata2 = actions.getChildByPath(String.valueOf(id));
-
-        if (basedata1 == null || basedata2 == null) {
-            return false;
-        }
-        //-------------------------------------------------
-        final MapleData startReqData = basedata1.getChildByPath("0");
-        if (startReqData != null) {
-            final List<MapleData> startC = startReqData.getChildren();
-            if (startC != null && startC.size() > 0) {
-                for (MapleData startReq : startC) {
-                    final MapleQuestRequirementType type = MapleQuestRequirementType.getByWZName(startReq.getName());
-                    if (type.equals(MapleQuestRequirementType.interval)) {
-                        ret.repeatable = true;
-                    }
-                    final MapleQuestRequirement req = new MapleQuestRequirement(ret, type, startReq);
-                    if (req.getType().equals(MapleQuestRequirementType.mob)) {
-                        for (MapleData mob : startReq.getChildren()) {
-                            ret.relevantMobs.put(
-                                    MapleDataTool.getInt(mob.getChildByPath("id")),
-                                    MapleDataTool.getInt(mob.getChildByPath("count"), 0));
-                        }
-                    }
-                    ret.startReqs.add(req);
-                }
-            }
-        }
-        //-------------------------------------------------
-        final MapleData completeReqData = basedata1.getChildByPath("1");
-        if (completeReqData != null) {
-            final List<MapleData> completeC = completeReqData.getChildren();
-            if (completeC != null && completeC.size() > 0) {
-                for (MapleData completeReq : completeC) {
-                    MapleQuestRequirement req = new MapleQuestRequirement(ret, MapleQuestRequirementType.getByWZName(completeReq.getName()), completeReq);
-                    if (req.getType().equals(MapleQuestRequirementType.mob)) {
-                        for (MapleData mob : completeReq.getChildren()) {
-                            ret.relevantMobs.put(
-                                    MapleDataTool.getInt(mob.getChildByPath("id")),
-                                    MapleDataTool.getInt(mob.getChildByPath("count"), 0));
-                        }
-                    } else if (req.getType().equals(MapleQuestRequirementType.endscript)) {
-                        ret.customend = true;
-                    }
-                    ret.completeReqs.add(req);
-                }
-            }
-        }
-        // read acts
-        final MapleData startActData = basedata2.getChildByPath("0");
-        if (startActData != null) {
-            final List<MapleData> startC = startActData.getChildren();
-            for (MapleData startAct : startC) {
-                ret.startActs.add(new MapleQuestAction(MapleQuestActionType.getByWZName(startAct.getName()), startAct, ret));
-            }
-        }
-        final MapleData completeActData = basedata2.getChildByPath("1");
-
-        if (completeActData != null) {
-            final List<MapleData> completeC = completeActData.getChildren();
-            for (MapleData completeAct : completeC) {
-                ret.completeActs.add(new MapleQuestAction(MapleQuestActionType.getByWZName(completeAct.getName()), completeAct, ret));
-            }
-        }
-        final MapleData questInfo = info.getChildByPath(String.valueOf(id));
-        if (questInfo != null) {
-            ret.name = MapleDataTool.getString("name", questInfo, "");
-            ret.autoStart = MapleDataTool.getInt("autoStart", questInfo, 0) == 1;
-            ret.autoPreComplete = MapleDataTool.getInt("autoPreComplete", questInfo, 0) == 1;
-            ret.viewMedalItem = MapleDataTool.getInt("viewMedalItem", questInfo, 0);
-            ret.selectedSkillID = MapleDataTool.getInt("selectedSkillID", questInfo, 0);
-        }
-
-        final MapleData pquestInfo = pinfo.getChildByPath(String.valueOf(id));
-        if (pquestInfo != null) {
-            for (MapleData d : pquestInfo.getChildByPath("rank")) {
-                List<Pair<String, Pair<String, Integer>>> pInfo = new ArrayList<Pair<String, Pair<String, Integer>>>();
-                //LinkedHashMap<String, List<Pair<String, Pair<String, Integer>>>>
-                for (MapleData c : d) {
-                    for (MapleData b : c) {
-                        pInfo.add(new Pair<String, Pair<String, Integer>>(c.getName(), new Pair<String, Integer>(b.getName(), MapleDataTool.getInt(b, 0))));
-                    }
-                }
-                ret.partyQuestInfo.put(d.getName(), pInfo);
-            }
-        }
-
-        return true;
-    }
-     */
     public List<Pair<String, Pair<String, Integer>>> getInfoByRank(final String rank) {
         return partyQuestInfo.get(rank);
     }
@@ -228,7 +124,7 @@ public class MapleQuest implements Serializable {
 
     public static void initQuests() {
         try {
-            Connection con = DatabaseConnectionWZ.getConnection();
+            Connection con = DatabaseConnection.getConnection();
             PreparedStatement ps = con.prepareStatement("SELECT * FROM wz_questdata order by questid asc");
             PreparedStatement psr = con.prepareStatement("SELECT * FROM wz_questreqdata WHERE questid = ?");
             PreparedStatement psa = con.prepareStatement("SELECT * FROM wz_questactdata WHERE questid = ?");
@@ -275,25 +171,6 @@ public class MapleQuest implements Serializable {
         return ret;
     }
 
-    /*public static MapleQuest getInstance(int id) {
-        MapleQuest ret = quests.get(id);
-        if (ret == null) {
-            ret = new MapleQuest(id);
-            try {
-                if (GameConstants.isCustomQuest(id) || !loadQuest(ret, id)) {
-                    ret = new MapleCustomQuest(id);
-                }
-                quests.put(id, ret);
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                FileoutputUtil.outputFileError(FileoutputUtil.ScriptEx_Log, ex);
-                FileoutputUtil.log(FileoutputUtil.ScriptEx_Log, "Caused by questID " + id);
-                System.out.println("Caused by questID " + id);
-                return new MapleCustomQuest(id);
-            }
-        }
-        return ret;
-    }*/
     public boolean canStart(MapleCharacter c, Integer npcid) {
         if (c.getQuest(this).getStatus() != 0 && !(c.getQuest(this).getStatus() == 2 && repeatable)) {
             return false;

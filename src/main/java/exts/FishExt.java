@@ -12,7 +12,7 @@ import java.util.List;
 public interface FishExt {
     List<FishReward> fishRewards = new ArrayList<>();
 
-    static void refreshFishRewareds() {
+    static void refreshFishRewards() {
         try {
             System.out.println("开始读取抽奖物品");
             Statement stmt = ConnExt.getConn().createStatement();

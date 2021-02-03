@@ -21,18 +21,7 @@
 package client;
 
 import client.anticheat.CheatTracker;
-import client.inventory.Equip;
-import client.inventory.IItem;
-import client.inventory.Item;
-import client.inventory.ItemFlag;
-import client.inventory.ItemLoader;
-import client.inventory.MapleInventory;
-import client.inventory.MapleInventoryIdentifier;
-import client.inventory.MapleInventoryType;
-import client.inventory.MapleMount;
-import client.inventory.MaplePet;
-import client.inventory.MapleRing;
-import client.inventory.ModifyInventory;
+import client.inventory.*;
 import constants.GameConstants;
 import constants.ServerConstants;
 import database.DatabaseConnection;
@@ -42,42 +31,19 @@ import exts.model.FishReward;
 import handling.MaplePacket;
 import handling.channel.ChannelServer;
 import handling.login.LoginServer;
-import handling.world.CharacterTransfer;
-import handling.world.MapleMessenger;
-import handling.world.MapleMessengerCharacter;
-import handling.world.MapleParty;
-import handling.world.MaplePartyCharacter;
-import handling.world.PartyOperation;
-import handling.world.PlayerBuffStorage;
-import handling.world.PlayerBuffValueHolder;
-import handling.world.World;
+import handling.world.*;
 import handling.world.family.MapleFamily;
 import handling.world.family.MapleFamilyBuff;
 import handling.world.family.MapleFamilyBuff.MapleFamilyBuffEntry;
 import handling.world.family.MapleFamilyCharacter;
 import handling.world.guild.MapleGuild;
 import handling.world.guild.MapleGuildCharacter;
-
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.io.File;
-import java.io.Serializable;
-import java.lang.ref.WeakReference;
-import java.sql.*;
-import java.util.*;
-import java.util.Map.Entry;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
-
 import provider.MapleData;
 import provider.MapleDataProvider;
 import provider.MapleDataProviderFactory;
 import scripting.EventInstanceManager;
 import scripting.NPCScriptManager;
 import server.*;
-import server.Timer;
 import server.Timer.BuffTimer;
 import server.Timer.EtcTimer;
 import server.Timer.EventTimer;
@@ -87,29 +53,23 @@ import server.life.MapleMonster;
 import server.life.MobSkill;
 import server.life.PlayerNPC;
 import server.maps.*;
-import server.maps.AbstractAnimatedMapleMapObject;
-import server.maps.FieldLimitType;
-import server.maps.MapleDoor;
-import server.maps.MapleMap;
-import server.maps.MapleMapFactory;
-import server.maps.MapleMapObject;
-import server.maps.MapleMapObjectType;
-import server.maps.MapleSummon;
-import server.maps.SavedLocationType;
 import server.movement.LifeMovementFragment;
 import server.quest.MapleQuest;
 import server.shops.IMaplePlayerShop;
-import tools.ConcurrentEnumMap;
-import tools.FileoutputUtil;
-import tools.MaplePacketCreator;
-import tools.MockIOSession;
-import tools.Pair;
-import tools.packet.MTSCSPacket;
-import tools.packet.MobPacket;
-import tools.packet.MonsterCarnivalPacket;
-import tools.packet.PetPacket;
-import tools.packet.PlayerShopPacket;
-import tools.packet.UIPacket;
+import tools.*;
+import tools.packet.*;
+
+import java.awt.*;
+import java.io.File;
+import java.io.Serializable;
+import java.lang.ref.WeakReference;
+import java.sql.*;
+import java.util.List;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Serializable {
 
@@ -195,7 +155,6 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
     private long 防止复制时间 = 1000L;
 
     private final List<String> blockedPortals = new ArrayList<>();//传送点
-    // private int linkMid;
     private transient Map<Integer, Integer> linkMid;
     private int skillzq = 0, bosslog = 0, grname = 0, jzname = 0, mrsjrw = 0, mrsgrw = 0, mrsbossrw = 0, mrfbrw = 0, hythd = 0, mrsgrwa = 0, mrsbossrwa = 0, mrfbrwa = 0, mrsgrws = 0, mrsbossrws = 0, mrfbrws = 0, mrsgrwas = 0, mrsbossrwas = 0, mrfbrwas = 0, ddj = 0, vip = 0, djjl = 0, qiandao = 0;
 
@@ -1669,7 +1628,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
                 return;
             }
             MapleInventoryManipulator.removeById(client, MapleInventoryType.USE, expMulti ? 2300001 : 2300000, 1, false, false);
-            FishExt.refreshFishRewareds();
+            FishExt.refreshFishRewards();
             FishReward fishReward = FishExt.randomItem();
             if (null == fishReward) {
                 dropMessage(5, "服务器缺少钓鱼奖励物品。");

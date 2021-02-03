@@ -14,8 +14,8 @@ public class ConnExt {
             if (c == null || c.isClosed()) {
                 c = DatabaseConnection.getConnection();
             }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return c;
     }

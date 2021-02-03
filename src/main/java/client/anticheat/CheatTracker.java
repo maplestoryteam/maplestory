@@ -20,29 +20,23 @@
  */
 package client.anticheat;
 
-import java.awt.Point;
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ScheduledFuture;
-
-import constants.GameConstants;
 import client.MapleCharacter;
 import client.MapleCharacterUtil;
+import constants.GameConstants;
 import handling.world.World;
-
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
-
 import server.AutobanManager;
 import server.Timer.CheatTimer;
 import tools.FileoutputUtil;
 import tools.MaplePacketCreator;
 import tools.StringUtil;
+
+import java.awt.*;
+import java.lang.ref.WeakReference;
+import java.util.List;
+import java.util.*;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class CheatTracker {
 
@@ -289,8 +283,7 @@ public class CheatTracker {
                 String outputFileName = "断线";
                 World.Broadcast.broadcastGMMessage(MaplePacketCreator.serverNotice(6, "[GM信息] " + chrhardref.getName() + " 自动断线 类别: " + offense.toString() + " 原因: " + (param == null ? "" : (" - " + param))).getBytes());
                 FileoutputUtil.logToFile_chr(chrhardref, "日志/logs/Hack/" + outputFileName + ".txt", "\r\n " + FileoutputUtil.NowTime() + " 类别" + offense.toString() + " 原因 " + (param == null ? "" : (" - " + param)));
-                chrhardref.getClient().getSession().close();
-                //chrhardref.getClient().getSession().close();
+                chrhardref.getClient().getSession().closeNow();
             } else if (type == 3) {
             }
             gm_message = 50;

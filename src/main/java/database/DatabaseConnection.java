@@ -8,7 +8,7 @@ import java.util.Properties;
 
 public class DatabaseConnection {
 
-    private static final HashMap<Integer, ConWrapper> connections = new HashMap<>();
+    private static final HashMap<Integer, ConnWrapper> connections = new HashMap<>();
     private static String dbDriver;
     private static String dbUrl;
     private static String dbUser;
@@ -27,14 +27,13 @@ public class DatabaseConnection {
     public static Connection getConnection() {
         Thread cThread = Thread.currentThread();
         int threadID = (int) cThread.getId();
-        ConWrapper ret = connections.get(threadID);
+        ConnWrapper ret = connections.get(threadID);
         if (ret == null) {
             Connection retCon = connectToDB();
-            ret = new ConWrapper(retCon);
+            ret = new ConnWrapper(retCon);
             ret.id = threadID;
             connections.put(threadID, ret);
         }
-
         return ret.getConnection();
     }
 
@@ -113,19 +112,19 @@ public class DatabaseConnection {
     }
 
     public static void closeAll() throws SQLException {
-        for (ConWrapper con : connections.values()) {
+        for (ConnWrapper con : connections.values()) {
             con.connection.close();
         }
         connections.clear();
     }
 
-    public static class ConWrapper {
+    public static class ConnWrapper {
 
         private long lastAccessTime = 0;
         private Connection connection;
         private int id;
 
-        public ConWrapper(Connection con) {
+        public ConnWrapper(Connection con) {
             connection = con;
         }
 

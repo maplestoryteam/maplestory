@@ -26,6 +26,7 @@ import client.inventory.IItem;
 import client.inventory.MapleInventoryType;
 import constants.GameConstants;
 import constants.MapConstants;
+import exts.VarsExt;
 import handling.channel.ChannelServer;
 import server.*;
 import server.Timer.CloneTimer;
@@ -760,7 +761,7 @@ public class PlayerHandler {
                 if (numFinisherOrbs == 0) {
                     return;
                 }
-                maxdamage = 199999; // FIXME reenable damage calculation for finishers
+                maxdamage = VarsExt.MAX_ATTACK; // FIXME reenable damage calculation for finishers
             }
         }
         chr.checkFollow();
