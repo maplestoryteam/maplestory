@@ -1511,7 +1511,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
     }
 
     public boolean isActiveBuffedValue(int skillid) {
-        LinkedList<MapleBuffStatValueHolder> allBuffs = new LinkedList<MapleBuffStatValueHolder>(effects.values());
+        LinkedList<MapleBuffStatValueHolder> allBuffs = new LinkedList<>(effects.values());
         for (MapleBuffStatValueHolder mbsvh : allBuffs) {
             if (mbsvh.effect.isSkill() && mbsvh.effect.getSourceId() == skillid) {
                 return true;
@@ -1616,10 +1616,10 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
             }
             getClient().getSession().write(MaplePacketCreator.sendHint("开始钓鱼...\r\n" + gage, 200, 200));
         }
-        final int time = GameConstants.getFishingTime(VIP, isGM());
+        final int time = GameConstants.getFishingTime(VIP);
         cancelFishingTask();
 
-        EtcTimer.getInstance().register(() -> {
+        fishing = EtcTimer.getInstance().register(() -> {
             final boolean expMulti = haveItem(2300001, 1, false, true);
             if (!expMulti && !haveItem(2300000, 1, false, true)) {
                 cancelFishingTask();
@@ -1627,15 +1627,28 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
                 getClient().getSession().write(MaplePacketCreator.sendHint("没有鱼饵无法钓鱼\r\n", 200, 200));
                 return;
             }
+            // 背包满了停止钓鱼
+            int i1 = getInventory(MapleInventoryType.getByType((byte) 1)).getNumFreeSlot();
+            if (i1 <= 0) {
+                cancelFishingTask();
+                return;
+            }
+
+            int i2 = getInventory(MapleInventoryType.getByType((byte) 2)).getNumFreeSlot();
+            if (i2 <= 0) {
+                cancelFishingTask();
+                return;
+            }
+
             MapleInventoryManipulator.removeById(client, MapleInventoryType.USE, expMulti ? 2300001 : 2300000, 1, false, false);
-            FishExt.refreshFishRewards();
             FishReward fishReward = FishExt.randomItem();
             if (null == fishReward) {
                 dropMessage(5, "服务器缺少钓鱼奖励物品。");
+            } else {
+                gainItem(fishReward.getItemId(), fishReward.getCount());
+                map.broadcastMessage(UIPacket.fishingCaught(id));
+                getClient().getSession().write(MaplePacketCreator.getShowItemGain(fishReward.getItemId(), fishReward.getCount(), true));
             }
-            dropMessage(5, "恭喜您获得" + fishReward.getCount() + "个" + fishReward.getItemName() + "。");
-            gainItem(fishReward.getItemId(), fishReward.getCount());
-            map.broadcastMessage(UIPacket.fishingCaught(id));
         }, time, time);
     }
 
@@ -1646,10 +1659,10 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
     }
 
     public void cancelFishingTask() {
-//        if (fishing != null) {
-//            fishing.cancel(false);
+        if (fishing != null) {
+            fishing.cancel(false);
 //            getClient().getSession().write(MaplePacketCreator.sendHint("钓鱼中断。", 200, 200));
-//        }
+        }
     }
 
     public void registerEffect(MapleStatEffect effect, long starttime, ScheduledFuture<?> schedule) {
@@ -1912,7 +1925,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
     }*/
     public void dispel() {
         if (!isHidden()) {
-            final LinkedList<MapleBuffStatValueHolder> allBuffs = new LinkedList<MapleBuffStatValueHolder>(effects.values());
+            final LinkedList<MapleBuffStatValueHolder> allBuffs = new LinkedList<>(effects.values());
             for (MapleBuffStatValueHolder mbsvh : allBuffs) {
                 if (mbsvh.effect.isSkill() && mbsvh.schedule != null && !mbsvh.effect.isMorph()) {
                     cancelEffect(mbsvh.effect, false, mbsvh.startTime);
@@ -1922,7 +1935,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
     }
 
     public void dispelSkill(int skillid) {
-        final LinkedList<MapleBuffStatValueHolder> allBuffs = new LinkedList<MapleBuffStatValueHolder>(effects.values());
+        final LinkedList<MapleBuffStatValueHolder> allBuffs = new LinkedList<>(effects.values());
 
         for (MapleBuffStatValueHolder mbsvh : allBuffs) {
             if (skillid == 0) {
@@ -1938,7 +1951,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
     }
 
     public void dispelBuff(int skillid) {
-        final LinkedList<MapleBuffStatValueHolder> allBuffs = new LinkedList<MapleBuffStatValueHolder>(effects.values());
+        final LinkedList<MapleBuffStatValueHolder> allBuffs = new LinkedList<>(effects.values());
 
         for (MapleBuffStatValueHolder mbsvh : allBuffs) {
             if (mbsvh.effect.getSourceId() == skillid) {
@@ -1949,19 +1962,19 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
     }
 
     public void cancelAllBuffs_() {
+        cancelAllBuffs();
         effects.clear();
     }
 
     public void cancelAllBuffs() {
-        final LinkedList<MapleBuffStatValueHolder> allBuffs = new LinkedList<MapleBuffStatValueHolder>(effects.values());
-
+        final LinkedList<MapleBuffStatValueHolder> allBuffs = new LinkedList<>(effects.values());
         for (MapleBuffStatValueHolder mbsvh : allBuffs) {
             cancelEffect(mbsvh.effect, false, mbsvh.startTime);
         }
     }
 
     public void cancelMorphs() {
-        final LinkedList<MapleBuffStatValueHolder> allBuffs = new LinkedList<MapleBuffStatValueHolder>(effects.values());
+        final LinkedList<MapleBuffStatValueHolder> allBuffs = new LinkedList<>(effects.values());
 
         for (MapleBuffStatValueHolder mbsvh : allBuffs) {
             switch (mbsvh.effect.getSourceId()) {
@@ -1980,7 +1993,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
     }
 
     public int getMorphState() {
-        LinkedList<MapleBuffStatValueHolder> allBuffs = new LinkedList<MapleBuffStatValueHolder>(effects.values());
+        LinkedList<MapleBuffStatValueHolder> allBuffs = new LinkedList<>(effects.values());
         for (MapleBuffStatValueHolder mbsvh : allBuffs) {
             if (mbsvh.effect.isMorph()) {
                 return mbsvh.effect.getSourceId();
@@ -2000,7 +2013,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
 
     public List<PlayerBuffValueHolder> getAllBuffs() {
         List<PlayerBuffValueHolder> ret = new ArrayList<PlayerBuffValueHolder>();
-        LinkedList<MapleBuffStatValueHolder> allBuffs = new LinkedList<MapleBuffStatValueHolder>(effects.values());
+        LinkedList<MapleBuffStatValueHolder> allBuffs = new LinkedList<>(effects.values());
         for (MapleBuffStatValueHolder mbsvh : allBuffs) {
             ret.add(new PlayerBuffValueHolder(mbsvh.startTime, mbsvh.effect));
         }
@@ -2008,7 +2021,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
     }
 
     public void cancelMagicDoor() {
-        final LinkedList<MapleBuffStatValueHolder> allBuffs = new LinkedList<MapleBuffStatValueHolder>(effects.values());
+        final LinkedList<MapleBuffStatValueHolder> allBuffs = new LinkedList<>(effects.values());
 
         for (MapleBuffStatValueHolder mbsvh : allBuffs) {
             if (mbsvh.effect.isMagicDoor()) {
@@ -2928,7 +2941,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
             int channel = client.getChannel();
             for (MaplePartyCharacter partychar : party.getMembers()) {
                 if (partychar.getMapid() == getMapId() && partychar.getChannel() == channel) {
-                    MapleCharacter other = ChannelServer.getInstance(channel).getPlayerStorage().getCharacterByName(partychar.getName());
+                    MapleCharacter other = ChannelServer.getInstance(channel).getPlayerStorage().getCharacterById(partychar.getId());
                     if (other != null) {
                         other.getClient().getSession().write(MaplePacketCreator.updatePartyMemberHP(getId(), stats.getHp(), stats.getCurrentMaxHp()));
                     }
@@ -2944,7 +2957,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
         int channel = client.getChannel();
         for (MaplePartyCharacter partychar : party.getMembers()) {
             if (partychar.getMapid() == getMapId() && partychar.getChannel() == channel) {
-                MapleCharacter other = ChannelServer.getInstance(channel).getPlayerStorage().getCharacterByName(partychar.getName());
+                MapleCharacter other = ChannelServer.getInstance(channel).getPlayerStorage().getCharacterById(partychar.getId());
                 if (other != null) {
                     client.sendPacket(MaplePacketCreator.updatePartyMemberHP(other.getId(), other.getStat().getHp(), other.getStat().getCurrentMaxHp()));
                 }
@@ -3976,6 +3989,11 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
     public void sendSpawnData(MapleClient client) {
         if (client.getPlayer().allowedToTarget(this)) {
             client.getSession().write(MaplePacketCreator.spawnPlayerMapobject(this));
+
+            if (client.getPlayer().getParty() != null) {
+                client.getPlayer().receivePartyMemberHP();
+                client.getPlayer().updatePartyMemberHP();
+            }
 
             for (final MaplePet pet : pets) {
                 if (pet.getSummoned()) {
@@ -5834,11 +5852,11 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
 
         setRemainingAp((short) total);
 
-        stat.add(new Pair<MapleStat, Integer>(MapleStat.STR, str));
-        stat.add(new Pair<MapleStat, Integer>(MapleStat.DEX, dex));
-        stat.add(new Pair<MapleStat, Integer>(MapleStat.INT, int_));
-        stat.add(new Pair<MapleStat, Integer>(MapleStat.LUK, luk));
-        stat.add(new Pair<MapleStat, Integer>(MapleStat.AVAILABLEAP, total));
+        stat.add(new Pair<>(MapleStat.STR, str));
+        stat.add(new Pair<>(MapleStat.DEX, dex));
+        stat.add(new Pair<>(MapleStat.INT, int_));
+        stat.add(new Pair<>(MapleStat.LUK, luk));
+        stat.add(new Pair<>(MapleStat.AVAILABLEAP, total));
         client.getSession().write(MaplePacketCreator.updatePlayerStats(stat, false, getJob()));
     }
 

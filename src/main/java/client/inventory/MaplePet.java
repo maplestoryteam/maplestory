@@ -20,25 +20,21 @@
  */
 package client.inventory;
 
-import client.MapleCharacter;
-import constants.GameConstants;
-
-import java.awt.Point;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.io.Serializable;
-
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import database.DatabaseConnection;
 import server.MapleItemInformationProvider;
 import server.movement.AbsoluteLifeMovement;
 import server.movement.LifeMovement;
 import server.movement.LifeMovementFragment;
+
+import java.awt.*;
+import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class MaplePet implements Serializable {
 

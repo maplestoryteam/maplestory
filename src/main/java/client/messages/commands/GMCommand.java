@@ -5,6 +5,7 @@ import client.MapleClient;
 import client.inventory.IItem;
 import client.inventory.MapleInventoryType;
 import constants.ServerConstants.PlayerGMRank;
+import exts.FishExt;
 import handling.RecvPacketOpcode;
 import handling.SendPacketOpcode;
 import handling.channel.ChannelServer;
@@ -57,6 +58,15 @@ public class GMCommand {
     }
 
     public static class 刷钱 extends GainMeso {
+    }
+
+    public static class 重载钓鱼 extends ReloadFish {
+    }
+
+    public static class 重载抽奖 extends ReloadLottery {
+    }
+
+    public static class 重载飞天猪 extends ReloadLottery {
     }
 
     public static class WarpHere extends CommandExecute {
@@ -156,6 +166,27 @@ public class GMCommand {
         @Override
         public int execute(MapleClient c, String[] splitted) {
             c.getPlayer().gainMeso(Integer.MAX_VALUE - c.getPlayer().getMeso(), true);
+            return 1;
+        }
+    }
+
+    public static class ReloadFish extends CommandExecute {
+
+        @Override
+        public int execute(MapleClient c, String[] splitted) {
+            FishExt.refreshFishRewards();
+            c.getPlayer().dropMessage(5, "重载钓鱼物品成功");
+            return 1;
+        }
+    }
+
+
+    public static class ReloadLottery extends CommandExecute {
+
+        @Override
+        public int execute(MapleClient c, String[] splitted) {
+            FishExt.refreshFishRewards();
+            c.getPlayer().dropMessage(5, "重载抽奖物品成功");
             return 1;
         }
     }

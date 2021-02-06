@@ -20,36 +20,27 @@
  */
 package handling.channel.handler;
 
-import java.util.Comparator;
-import java.util.List;
-
-import client.inventory.IItem;
-import client.MapleClient;
 import client.MapleCharacter;
+import client.MapleClient;
 import client.MapleDisease;
-import client.inventory.ExpTable;
-import client.inventory.MapleInventoryType;
-import client.inventory.MaplePet;
+import client.inventory.*;
 import constants.GameConstants;
-import client.inventory.PetCommand;
-import client.inventory.PetDataFactory;
 import handling.world.MaplePartyCharacter;
-
-import java.util.LinkedList;
-import java.util.concurrent.locks.Lock;
-import java.util.stream.Collectors;
-
-import server.Randomizer;
 import server.MapleInventoryManipulator;
 import server.MapleItemInformationProvider;
+import server.Randomizer;
 import server.life.MapleMonster;
-import server.movement.LifeMovementFragment;
 import server.maps.FieldLimitType;
 import server.maps.MapleMapItem;
+import server.movement.LifeMovementFragment;
 import tools.MaplePacketCreator;
 import tools.data.input.LittleEndianAccessor;
-import tools.packet.PetPacket;
 import tools.data.input.SeekableLittleEndianAccessor;
+import tools.packet.PetPacket;
+
+import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.locks.Lock;
 
 public class PetHandler {
 
@@ -67,7 +58,7 @@ public class PetHandler {
     public static final void SpawnPet(final SeekableLittleEndianAccessor slea, final MapleClient c, final MapleCharacter chr) {
         chr.updateTick(slea.readInt());
         byte slot = slea.readByte();
-        slea.readByte();
+//        slea.readByte();
         chr.spawnPet(slot, slea.readByte() > 0);
     }
 
@@ -143,88 +134,6 @@ public class PetHandler {
     }
 
     //FIXED 宠物食物漏洞
-    public static final void PetFood2(final SeekableLittleEndianAccessor slea, final MapleClient c, final MapleCharacter chr) {
-        if (c.getPlayer().getNoPets() == 0) {
-            c.getSession().write(MaplePacketCreator.enableActions());
-            return;
-        }
-        int slot = 0;
-        List<MaplePet> pets = c.getPlayer().getPets();
-        MaplePet pet = null;
-        List<MaplePet> sortedPets = pets.stream().sorted(Comparator.comparingInt(MaplePet::getFullness)).collect(Collectors.toList());
-        for (int i = 0; i < sortedPets.size(); i++) {
-            MaplePet _pet = sortedPets.get(i);
-            if (_pet.getSummoned()) {
-//                slot = c.getPlayer().getPetSlot(mPet);
-                pet = _pet;
-                slot = i;
-                break;
-            }
-        }
-//        for (MaplePet mPet : pets) {
-//            if (mPet.getSummoned() && mPet.getFullness() < 100) {
-//                slot = c.getPlayer().getPetSlot(mPet);
-//                pet = mPet;
-//                break;
-//            }
-//        }
-//        MaplePet pet = c.getPlayer().getPet(slot);
-        //FIXED 没开启宠物使用宠物食物导致客户端卡死
-        if (pet == null) {
-            c.getPlayer().dropMessage(1, "宠物不在身边");
-            c.getSession().write(MaplePacketCreator.enableActions());
-            return;
-        }
-        slea.readInt();
-        short itemPos = slea.readShort();
-        final int itemId = slea.readInt();
-        IItem toUse = c.getPlayer().getInventory(MapleInventoryType.USE).getItem(itemPos);
-
-        if (toUse == null || toUse.getItemId() != itemId || (itemId != 2120000 && itemId != 2120008)) {
-            c.getPlayer().dropMessage(1, "Error ItemId");
-            c.sendPacket(MaplePacketCreator.enableActions());
-            return;
-        }
-        boolean gainCloseness = false;
-
-        if (Randomizer.nextInt(101) > 50) {
-            gainCloseness = true;
-        }
-        if (pet.getFullness() < 100) {
-            int newFullness = pet.getFullness() + 30;
-            if (newFullness > 100) {
-                newFullness = 100;
-            }
-            pet.setFullness(newFullness);
-            if ((gainCloseness) && (pet.getCloseness() < 30000)) {
-                int newCloseness = pet.getCloseness() + 1;
-                if (newCloseness > 30000) {
-                    newCloseness = 30000;
-                }
-                pet.setCloseness(newCloseness);
-                if (newCloseness >= ExpTable.getClosenessNeededForLevel(pet.getLevel() + 1)) {
-                    pet.setLevel(pet.getLevel() + 1);
-                }
-            }
-            c.getSession().write(PetPacket.updatePet(pet, c.getPlayer().getInventory(MapleInventoryType.CASH).getItem((byte) pet.getInventoryPosition()), true));
-            c.getPlayer().getMap().broadcastMessage(c.getPlayer(), PetPacket.commandResponse(c.getPlayer().getId(), slot, 1, true), true);
-        } else {
-            if (gainCloseness) {
-                int newCloseness = pet.getCloseness() - 1;
-                if (newCloseness < 0) {
-                    newCloseness = 0;
-                }
-                pet.setCloseness(newCloseness);
-                if (newCloseness < ExpTable.getClosenessNeededForLevel(pet.getLevel())) {
-                    pet.setLevel(pet.getLevel() - 1);
-                }
-            }
-            c.getPlayer().getMap().broadcastMessage(c.getPlayer(), PetPacket.commandResponse(c.getPlayer().getId(), slot, 1, false), true);
-        }
-        MapleInventoryManipulator.removeById(c, MapleInventoryType.USE, itemId, (short) 1, false, false);
-        c.sendPacket(MaplePacketCreator.enableActions());
-    }
-
     public static final void PetFood(final LittleEndianAccessor slea, final MapleClient c, final MapleCharacter chr) {
         int previousFullness = 100;
         MaplePet pet = null;
@@ -293,81 +202,10 @@ public class PetHandler {
         c.sendPacket(MaplePacketCreator.enableActions());
     }
 
-    public static final void MovePet2(final SeekableLittleEndianAccessor slea, final MapleCharacter chr) {
-        final int petId = slea.readInt();
-        slea.skip(8);
-        final List<LifeMovementFragment> res = MovementParse.parseMovement(slea, 3);
-
-        if (res != null && chr != null && res.size() != 0) { // map crash hack
-            final byte slot = chr.getPetIndex(petId);
-            if (slot == -1) {
-                return;
-            }
-            chr.getPet(slot).updatePosition(res);
-            chr.getMap().broadcastMessage(chr, PetPacket.movePet(chr.getId(), petId, slot, res), false);
-            if (chr.getPlayerShop() != null || chr.getConversation() > 0 || chr.getTrade() != null) { //hack
-                return;
-            }
-            if (chr.getStat().hasVac && (chr.getStat().hasMeso || chr.getStat().hasItem)) {
-                List<MapleMapItem> objects = chr.getMap().getAllItems();
-                for (MapleMapItem mapitem : objects) {
-                    final Lock lock = mapitem.getLock();
-                    lock.lock();
-                    try {
-                        if (mapitem.isPickedUp()) {
-                            continue;
-                        }
-                        if (mapitem.getOwner() != chr.getId() && mapitem.isPlayerDrop()) {
-                            continue;
-                        }
-                        if (mapitem.getOwner() != chr.getId() && ((!mapitem.isPlayerDrop() && mapitem.getDropType() == 0) || (mapitem.isPlayerDrop() && chr.getMap().getEverlast()))) {
-                            continue;
-                        }
-                        if (!mapitem.isPlayerDrop() && mapitem.getDropType() == 1 && mapitem.getOwner() != chr.getId() && (chr.getParty() == null || chr.getParty().getMemberById(mapitem.getOwner()) == null)) {
-                            continue;
-                        }
-                        if (mapitem.getMeso() > 0 && chr.getStat().hasMeso) {
-                            if (chr.getParty() != null && mapitem.getOwner() != chr.getId()) {
-                                final List<MapleCharacter> toGive = new LinkedList<>();
-
-                                for (MaplePartyCharacter mem : chr.getParty().getMembers()) {
-                                    MapleCharacter m = chr.getMap().getCharacterById(mem.getId());
-                                    if (m != null) {
-                                        toGive.add(m);
-                                    }
-                                }
-                                for (final MapleCharacter m : toGive) {
-                                    m.gainMeso(mapitem.getMeso() / toGive.size() + (m.getStat().hasPartyBonus ? (int) (mapitem.getMeso() / 20.0) : 0), true, true);
-                                }
-                            } else {
-                                chr.gainMeso(mapitem.getMeso(), true, true);
-                            }
-                            InventoryHandler.removeItem_Pet(chr, mapitem, slot);
-                        } else if (chr.getStat().hasItem && MapleItemInformationProvider.getInstance().isPickupBlocked(mapitem.getItem().getItemId())) {
-                            if (InventoryHandler.useItem(chr.getClient(), mapitem.getItemId())) {
-                                InventoryHandler.removeItem_Pet(chr, mapitem, slot);
-                            } else if (MapleInventoryManipulator.checkSpace(chr.getClient(), mapitem.getItem().getItemId(), mapitem.getItem().getQuantity(), mapitem.getItem().getOwner())) {
-                                if (mapitem.getItem().getQuantity() >= 50 && GameConstants.isUpgradeScroll(mapitem.getItem().getItemId())) {
-
-                                    chr.getClient().setMonitored(true); //hack check
-
-                                }
-
-                                if (MapleInventoryManipulator.addFromDrop(chr.getClient(), mapitem.getItem(), true, mapitem.getDropper() instanceof MapleMonster)) {
-
-                                    InventoryHandler.removeItem_Pet(chr, mapitem, slot);
-                                }
-                            }
-                        }
-                    } finally {
-                        lock.unlock();
-                    }
-                }
-            }
-        }
-    }
-
     public static final void MovePet(final SeekableLittleEndianAccessor slea, final MapleCharacter chr) {
+        if (true) {
+            return;
+        }
         final int petId = slea.readInt();
         slea.skip(8);
         final List<LifeMovementFragment> res = MovementParse.parseMovement(slea, 3);
@@ -384,6 +222,7 @@ public class PetHandler {
             }
             if (chr.getStat().hasVac && (chr.getStat().hasMeso || chr.getStat().hasItem)) {
                 List<MapleMapItem> objects = chr.getMap().getAllItems();
+                int gainCount = 0;
                 for (MapleMapItem mapitem : objects) {
                     final Lock lock = mapitem.getLock();
                     lock.lock();
@@ -422,13 +261,9 @@ public class PetHandler {
                                 InventoryHandler.removeItem_Pet(chr, mapitem, slot);
                             } else if (MapleInventoryManipulator.checkSpace(chr.getClient(), mapitem.getItem().getItemId(), mapitem.getItem().getQuantity(), mapitem.getItem().getOwner())) {
                                 if (mapitem.getItem().getQuantity() >= 50 && GameConstants.isUpgradeScroll(mapitem.getItem().getItemId())) {
-
                                     chr.getClient().setMonitored(true); //hack check
-
                                 }
-
                                 if (MapleInventoryManipulator.addFromDrop(chr.getClient(), mapitem.getItem(), true, mapitem.getDropper() instanceof MapleMonster)) {
-
                                     InventoryHandler.removeItem_Pet(chr, mapitem, slot);
                                 }
                             }

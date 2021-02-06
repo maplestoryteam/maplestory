@@ -20,36 +20,29 @@
  */
 package scripting;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.locks.Lock;
-import javax.script.ScriptException;
-
 import client.MapleCharacter;
 import client.MapleQuestStatus;
 import handling.channel.ChannelServer;
 import handling.world.MapleParty;
 import handling.world.MaplePartyCharacter;
-
-import java.util.Collections;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
-
 import server.MapleCarnivalParty;
 import server.MapleItemInformationProvider;
 import server.MapleSquad;
 import server.MapleSquad.MapleSquadType;
 import server.Timer.EventTimer;
-import server.quest.MapleQuest;
 import server.life.MapleMonster;
 import server.maps.MapleMap;
 import server.maps.MapleMapFactory;
+import server.quest.MapleQuest;
 import tools.FileoutputUtil;
 import tools.MaplePacketCreator;
 import tools.packet.UIPacket;
+
+import javax.script.ScriptException;
+import java.util.*;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class EventInstanceManager {
 
@@ -115,18 +108,15 @@ public class EventInstanceManager {
         if (disposed || eim == null) {
             return;
         }
-        eventTimer = EventTimer.getInstance().schedule(new Runnable() {
-
-            public void run() {
-                if (disposed || eim == null || em == null) {
-                    return;
-                }
-                try {
-                    em.getIv().invokeFunction("scheduledTimeout", eim);
-                } catch (Exception ex) {
-                    FileoutputUtil.log(FileoutputUtil.ScriptEx_Log, "Event name" + em.getName() + ", Instance name : " + name + ", method Name : scheduledTimeout:\n" + ex);
-                    System.out.println("Event name" + em.getName() + ", Instance name : " + name + ", method Name : scheduledTimeout:\n" + ex);
-                }
+        eventTimer = EventTimer.getInstance().schedule(() -> {
+            if (disposed || eim == null || em == null) {
+                return;
+            }
+            try {
+                em.getIv().invokeFunction("scheduledTimeout", eim);
+            } catch (Exception ex) {
+                FileoutputUtil.log(FileoutputUtil.ScriptEx_Log, "Event name" + em.getName() + ", Instance name : " + name + ", method Name : scheduledTimeout:\n" + ex);
+                System.out.println("Event name" + em.getName() + ", Instance name : " + name + ", method Name : scheduledTimeout:\n" + ex);
             }
         }, delay);
     }

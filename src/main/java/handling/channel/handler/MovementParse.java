@@ -20,14 +20,13 @@
  */
 package handling.channel.handler;
 
-import java.awt.Point;
-import java.util.ArrayList;
-import java.util.List;
-
 import server.maps.AnimatedMapleMapObject;
 import server.movement.*;
 import tools.data.input.SeekableLittleEndianAccessor;
-import tools.data.input.LittleEndianAccessor;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MovementParse {
 
@@ -187,7 +186,7 @@ public class MovementParse {
                 case 18:
                 case 19:
                 default:
-                    System.out.println("移动类型: " + kind + ", 剩下的 : " + (numCommands - res.size()) + " 新的移动类型 ID : " + command + ", 封包 : " + lea.toString(true));
+//                    System.out.println("移动类型: " + kind + ", 剩下的 : " + (numCommands - res.size()) + " 新的移动类型 ID : " + command + ", 封包 : " + lea.toString(true));
                     return null;
             }
         }

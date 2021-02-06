@@ -26,6 +26,7 @@ import client.inventory.*;
 import client.inventory.IEquip.ScrollResult;
 import client.inventory.MaplePet.PetFlag;
 import constants.GameConstants;
+import constants.ServerConstants;
 import handling.world.MaplePartyCharacter;
 import handling.world.World;
 import scripting.NPCScriptManager;
@@ -2721,6 +2722,9 @@ public class InventoryHandler {
     }
 
     public static final void Pickup_Pet(final SeekableLittleEndianAccessor slea, final MapleClient c, final MapleCharacter chr) {
+       if (ServerConstants.调试输出封包){
+           System.out.println("Pickup_Pet----------------------------");
+       }
         if (chr == null) {
             return;
         }

@@ -4,7 +4,9 @@ import client.MapleCharacter;
 import client.SkillFactory;
 import constants.ServerConstants;
 import database.DatabaseConnection;
+import exts.FishExt;
 import exts.GiveExt;
+import exts.LotteryItemExt;
 import handling.MapleServerHandler;
 import handling.cashshop.CashShopServer;
 import handling.channel.ChannelServer;
@@ -45,8 +47,26 @@ public class Start {
         }
     }
 
+
+    public static void main(String[] args) {
+        main();
+        mainExtra();
+    }
+
+    public static void mainExtra() {
+        if (GiveExt.giveEnable) {
+            System.out.println("注册挂机奖励");
+            // 注册挂机奖励
+            EventTimer.getInstance().register(() -> GiveExt.start(), GiveExt.givePeriod, 1000 * 60);
+        }
+        // 加载钓鱼物品
+        FishExt.refreshFishRewards();
+        // 加载抽奖物品
+        LotteryItemExt.refreshLotteryItem();
+    }
+
     //bat启动。
-    public static void main(final String[] args) {
+    public static void main() {
         Start.checkSingleInstance();//检测是否只启动一个进程
         if (Boolean.parseBoolean(ServerProperties.getProperty("KingMS.Admin", "true"))) {
             System.out.println("已开启仅管理员登录模式");
@@ -77,13 +97,6 @@ public class Start {
         EventTimer.getInstance().start();
         BuffTimer.getInstance().start();
         TimerManager.getInstance().start();//点卷赌博的时钟线程
-
-        if (GiveExt.giveEnable) {
-            System.out.println("注册挂机奖励");
-            // 注册挂机奖励
-            EventTimer.getInstance().register(() -> GiveExt.start(), GiveExt.givePeriod, 1000 * 60);
-        }
-
         System.out.println("时钟线程加载完成 耗时：" + (System.currentTimeMillis() - szxctime) / 1000.0 + "秒");
         System.out.println("====================================================-[ 加载NPC ]");
         long npctime = System.currentTimeMillis();
