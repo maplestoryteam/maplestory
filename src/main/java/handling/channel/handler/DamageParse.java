@@ -320,25 +320,25 @@ public class DamageParse {
                             //4120005 - 武器用毒液 - 在飞镖上涂抹毒药攻击敌人使它一定几率中毒受持续伤害.最多可重复3次,敌人的HP不会掉落1以下.
                             //4220005 - 武器用毒液 - 在短剑上涂抹毒药攻击敌人,使它一定的几率陷入中毒状态受持续伤害.最多可重复3次,敌人的HP不会掉到1以下.
                             //14110004 - 武器用毒液 - [最高等级：20]\n在标枪上涂毒，进行攻击。有一定概率使敌人中毒，造成伤害。最多重复3次，敌人的HP不会掉落到1以下。
-                            int[] 武器用毒液技能数组 = {4120005, 4220005, 14110004};
-                            for (int i : 武器用毒液技能数组) {
-                                ISkill 获取技能 = SkillFactory.getSkill(i);
-                                if (player.getSkillLevel(获取技能) > 0) {//判断其技能等级大于0
-                                    MapleStatEffect 毒液BUFF = 获取技能.getEffect(player.getSkillLevel(获取技能));//获取技能BUFF
-                                    if (毒液BUFF.makeChanceResult()) {
-                                        if (毒液BUFF.getDuration() <= 4000L) {//获取技能时间是否小于4000L //这就是我的修复方式，判断
-                                            if (monster.getVenomMulti() <= 3) {//获取毒次数，判断小于等于三次才可以毒
-                                                毒液BUFF.setDuration(4000);//设置毒时间
-                                                monster.setVenomMulti((byte) (monster.getVenomMulti() + 1));//记录毒次数+1
-                                                monster.applyStatus(player, new MonsterStatusEffect(MonsterStatus.中毒, 1, i, null, false), true, 毒液BUFF.getDuration(), true, effect);
-                                            }
-                                            return;
-                                        }
-                                        return;
-                                    }
-                                    break;
-                                }
-                            }
+//                            int[] 武器用毒液技能数组 = {4120005, 4220005, 14110004};
+//                            for (int i : 武器用毒液技能数组) {
+//                                ISkill 获取技能 = SkillFactory.getSkill(i);
+//                                if (player.getSkillLevel(获取技能) > 0) {//判断其技能等级大于0
+//                                    MapleStatEffect 毒液BUFF = 获取技能.getEffect(player.getSkillLevel(获取技能));//获取技能BUFF
+//                                    if (毒液BUFF.makeChanceResult()) {
+//                                        if (毒液BUFF.getDuration() <= 4000L) {//获取技能时间是否小于4000L //这就是我的修复方式，判断
+//                                            if (monster.getVenomMulti() <= 3) {//获取毒次数，判断小于等于三次才可以毒
+//                                                毒液BUFF.setDuration(4000);//设置毒时间
+//                                                monster.setVenomMulti((byte) (monster.getVenomMulti() + 1));//记录毒次数+1
+//                                                monster.applyStatus(player, new MonsterStatusEffect(MonsterStatus.中毒, 1, i, null, false), true, 毒液BUFF.getDuration(), true, effect);
+//                                            }
+//                                            return;
+//                                        }
+//                                        return;
+//                                    }
+//                                    break;
+//                                }
+//                            }
                             break;
                         }
                         case 4201004: { //steal

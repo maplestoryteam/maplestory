@@ -3091,52 +3091,27 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
      * @param itemReaction
      */
     public void updateSingleStat(MapleStat stat, int newval, boolean itemReaction) {
-        Pair<MapleStat, Integer> statpair = new Pair<MapleStat, Integer>(stat, Integer.valueOf(newval));
+        Pair<MapleStat, Integer> statpair = new Pair<>(stat, Integer.valueOf(newval));
         client.getSession().write(MaplePacketCreator.updatePlayerStats(Collections.singletonList(statpair), itemReaction, getJob()));
     }
 
     public void gainExp(final int total, final boolean show, final boolean inChat, final boolean white) {
         try {
-            int prevexp = getExp();
-            int needed = GameConstants.getExpNeededForLevel(level);
-            if (level >= 200 || (GameConstants.isKOC(job) && level >= 120)) {
-                if (exp + total > needed) {
-                    setExp(needed);
-                } else {
-                    exp += total;
-                }
+            long exp0 = this.exp;
+            int maxExp = GameConstants.getExpNeededForLevel(level);
+            exp0 += total;
+            if (exp0 >= maxExp) {
+                this.exp = maxExp;
             } else {
-                boolean leveled = false;
-                if (exp + total >= needed) {
-                    exp += total;
-                    levelUp();
-                    leveled = true;
-                    needed = GameConstants.getExpNeededForLevel(level);
-                    if (exp > needed) {
-                        setExp(needed);
-                    }
-                } else {
-                    exp += total;
-                }
-                if (total > 0) {
-                    // familyRep(prevexp, needed, leveled);
-                }
+                this.exp += total;
             }
-            if (total != 0) {
-                if (exp < 0) { // After adding, and negative
-                    if (total > 0) {
-                        setExp(needed);
-                    } else if (total < 0) {
-                        setExp(0);
-                    }
-                }
+            if (this.level < 255 && this.exp >= maxExp) {
+                levelUp();
+            }
+            if (total > 0) {
                 if (show) { // still show the expgain even if it's not there
                     client.getSession().write(MaplePacketCreator.GainEXP_Others(total, inChat, white));
                 }
-                /*
-                 * if (total > 0) { stats.checkEquipLevels(this, total); //gms
-                 * like }
-                 */
                 updateSingleStat(MapleStat.EXP, getExp());
             }
         } catch (Exception e) {
