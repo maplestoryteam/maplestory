@@ -78,7 +78,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
     private long lastCombo, lastfametime, keydown_skill;
     private byte dojoRecord, gmLevel, gender, initialSpawnPoint, skinColor, guildrank = 5, allianceRank = 5, world, fairyExp = 30, numClones, subcategory; // Make this a quest record, TODO : Transfer it somehow with the current data
     private short level, mulung_energy, combo, availableCP, totalCP, fame, hpApUsed, job, remainingAp;
-    private int accountid, id, meso, exp, hair, face, mapid, bookCover, dojo, sg,
+    private int accountid, id, meso, exp, extraExp, hair, face, mapid, bookCover, dojo, sg,
             guildid, fallcounter, maplepoints, acash, chair, itemEffect, points, vpoints,
             rank = 1, rankMove, jobRank = 1, jobRankMove, marriageId, marriageItemId,
             currentrep, totalrep, coconutteam, followid, battleshipHP,
@@ -3102,6 +3102,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
             exp0 += total;
             if (exp0 >= maxExp) {
                 this.exp = maxExp;
+                this.extraExp = (int) (exp0 - maxExp);
             } else {
                 this.exp += total;
             }
@@ -3573,6 +3574,8 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
         }
         maxmp += stats.getTotalInt() / 10;
         exp -= GameConstants.getExpNeededForLevel(level);
+        this.exp += this.extraExp;
+        this.extraExp = 0;
         level += 1;
         int level = getLevel();
 
