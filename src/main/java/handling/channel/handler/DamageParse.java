@@ -210,13 +210,13 @@ public class DamageParse {
                             if (eachd > maxDamagePerHit) {
                                 player.getCheatTracker().registerOffense(CheatingOffense.攻击力过高);
                                 if (eachd > maxDamagePerHit * 2) {
-                                    FileoutputUtil.logToFile_chr(player, FileoutputUtil.fixdam_ph, " 技能 " + attack.skill + " 怪物 " + monster.getId() + " 预计伤害:" + (long) maxDamagePerHit + "  实际" + eachd);
+                                   // FileoutputUtil.logToFile_chr(player, FileoutputUtil.fixdam_ph, " 技能 " + attack.skill + " 怪物 " + monster.getId() + " 预计伤害:" + (long) maxDamagePerHit + "  实际" + eachd);
                                     eachd = (int) (maxDamagePerHit * 2); // Convert to server calculated damage
                                     player.getCheatTracker().registerOffense(CheatingOffense.攻击过高2);
                                 }
                             }
                         } else if (eachd > maxDamagePerHit * 2) {
-                            FileoutputUtil.logToFile_chr(player, FileoutputUtil.fixdam_ph, " 技能 " + attack.skill + " 怪物 " + monster.getId() + " 预计伤害:" + (long) maxDamagePerHit + "  实际" + eachd);
+                        //    FileoutputUtil.logToFile_chr(player, FileoutputUtil.fixdam_ph, " 技能 " + attack.skill + " 怪物 " + monster.getId() + " 预计伤害:" + (long) maxDamagePerHit + "  实际" + eachd);
                             eachd = (int) (maxDamagePerHit);
                         }
                     }
@@ -572,12 +572,12 @@ public class DamageParse {
                                 if (eachd > MaxDamagePerHit * 2) {
 //				    System.out.println("EXCEED!!! Client damage : " + eachd + " Server : " + MaxDamagePerHit);
                                     eachd = (int) (MaxDamagePerHit * 2); // Convert to server calculated damage
-                                    FileoutputUtil.logToFile_chr(player, FileoutputUtil.fixdam_ph, " 技能 " + attack.skill + " 怪物 " + monster.getId() + " 预计伤害:" + (long) MaxDamagePerHit + "  实际" + eachd);
+//                                    FileoutputUtil.logToFile_chr(player, FileoutputUtil.fixdam_ph, " 技能 " + attack.skill + " 怪物 " + monster.getId() + " 预计伤害:" + (long) MaxDamagePerHit + "  实际" + eachd);
                                     player.getCheatTracker().registerOffense(CheatingOffense.魔法伤害过高2);
                                 }
                             }
                         } else if (eachd > maxDamagePerHit * 2) {
-                            FileoutputUtil.logToFile_chr(player, FileoutputUtil.fixdam_ph, " 技能 " + attack.skill + " 怪物 " + monster.getId() + " 预计伤害:" + (long) MaxDamagePerHit + "  实际" + eachd);
+//                            FileoutputUtil.logToFile_chr(player, FileoutputUtil.fixdam_ph, " 技能 " + attack.skill + " 怪物 " + monster.getId() + " 预计伤害:" + (long) MaxDamagePerHit + "  实际" + eachd);
                             eachd = (int) (maxDamagePerHit);
                         }
                     }

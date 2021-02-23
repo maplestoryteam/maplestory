@@ -49,16 +49,18 @@ public interface TimeSaleItemExt {
 
     Object LOCK = 0;
 
-    static void update(int type, int itemId, int itemCount) {
+    static boolean update(int type, int itemId, int itemCount) {
         synchronized (LOCK) {
             PreparedStatement ps;
             try {
                 ps = ConnExt.getConn().prepareStatement(String.format("UPDATE timesale_item AS tsi SET tsi.`item_count` = tsi.`item_count` - %d WHERE tsi.type = %d AND tsi.`item_id` = %d AND tsi.`item_count` >= %d", itemCount, type, itemId, itemCount));
-                ps.executeUpdate();
+                int ret = ps.executeUpdate();
                 ps.close();
+                return ret > 0;
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+            return false;
         }
     }
 }

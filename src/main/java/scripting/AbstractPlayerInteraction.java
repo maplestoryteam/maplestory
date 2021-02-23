@@ -2083,8 +2083,8 @@ public abstract class AbstractPlayerInteraction {
         return tsi.getItemCount();
     }
 
-    public final void 抢购减少(int type, int itemId, int itemCount) {
-        TimeSaleItemExt.update(type, itemId, itemCount);
+    public final boolean 抢购减少(int type, int itemId, int itemCount) {
+        return TimeSaleItemExt.update(type, itemId, itemCount);
     }
 
     //查询组队BossLog("文本",次数)  //反正 ture/false   如果  查询的次数>=次数  就返回false
