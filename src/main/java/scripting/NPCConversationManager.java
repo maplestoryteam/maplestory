@@ -1126,7 +1126,7 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
     }
 
     public void maxStats() {
-        List<Pair<MapleStat, Integer>> statup = new ArrayList<Pair<MapleStat, Integer>>(2);
+        List<Pair<MapleStat, Integer>> statup = new ArrayList<>(2);
         c.getPlayer().getStat().setStr((short) 32767);
         c.getPlayer().getStat().setDex((short) 32767);
         c.getPlayer().getStat().setInt((short) 32767);
@@ -1137,14 +1137,14 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
         c.getPlayer().getStat().setHp((short) 30000);
         c.getPlayer().getStat().setMp((short) 30000);
 
-        statup.add(new Pair<MapleStat, Integer>(MapleStat.STR, Integer.valueOf(32767)));
-        statup.add(new Pair<MapleStat, Integer>(MapleStat.DEX, Integer.valueOf(32767)));
-        statup.add(new Pair<MapleStat, Integer>(MapleStat.LUK, Integer.valueOf(32767)));
-        statup.add(new Pair<MapleStat, Integer>(MapleStat.INT, Integer.valueOf(32767)));
-        statup.add(new Pair<MapleStat, Integer>(MapleStat.HP, Integer.valueOf(30000)));
-        statup.add(new Pair<MapleStat, Integer>(MapleStat.MAXHP, Integer.valueOf(30000)));
-        statup.add(new Pair<MapleStat, Integer>(MapleStat.MP, Integer.valueOf(30000)));
-        statup.add(new Pair<MapleStat, Integer>(MapleStat.MAXMP, Integer.valueOf(30000)));
+        statup.add(new Pair<>(MapleStat.STR, Integer.valueOf(32767)));
+        statup.add(new Pair<>(MapleStat.DEX, Integer.valueOf(32767)));
+        statup.add(new Pair<>(MapleStat.LUK, Integer.valueOf(32767)));
+        statup.add(new Pair<>(MapleStat.INT, Integer.valueOf(32767)));
+        statup.add(new Pair<>(MapleStat.HP, Integer.valueOf(30000)));
+        statup.add(new Pair<>(MapleStat.MAXHP, Integer.valueOf(30000)));
+        statup.add(new Pair<>(MapleStat.MP, Integer.valueOf(30000)));
+        statup.add(new Pair<>(MapleStat.MAXMP, Integer.valueOf(30000)));
 
         c.getSession().write(MaplePacketCreator.updatePlayerStats(statup, c.getPlayer().getJob()));
     }
@@ -1154,7 +1154,7 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
         if (SpeedRunner.getInstance().getSpeedRunData(type) != null) {
             return SpeedRunner.getInstance().getSpeedRunData(type);
         }
-        return new Pair<String, Map<Integer, String>>("", new HashMap<>());
+        return new Pair<>("", new HashMap<>());
     }
 
     public boolean getSR(Pair<String, Map<Integer, String>> ma, int sel) {

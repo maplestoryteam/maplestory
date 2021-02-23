@@ -736,7 +736,7 @@ public class DamageParse {
         if (player.getMapId() / 1000000 == 914) { //aran
             return VarsExt.MAX_ATTACK;
         }
-        List<Element> elements = new ArrayList<Element>();
+        List<Element> elements = new ArrayList<>();
         boolean defined = false;
         if (theSkill != null) {
             elements.add(theSkill.getElement());

@@ -561,7 +561,7 @@ public class PlayerStats implements Serializable {
         this.magic += (percent_matk * magic) / 100f; //or should this go before
         localmaxhp_ += (percent_hp * localmaxhp_) / 100f;
         localmaxmp_ += (percent_mp * localmaxmp_) / 100f;
-        magic = Math.min(magic, 1999); //buffs can make it higher
+//        magic = Math.min(magic, 1999); //buffs can make it higher
 
         Integer buff = chra.getBuffedValue(MapleBuffStat.MAPLE_WARRIOR);
         if (buff != null) {

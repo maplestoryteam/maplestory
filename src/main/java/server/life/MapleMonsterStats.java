@@ -20,13 +20,9 @@
  */
 package server.life;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import tools.Pair;
+
+import java.util.*;
 
 public class MapleMonsterStats {
 
@@ -37,8 +33,8 @@ public class MapleMonsterStats {
     private boolean boss, undead, ffaLoot, firstAttack, isExplosiveReward, mobile, fly, onlyNormalAttack, friendly, noDoom;
     private String name;
     private final Map<Element, ElementalEffectiveness> resistance = new HashMap<>();
-    private List<Integer> revives = new ArrayList<Integer>();
-    private final List<Pair<Integer, Integer>> skills = new ArrayList<Pair<Integer, Integer>>();
+    private List<Integer> revives = new ArrayList<>();
+    private final List<Pair<Integer, Integer>> skills = new ArrayList<>();
     private BanishInfo banish;
     private boolean changeable;
 
