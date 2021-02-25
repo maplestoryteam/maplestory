@@ -378,6 +378,7 @@ public class MapleServerHandler extends IoHandlerAdapter implements MapleServerH
                 session.removeAttribute(MapleClient.CLIENT_KEY);
             }
         }
+
         super.sessionClosed(session);
     }
 

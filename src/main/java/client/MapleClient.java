@@ -24,6 +24,7 @@ import constants.GameConstants;
 import constants.ServerConstants;
 import database.DatabaseConnection;
 import database.DatabaseException;
+import exts.PlayerMapTimeExt;
 import handling.cashshop.CashShopServer;
 import handling.channel.ChannelServer;
 import handling.world.*;
@@ -965,6 +966,9 @@ public class MapleClient implements Serializable {
         }
         if (!serverTransition && isLoggedIn()) {
             updateLoginState(MapleClient.LOGIN_NOTLOGGEDIN, getSessionIPAddress());
+            if (getPlayer() != null) {
+                PlayerMapTimeExt.remove(getPlayer().getName());
+            }
         }
     }
 
@@ -1131,22 +1135,18 @@ public class MapleClient implements Serializable {
         lastPing = System.currentTimeMillis();
         session.write(LoginPacket.getPing());
 
-        PingTimer.getInstance().schedule(new Runnable() {
-
-            @Override
-            public void run() {
-                try {
-                    if (getLatency() < 0) {
-                        MapleClient.this.disconnect(true, false);
-                        if (getSession().isConnected()) {
-                            MapleClient.this.updateLoginState(MapleClient.LOGIN_NOTLOGGEDIN, MapleClient.this.getSessionIPAddress());
-                            getSession().close();
-                        }
+        PingTimer.getInstance().schedule(() -> {
+            try {
+                if (getLatency() < 0) {
+                    MapleClient.this.disconnect(true, false);
+                    if (getSession().isConnected()) {
+                        MapleClient.this.updateLoginState(MapleClient.LOGIN_NOTLOGGEDIN, MapleClient.this.getSessionIPAddress());
+                        getSession().close();
                     }
-                } catch (final NullPointerException e) {
-                    getSession().close();
-                    // client already gone
                 }
+            } catch (final NullPointerException e) {
+                getSession().close();
+                // client already gone
             }
         }, 15000); // note: idletime gets added to this too
     }

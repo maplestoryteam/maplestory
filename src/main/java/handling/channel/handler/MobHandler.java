@@ -20,30 +20,24 @@
  */
 package handling.channel.handler;
 
-import java.awt.Point;
-import java.util.List;
-
-import client.MapleClient;
 import client.MapleCharacter;
-import client.anticheat.CheatingOffense;
+import client.MapleClient;
 import client.inventory.MapleInventoryType;
-import constants.GameConstants;
-import handling.world.World;
 import server.MapleInventoryManipulator;
 import server.Randomizer;
-import server.maps.MapleMap;
 import server.life.MapleMonster;
 import server.life.MobSkill;
 import server.life.MobSkillFactory;
+import server.maps.MapleMap;
 import server.maps.MapleNodes.MapleNodeInfo;
-import server.movement.AbstractLifeMovement;
-import server.movement.LifeMovement;
 import server.movement.LifeMovementFragment;
-import tools.FileoutputUtil;
 import tools.MaplePacketCreator;
 import tools.Pair;
-import tools.packet.MobPacket;
 import tools.data.input.SeekableLittleEndianAccessor;
+import tools.packet.MobPacket;
+
+import java.awt.*;
+import java.util.List;
 
 public class MobHandler {
 
@@ -111,49 +105,50 @@ public class MobHandler {
             map.moveMonster(monster, monster.getPosition());
             map.broadcastMessage(chr, MobPacket.moveMonster(useSkill, skill, skill1, skill2, skill3, skill4, monster.getObjectId(), startPos, monster.getPosition(), res), monster.getPosition());
         }
-        try {
-            boolean fly = monster.getStats().getFly();
-            if (!fly) {
-                final MapleCharacter controller = monster.getController();
-                MapleMap map = chr.getMap();
 
-                Point endPos = null;
-                int reduce_x = 0;
-                int reduce_y = 0;
-                for (LifeMovementFragment move : res) {
-                    if ((move instanceof AbstractLifeMovement)) {
-                        endPos = move.getPosition();
-                        try {
-                            reduce_x = Math.abs(startPos.x - endPos.x);
-                            reduce_y = Math.abs(startPos.y - endPos.y);
-                        } catch (Exception ex) {
-                        }
-                    }
-                }
-                int GeneallyDistance_y = 150;
-                int Check_x = 250;
-                if (chr.getMapId() == 541020500) {
-                    Check_x = 300;
-                }
-                if (monster.getId() == 4230100) {
-                    GeneallyDistance_y = 200;
-                }
-
-                if (((reduce_x > 200 || reduce_y > GeneallyDistance_y) && reduce_y != 0) || (reduce_x > Check_x && reduce_y == 0)) {
-                    chr.addMobVac(1);
-                    if (c.getPlayer().getMobVac(1) % 50 == 0) {
-                        c.getPlayer().getCheatTracker().registerOffense(CheatingOffense.吸怪, "(地图: " + chr.getMapId() + " 怪物数量:" + chr.getMobVac(1) + ")");
-                        //World.Broadcast.broadcastGMMessage(MaplePacketCreator.serverNotice(6, "[GM信息] " + chr.getName() + "怪物数量(" + chr.getMobVac(1) + ")! 地图:" + chr.getMapId() + "(" + chr.getMap().getMapName() + ")").getBytes());
-                        FileoutputUtil.logToFile_chr(c.getPlayer(), FileoutputUtil.MobVac_log, " 怪物: " + monster.getId() + " 起始坐标 " + startPos.x + "," + startPos.y + " 结束坐标 " + endPos.x + "," + endPos.y + " 相差x:" + reduce_x + "相差y" + reduce_y);
-                        if (chr.hasGmLevel(1)) {
-                            c.getPlayer().dropMessage("触发吸怪");
-                        }
-                    }
-                }
-
-            }
-        } catch (Exception ex) {
-        }
+//        try {
+//            boolean fly = monster.getStats().getFly();
+//            if (!fly) {
+//                final MapleCharacter controller = monster.getController();
+//                MapleMap map = chr.getMap();
+//
+//                Point endPos = null;
+//                int reduce_x = 0;
+//                int reduce_y = 0;
+//                for (LifeMovementFragment move : res) {
+//                    if ((move instanceof AbstractLifeMovement)) {
+//                        endPos = move.getPosition();
+//                        try {
+//                            reduce_x = Math.abs(startPos.x - endPos.x);
+//                            reduce_y = Math.abs(startPos.y - endPos.y);
+//                        } catch (Exception ex) {
+//                        }
+//                    }
+//                }
+//                int GeneallyDistance_y = 150;
+//                int Check_x = 250;
+//                if (chr.getMapId() == 541020500) {
+//                    Check_x = 300;
+//                }
+//                if (monster.getId() == 4230100) {
+//                    GeneallyDistance_y = 200;
+//                }
+//
+//                if (((reduce_x > 200 || reduce_y > GeneallyDistance_y) && reduce_y != 0) || (reduce_x > Check_x && reduce_y == 0)) {
+//                    chr.addMobVac(1);
+//                    if (c.getPlayer().getMobVac(1) % 50 == 0) {
+//                        c.getPlayer().getCheatTracker().registerOffense(CheatingOffense.吸怪, "(地图: " + chr.getMapId() + " 怪物数量:" + chr.getMobVac(1) + ")");
+//                        //World.Broadcast.broadcastGMMessage(MaplePacketCreator.serverNotice(6, "[GM信息] " + chr.getName() + "怪物数量(" + chr.getMobVac(1) + ")! 地图:" + chr.getMapId() + "(" + chr.getMap().getMapName() + ")").getBytes());
+//                        FileoutputUtil.logToFile_chr(c.getPlayer(), FileoutputUtil.MobVac_log, " 怪物: " + monster.getId() + " 起始坐标 " + startPos.x + "," + startPos.y + " 结束坐标 " + endPos.x + "," + endPos.y + " 相差x:" + reduce_x + "相差y" + reduce_y);
+//                        if (chr.hasGmLevel(1)) {
+//                            c.getPlayer().dropMessage("触发吸怪");
+//                        }
+//                    }
+//                }
+//
+//            }
+//        } catch (Exception ex) {
+//        }
     }
 
     public static final void FriendlyDamage(final SeekableLittleEndianAccessor slea, final MapleCharacter chr) {

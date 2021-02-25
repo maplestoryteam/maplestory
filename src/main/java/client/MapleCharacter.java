@@ -27,6 +27,7 @@ import constants.ServerConstants;
 import database.DatabaseConnection;
 import database.DatabaseException;
 import exts.FishExt;
+import exts.PlayerMapTimeExt;
 import exts.model.FishReward;
 import handling.MaplePacket;
 import handling.channel.ChannelServer;
@@ -2516,6 +2517,8 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
         if (pyramid && pyramidSubway != null) { //checks if they had pyramid before AND after changing
             pyramidSubway.onChangeMap(this, to.getId());
         }
+
+        PlayerMapTimeExt.remove(getName());
     }
 
     public void leaveMap() {

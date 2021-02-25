@@ -29,6 +29,7 @@ import client.status.MonsterStatusEffect;
 import constants.GameConstants;
 import constants.ServerConstants;
 import database.DatabaseConnection;
+import exts.PlayerMapTimeExt;
 import handling.MaplePacket;
 import handling.channel.ChannelServer;
 import handling.world.MaplePartyCharacter;
@@ -567,6 +568,9 @@ public final class MapleMap {
             animation = 2; //or is it 3?
         } else if (this.getId() == 910320100) {
         }
+
+
+        PlayerMapTimeExt.put(chr.getName(), chr.getMapId());
 
         spawnedMonstersOnMap.decrementAndGet();
         removeMapObject(monster);

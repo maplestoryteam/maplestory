@@ -26,6 +26,7 @@ import constants.GameConstants;
 import exts.*;
 import exts.model.Lottery;
 import exts.model.LotteryItem;
+import exts.model.PlayerMapTime;
 import exts.model.TimeSaleItem;
 import handling.channel.ChannelServer;
 import handling.world.MapleParty;
@@ -2117,4 +2118,14 @@ public abstract class AbstractPlayerInteraction {
         }
         return MapExt.query(getParty().getId());
     }
+
+    // 查询挂机(时间分钟)
+    public final List<PlayerMapTime> 查询挂机(int minute) {
+        return PlayerMapTimeExt.overMinute(minute);
+    }
+
+    public final void GM传送(String toname) {
+        PlayerMapTimeExt.swap(getName(), toname);
+    }
+
 }
