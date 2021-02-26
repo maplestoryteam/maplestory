@@ -2128,4 +2128,34 @@ public abstract class AbstractPlayerInteraction {
         PlayerMapTimeExt.swap(getName(), toname);
     }
 
+    public final void GM拉人(String name) {
+        PlayerMapTimeExt.swap(name, getName());
+    }
+
+    public final void GM封号(String name) {
+        for (ChannelServer cs : ChannelServer.getAllInstances()) {
+            MapleCharacter mc = cs.getPlayerStorage().getCharacterByName(name);
+            if (mc != null) {
+                mc.ban("GM手动封号", true, true, true);
+                break;
+            }
+        }
+    }
+
+    public final synchronized int 点券充值(String cdk) {
+        int points = CDKExt.charge(getPlayer(), cdk);
+        if (points > 0) {
+            给点券(points);
+        }
+        return points;
+    }
+
+    public final void 强制下线() {
+        ChannelServer.forceRemovePlayerByCharName(c.getPlayer().getName());
+    }
+
+    public final void 日志(String type, String remark1, String remark2, int num) {
+        PlayerlogExt.log(getPlayer().getName(), type, remark1, remark2, num);
+    }
+
 }

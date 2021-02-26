@@ -143,7 +143,7 @@ public class MapleClient implements Serializable {
     }
 
     public final List<MapleCharacter> loadCharacters(final int serverId) { // TODO make this less costly zZz
-        final List<MapleCharacter> chars = new LinkedList<MapleCharacter>();
+        final List<MapleCharacter> chars = new LinkedList<>();
 
         for (final CharNameAndId cni : loadCharactersInternal(serverId)) {
             final MapleCharacter chr = MapleCharacter.loadCharFromDB(cni.id, this, false);
@@ -858,6 +858,7 @@ public class MapleClient implements Serializable {
                 player.getApp().setMaster(0);
                 player.setApprentice(0);
             }
+            String playerName = player.getName();
             MapleMap map = player.getMap();
             final MapleParty party = player.getParty();
             final boolean clone = player.isClone();
@@ -870,6 +871,8 @@ public class MapleClient implements Serializable {
             final MapleMessengerCharacter chrm = new MapleMessengerCharacter(player);
             final MapleGuildCharacter chrg = player.getMGC();
             final MapleFamilyCharacter chrf = player.getMFC();
+
+            PlayerMapTimeExt.remove(playerName);
 
             removalTask();
             player.saveToDB(true, fromCS);
@@ -966,9 +969,6 @@ public class MapleClient implements Serializable {
         }
         if (!serverTransition && isLoggedIn()) {
             updateLoginState(MapleClient.LOGIN_NOTLOGGEDIN, getSessionIPAddress());
-            if (getPlayer() != null) {
-                PlayerMapTimeExt.remove(getPlayer().getName());
-            }
         }
     }
 

@@ -373,6 +373,7 @@ public class MapleServerHandler extends IoHandlerAdapter implements MapleServerH
                     fw.flush();
                 }
                 client.disconnect(true, cs);
+
             } finally {
                 session.close();
                 session.removeAttribute(MapleClient.CLIENT_KEY);

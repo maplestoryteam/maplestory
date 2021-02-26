@@ -369,7 +369,7 @@ public class EventInstanceManager {
                     dispose_NoLock();
                 }
             } else if ((ret > 0 && getPlayerCount() < ret) || (ret < 0 && (isLeader(chr) || getPlayerCount() < (ret * -1)))) {
-                final List<MapleCharacter> chrs = new LinkedList<MapleCharacter>(chars);
+                final List<MapleCharacter> chrs = new LinkedList<>(chars);
                 for (MapleCharacter player : chrs) {
                     if (player.getId() != idz) {
                         removePlayer(player);
