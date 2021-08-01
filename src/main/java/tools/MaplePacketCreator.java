@@ -399,7 +399,6 @@ public class MaplePacketCreator {
      */
     public static MaplePacket serverBlocked(int type) {
         MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-
         if (ServerConstants.调试输出封包) {
             System.out.println("serverBlocked--------------------");
         }
@@ -410,38 +409,23 @@ public class MaplePacketCreator {
     }
 
     public static MaplePacket serverMessage(String message) {
-        if (ServerConstants.调试输出封包) {
-            System.out.println("serverMessageA--------------------");
-        }
         return serverMessage(4, 0, message, false);
     }
 
     public static MaplePacket serverNotice(int type, String message) {
-        if (ServerConstants.调试输出封包) {
-            System.out.println("serverNoticeA--------------------");
-        }
         return serverMessage(type, 0, message, false);
     }
 
     public static MaplePacket serverNotice(int type, int channel, String message) {
-        if (ServerConstants.调试输出封包) {
-            System.out.println("serverNoticeB--------------------");
-        }
         return serverMessage(type, channel, message, false);
     }
 
     public static MaplePacket serverNotice(int type, int channel, String message, boolean smegaEar) {
-        if (ServerConstants.调试输出封包) {
-            System.out.println("serverNoticeC--------------------");
-        }
         return serverMessage(type, channel, message, smegaEar);
     }
 
     private static MaplePacket serverMessage(int type, int channel, String message, boolean megaEar) {
         MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-        if (ServerConstants.调试输出封包) {
-            System.out.println("serverMessage--------------------");
-        }
 
         /*
          * 0：[公告] 1：弹出 2：超级电话 3：超级大电话 4：在顶部滚动消息 5：粉红的全文 6：蓝色光芒的全文： 8：项大型电话：
@@ -476,7 +460,6 @@ public class MaplePacketCreator {
 
     public static MaplePacket getGachaponMega(final String name, final String message, final IItem item, final byte rareness, int channel) {
         MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-
         if (ServerConstants.调试输出封包) {
             System.out.println("getGachaponMega--------------------");
         }
@@ -488,13 +471,11 @@ public class MaplePacketCreator {
         mplew.writeInt(channel - 1); // 0~3 i think
         //mplew.writeMapleAsciiString(name);
         PacketHelper.addItemInfo(mplew, item, true, true);
-
         return mplew.getPacket();
     }
 
     public static MaplePacket getGachaponMega(final String message, int channel) {
         MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-
         if (ServerConstants.调试输出封包) {
             System.out.println("getGachaponMega--------------------");
         }
@@ -6189,7 +6170,7 @@ public class MaplePacketCreator {
         // 10 = The marriage reservation has been successsfully made.
         // 12 = Wrong character name
         // 13 = The party in not in the same map.
-        // 14 = Your inventory is full. Please empty your E.T.C window.
+        // 14 = 你的背包满了. Please empty your E.T.C window.
         // 15 = The person's inventory is full.
         // 16 = The person cannot be of the same gender.
         // 17 = You are already engaged.

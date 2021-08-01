@@ -39,7 +39,10 @@ import java.util.List;
 
 public class InterServerHandler {
 
-    public static final void EnterCS(final MapleClient c, final MapleCharacter chr, final boolean mts) {
+    public static final void EnterCS(final MapleClient c, final MapleCharacter chr, boolean is2) {
+        System.out.println("before iscs = " + chr.iscs2);
+        chr.iscs2 = is2;
+        System.out.println("after iscs = " + chr.iscs2);
         if (c.getPlayer().getBuffedValue(MapleBuffStat.SUMMON) != null) {
             c.getPlayer().cancelEffectFromBuffStat(MapleBuffStat.SUMMON);
         }
@@ -48,12 +51,8 @@ public class InterServerHandler {
             c.getSession().write(MaplePacketCreator.enableActions());
             return;
         }
-        //c.getPlayer().saveToDB(false, false);
-        //String[] socket = c.getChannelServer().getIP().split(":");
         final ChannelServer ch = ChannelServer.getInstance(c.getChannel());
-
         chr.changeRemoval();
-
         if (chr.getMessenger() != null) {
             MapleMessengerCharacter messengerplayer = new MapleMessengerCharacter(chr);
             World.Messenger.leaveMessenger(chr.getMessenger().getId(), messengerplayer);
@@ -237,7 +236,7 @@ public class InterServerHandler {
         c.getSession().write(MaplePacketCreator.showCharCash(c.getPlayer()));
         //上线提示
         if (player.getGMLevel() == 0) {
-            World.Broadcast.broadcastSmega(MaplePacketCreator.serverNotice(11, c.getChannel(), "[上线公告]" + c.getPlayer().getName() + " : " + new StringBuilder().append("上线了！【组队闯天涯，相伴共冒险】").toString()).getBytes());
+            //      World.Broadcast.broadcastSmega(MaplePacketCreator.serverNotice(11, c.getChannel(), "[上线公告]" + c.getPlayer().getName() + " : " + new StringBuilder().append("上线了！【组队闯天涯，相伴共冒险】").toString()).getBytes());
         } else {
             int p = 0;
             for (ChannelServer cserv : ChannelServer.getAllInstances()) {

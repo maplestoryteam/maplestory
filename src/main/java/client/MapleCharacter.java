@@ -106,6 +106,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
     private final transient Map<Integer, MapleCoolDownValueHolder> coolDowns = new LinkedHashMap<>();
     private final transient Map<MapleDisease, MapleDiseaseValueHolder> diseases = new ConcurrentEnumMap<>(MapleDisease.class);
     private CashShop cs;
+    private CashShop cs2;
     private transient Deque<MapleCarnivalChallenge> pendingCarnivalRequests;
     private transient MapleCarnivalParty carnivalParty;
     private BuddyList buddylist;
@@ -154,6 +155,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
     private int touzhuType;
     private int touzhuNX;
     private long 防止复制时间 = 1000L;
+    public boolean iscs2;
 
     private final List<String> blockedPortals = new ArrayList<>();//传送点
     private transient Map<Integer, Integer> linkMid;
@@ -270,6 +272,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
         }
 
         ret.sg = ct.sg;
+        ret.iscs2 = ct.iscs2;
         ret.mount_id = ct.mount_id;
         ret.DebugMessage = ct.DebugMessage;
         ret.id = ct.characterid;
@@ -428,6 +431,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
         ret.lastmonthfameids = ct.famedcharacters;
         ret.storage = (MapleStorage) ct.storage;
         ret.cs = (CashShop) ct.cs;
+        ret.cs2 = (CashShop) ct.cs2;
         client.setAccountName(ct.accountname);
         ret.acash = ct.ACash;
         ret.lastGainHM = ct.lastGainHM;
@@ -765,7 +769,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
                 ret.buddylist.loadFromDb(charid);
                 ret.storage = MapleStorage.loadStorage(ret.accountid);
                 ret.cs = new CashShop(ret.accountid, charid, ret.getJob());
-
+                ret.cs2 = new CashShop(ret.accountid, charid, ret.getJob());
                 ps = con.prepareStatement("SELECT sn FROM wishlist WHERE characterid = ?");
                 ps.setInt(1, charid);
                 rs = ps.executeQuery();
@@ -5405,7 +5409,10 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
     }
 
     public CashShop getCashInventory() {
-        return cs;
+        System.out.println("iscs2 = " + iscs2);
+        System.out.println("cs = " + cs);
+        System.out.println("cs2 = " + cs2);
+        return iscs2 ? cs2 : cs;
     }
 
     public void removeAll(int id) {

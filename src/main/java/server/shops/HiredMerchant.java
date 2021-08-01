@@ -116,7 +116,7 @@ public class HiredMerchant extends AbstractPlayerStore {
          * final int gainmeso = getMeso() + (pItem.price * quantity);
          * setMeso(gainmeso - GameConstants.EntrustedStoreTax(gainmeso));
          * c.getPlayer().gainMeso(-pItem.price * quantity, false); saveItems();
-         * } else { c.getPlayer().dropMessage(1, "Your inventory is full.");
+         * } else { c.getPlayer().dropMessage(1, "你的背包满了.");
          * c.getSession().write(MaplePacketCreator.enableActions()); } }
          */
         /*

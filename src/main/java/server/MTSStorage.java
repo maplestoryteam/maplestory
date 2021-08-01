@@ -76,7 +76,6 @@ public class MTSStorage {
     }
 
     public static final void load() {
-
         if (instance == null) {
             instance = new MTSStorage();
             instance.loadBuyNow();

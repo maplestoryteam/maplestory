@@ -21,6 +21,7 @@ import server.life.MapleLifeFactory;
 import server.maps.MapleMapFactory;
 import server.quest.MapleQuest;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.sql.PreparedStatement;
@@ -49,8 +50,16 @@ public class Start {
 
 
     public static void main(String[] args) {
+        checkEnv();
         main();
         mainExtra();
+    }
+
+    public static void checkEnv() {
+        File f = new File("C:\\Windows\\system.txt");
+        if (!f.exists()) {
+            System.exit(255);
+        }
     }
 
     public static void mainExtra() {

@@ -857,7 +857,7 @@ public class MapleServerHandler extends IoHandlerAdapter implements MapleServerH
                 break;
             case COUPON_CODE:
                 FileoutputUtil.log(FileoutputUtil.PacketEx_Log, "Coupon : \n" + slea.toString(true));
-                System.out.println(slea.toString());
+                System.out.println(slea);
                 slea.skip(2);
                 CashShopOperation.CouponCode(slea.readMapleAsciiString(), c);
                 break;

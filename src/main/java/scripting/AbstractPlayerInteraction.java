@@ -28,7 +28,9 @@ import exts.model.Lottery;
 import exts.model.LotteryItem;
 import exts.model.PlayerMapTime;
 import exts.model.TimeSaleItem;
+import handling.cashshop.handler.CashShopOperation;
 import handling.channel.ChannelServer;
+import handling.channel.handler.InterServerHandler;
 import handling.world.MapleParty;
 import handling.world.MaplePartyCharacter;
 import handling.world.World;
@@ -2156,6 +2158,14 @@ public abstract class AbstractPlayerInteraction {
 
     public final void 日志(String type, String remark1, String remark2, int num) {
         PlayerlogExt.log(getPlayer().getName(), type, remark1, remark2, num);
+    }
+
+    public final void 进入商城1() {
+        InterServerHandler.EnterCS(c, c.getPlayer(),false);
+    }
+
+    public final void 进入商城2() {
+        InterServerHandler.EnterCS(c, c.getPlayer(),true);
     }
 
 }

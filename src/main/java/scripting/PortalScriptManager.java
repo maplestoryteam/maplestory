@@ -54,10 +54,8 @@ public class PortalScriptManager {
 
     private PortalScript getPortalScript(MapleClient c, final String scriptName) {
         if (scripts.containsKey(scriptName)) {
-            scripts.clear();
             return scripts.get(scriptName);
         }
-
         final File scriptFile = new File("scripts/portal/" + scriptName + ".js");
         if (!scriptFile.exists()) {
             //scripts.put(scriptName, null);

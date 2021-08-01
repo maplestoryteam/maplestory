@@ -102,7 +102,7 @@ public class MapleShop {
             return;
         }
         if (!GameConstants.isMountItemAvailable(itemId, c.getPlayer().getJob())) {
-            c.getPlayer().dropMessage(1, "You may not buy this item.");
+            c.getPlayer().dropMessage(1, "你不可以买这个东西.");
             c.getSession().write(MaplePacketCreator.enableActions());
             return;
         }
@@ -124,7 +124,7 @@ public class MapleShop {
                         MapleInventoryManipulator.addById(c, itemId, quantity, (byte) 0);
                     }
                 } else {
-                    c.getPlayer().dropMessage(1, "Your Inventory is full");
+                    c.getPlayer().dropMessage(1, "你的背包满了");
                 }
                 c.getSession().write(MaplePacketCreator.confirmShopTransaction((byte) 0));
             }
@@ -143,7 +143,7 @@ public class MapleShop {
          * if (GameConstants.isRechargable(itemId)) { quantity =
          * ii.getSlotMax(c, item.getItemId()); }
          * MapleInventoryManipulator.addById(c, itemId, quantity); } } else {
-         * c.getPlayer().dropMessage(1, "Your Inventory is full"); }
+         * c.getPlayer().dropMessage(1, "你的背包满了"); }
          * c.getSession().write(MaplePacketCreator.confirmShopTransaction((byte)
          * 0)); }
          */

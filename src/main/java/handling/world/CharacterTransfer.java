@@ -36,7 +36,7 @@ import java.util.List;
 import java.util.Map;
 
 public class CharacterTransfer implements Externalizable {
-
+    public boolean iscs2;
     public int characterid, accountid, exp,
             beans, meso, hair, face, mapid, guildid, sg, qiandao,
             partyid, messengerid, mBookCover, dojo, ACash, MaplePoints,
@@ -47,7 +47,7 @@ public class CharacterTransfer implements Externalizable {
     public String tempIP;
     public String name, accountname, BlessOfFairy, chalkboard, charmessage;
     public short level, fame, str, dex, int_, luk, maxhp, maxmp, hp, mp, remainingAp, hpApUsed, job;
-    public Object inventorys, skillmacro, storage, cs;
+    public Object inventorys, skillmacro, storage, cs, cs2;
     public int[] savedlocation, wishlist, rocks, remainingSp, regrocks;
     public byte[] petStore;
     public boolean DebugMessage;

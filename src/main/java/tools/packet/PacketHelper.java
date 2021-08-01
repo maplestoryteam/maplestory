@@ -362,18 +362,6 @@ public class PacketHelper {
     public static void addExpirationTime(final MaplePacketLittleEndianWriter mplew, long time) {
         mplew.writeLong(getTime(time));
     }
-//
-//    public static final void addExpirationTime(final MaplePacketLittleEndianWriter mplew, final long time) {
-//        mplew.write(0);
-//        mplew.writeShort(1408); // 80 05
-//        if (time != -1) {
-//            mplew.writeInt(KoreanDateUtil.getItemTimestamp(time));
-//            mplew.write(1);
-//        } else {
-//            mplew.writeInt(400967355);
-//            mplew.write(2);
-//        }
-//    }
 
     public static void addDDItemInfo(MaplePacketLittleEndianWriter mplew, IItem item, boolean zeroPosition, boolean leaveOut, boolean cs) {
         short pos = item.getPosition();

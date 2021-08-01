@@ -58,8 +58,8 @@ public class CashShop implements Serializable {
     private final int accountId;
     private final int characterId;
     private final ItemLoader factory;
-    private final List<IItem> inventory = new ArrayList<IItem>();
-    private final List<Integer> uniqueids = new ArrayList<Integer>();
+    private final List<IItem> inventory = new ArrayList<>();
+    private final List<Integer> uniqueids = new ArrayList<>();
 
     public CashShop(int accountId, int characterId, int jobType) throws SQLException {
         this.accountId = accountId;
@@ -103,7 +103,7 @@ public class CashShop implements Serializable {
     }
 
     public void checkExpire(MapleClient c) {
-        List<IItem> toberemove = new ArrayList<IItem>();
+        List<IItem> toberemove = new ArrayList<>();
         for (IItem item : inventory) {
             if (item != null && !GameConstants.isPet(item.getItemId()) && item.getExpiration() > 0 && item.getExpiration() < System.currentTimeMillis()) {
                 toberemove.add(item);
