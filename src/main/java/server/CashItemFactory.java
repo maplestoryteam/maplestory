@@ -103,7 +103,7 @@ public class CashItemFactory {
         for (int i : itemids) {
             getPackageItems2(i);
         }
-        for (int i : itemStats.keySet()) {
+        for (int i : itemStats2.keySet()) {
             getModInfo2(i);
             getItem2(i); //init the modinfo's citem
         }
@@ -165,7 +165,7 @@ public class CashItemFactory {
         if (cashPackages2.containsKey(itemId)) {
             return cashPackages2.get(itemId);
         }
-        List<CashItemInfo> packageItems = new ArrayList<CashItemInfo>();
+        List<CashItemInfo> packageItems = new ArrayList<>();
         MapleDataProvider dataProvider = MapleDataProviderFactory.getDataProvider(new File(System.getProperty("net.sf.odinms.wzpath", "wz") + "/" + "Etc.wz"));
         MapleData a = dataProvider.getData("CashPackage.img");
         for (MapleData b : a.getChildren()) {
@@ -211,7 +211,6 @@ public class CashItemFactory {
 
     public final CashModInfo getModInfo2(int sn) {
         CashModInfo ret = itemMods2.get(sn);
-        //  System.out.println(itemMods.toString());
         if (ret == null) {
             if (initialized2) {
                 return null;

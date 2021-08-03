@@ -139,25 +139,15 @@ public class MaplePacketCreator {
     }
 
     public static final MaplePacket enableActions() {
-        if (ServerConstants.调试输出封包) {
-            System.out.println("enableActions--------------------");
-        }
         return updatePlayerStats(EMPTY_STATUPDATE, true, 0);
     }
 
     public static final MaplePacket updatePlayerStats(final List<Pair<MapleStat, Integer>> stats, final int evan) {
-        if (ServerConstants.调试输出封包) {
-            System.out.println("updatePlayerStatsA--------------------");
-        }
         return updatePlayerStats(stats, false, evan);
     }
 
     public static final MaplePacket updatePlayerStats(final List<Pair<MapleStat, Integer>> stats, final boolean itemReaction, final int evan) {
         final MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-
-        if (ServerConstants.调试输出封包) {
-            System.out.println("updatePlayerStats--------------------");
-        }
         mplew.writeShort(SendPacketOpcode.UPDATE_STATS.getValue());
         mplew.write(itemReaction ? 1 : 0);
         int updateMask = 0;
@@ -3711,10 +3701,6 @@ public class MaplePacketCreator {
 
     public static MaplePacket getClock(int time) { // time in seconds
         MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-
-        if (ServerConstants.调试输出封包) {
-            System.out.println("getClock--------------------");
-        }
         mplew.writeShort(SendPacketOpcode.CLOCK.getValue());
         mplew.write(2); // clock type. if you send 3 here you have to send another byte (which does not matter at all) before the timestamp
         mplew.writeInt(time);
@@ -3724,25 +3710,16 @@ public class MaplePacketCreator {
 
     public static MaplePacket getClockTime(int hour, int min, int sec) { // Current Time
         MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-
-        if (ServerConstants.调试输出封包) {
-            System.out.println("getClockTime--------------------");
-        }
         mplew.writeShort(SendPacketOpcode.CLOCK.getValue());
         mplew.write(1); //Clock-Type
         mplew.write(hour);
         mplew.write(min);
         mplew.write(sec);
-
         return mplew.getPacket();
     }
 
     public static MaplePacket spawnMist(final MapleMist mist) {
         MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-
-        if (ServerConstants.调试输出封包) {
-            System.out.println("spawnMist--------------------");
-        }
         mplew.writeShort(SendPacketOpcode.SPAWN_MIST.getValue());
         mplew.writeInt(mist.getObjectId());
         mplew.writeInt(mist.isMobMist() ? 0 : (mist.isPoisonMist() != 0 ? 1 : 2)); //2 = invincible, so put 1 for recovery aura
@@ -3765,10 +3742,6 @@ public class MaplePacketCreator {
 
     public static MaplePacket removeMist(final int oid, boolean eruption) {
         MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-
-        if (ServerConstants.调试输出封包) {
-            System.out.println("removeMist--------------------");
-        }
         mplew.writeShort(SendPacketOpcode.REMOVE_MIST.getValue());
         mplew.writeInt(oid);
         //mplew.write(eruption ? 1 : 0); // 117
@@ -3778,7 +3751,6 @@ public class MaplePacketCreator {
 
     public static MaplePacket damageSummon(int cid, int summonSkillId, int damage, int unkByte, int monsterIdFrom) {
         MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-
         if (ServerConstants.调试输出封包) {
             System.out.println("damageSummon--------------------");
         }
@@ -3960,27 +3932,16 @@ public class MaplePacketCreator {
 
     public static MaplePacket triggerReactor(MapleReactor reactor, int stance) {
         MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-
-        if (ServerConstants.调试输出封包) {
-            System.out.println("triggerReactor--------------------");
-        }
         mplew.writeShort(SendPacketOpcode.REACTOR_HIT.getValue());
         mplew.writeInt(reactor.getObjectId());
         mplew.write(reactor.getState());
         mplew.writePos(reactor.getPosition());
         mplew.writeInt(stance);
-        //mplew.write(0);
-        // mplew.write(5); // frame delay, set to 5 since there doesn't appear to be a fixed formula for it
-
         return mplew.getPacket();
     }
 
     public static MaplePacket destroyReactor(MapleReactor reactor) {
         MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-
-        if (ServerConstants.调试输出封包) {
-            System.out.println("destroyReactor--------------------");
-        }
         mplew.writeShort(SendPacketOpcode.REACTOR_DESTROY.getValue());
         mplew.writeInt(reactor.getObjectId());
         mplew.write(reactor.getState());

@@ -24,10 +24,7 @@ import client.*;
 import client.inventory.*;
 import constants.GameConstants;
 import exts.*;
-import exts.model.Lottery;
-import exts.model.LotteryItem;
-import exts.model.PlayerMapTime;
-import exts.model.TimeSaleItem;
+import exts.model.*;
 import handling.cashshop.handler.CashShopOperation;
 import handling.channel.ChannelServer;
 import handling.channel.handler.InterServerHandler;
@@ -55,9 +52,10 @@ import tools.packet.PetPacket;
 import tools.packet.UIPacket;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
+import java.io.ObjectOutputStream;
+import java.util.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public abstract class AbstractPlayerInteraction {
 
@@ -555,7 +553,6 @@ public abstract class AbstractPlayerInteraction {
         if (quantity >= 0) {
             final MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
             final MapleInventoryType type = GameConstants.getInventoryType(id);
-
             if (!MapleInventoryManipulator.checkSpace(cg, id, quantity, "")) {
                 return;
             }
@@ -1711,7 +1708,7 @@ public abstract class AbstractPlayerInteraction {
                     cg.getPlayer().dropMessage(5, msg);
                 }
                 if (time > 0) {
-                    item.setExpiration(System.currentTimeMillis() + (time * 60 * 60 * 1000));
+                    item.setExpiration(System.currentTimeMillis() + (time * 60 * 60 * 1000L));
                 }
                 if (str > 0) {
                     item.setStr((short) str);
@@ -2161,11 +2158,138 @@ public abstract class AbstractPlayerInteraction {
     }
 
     public final void 进入商城1() {
-        InterServerHandler.EnterCS(c, c.getPlayer(),false);
+        InterServerHandler.EnterCS(c, c.getPlayer(), false);
     }
 
     public final void 进入商城2() {
-        InterServerHandler.EnterCS(c, c.getPlayer(),true);
+        InterServerHandler.EnterCS(c, c.getPlayer(), true);
+    }
+
+    public final int 挑战查询(String fuben) {
+        return FubenExt.select(c.getPlayer().getId(), fuben);
+    }
+
+    public final int 挑战增加(String fuben, int count) {
+        return FubenExt.insert(c.getPlayer().getId(), c.getPlayer().getName(), fuben, count);
+    }
+
+    public final boolean 师门创建(String name) {
+        return ShiTuExt.create(c.getPlayer(), name);
+    }
+
+    public final boolean 师门申请加入(int id) {
+        return ShiTuExt.joinApply(c.getPlayer(), id);
+    }
+
+    public final boolean 师门通过加入(int id, String playerName) {
+        return ShiTuExt.joinPassByCharacterName(id, playerName);
+    }
+
+    public final boolean 师门解散(int id) {
+        return ShiTuExt.dismiss(id);
+    }
+
+    public final boolean 师门退出(int id) {
+        return ShiTuExt.exit(id, c.getPlayer().getName());
+    }
+
+    public final boolean 师门踢人(int id, String playerName) {
+        return ShiTuExt.exit(id, playerName);
+    }
+
+    public final boolean 师门续费(int id) {
+        return ShiTuExt.renew(id);
+    }
+
+    public final boolean 师门是否存在(String name) {
+        return ShiTuExt.exists(name);
+    }
+
+    public final boolean 师门成员是否存在(int id, String name) {
+        return ShiTuExt.existsCharacterByName(id, name);
+    }
+
+    public final boolean 师门副掌门(int id) {
+        return ShiTuExt.updateCharacter(id, c.getPlayer(), 3, 1);
+    }
+
+    public final List<ShiTuCharacter> 师门申请查询(int id) {
+        return ShiTuExt.selectCharacterByState(id, 0);
+    }
+
+    public final ShiTuCharacter 师门个人查询(int id) {
+        return ShiTuExt.selectCharacterByShiTuId(id)
+                .parallelStream()
+                .filter(a -> a.getCharacterId() == c.getPlayer().getId())
+                .findAny().orElse(null);
+    }
+
+    public final ShiTu 师门信息查询(int id) {
+        return ShiTuExt.selectById(id);
+    }
+
+    public final boolean 师门信息修改(int id, int reward, int place, int stock) {
+        return ShiTuExt.updateById(id, reward, place, stock);
+    }
+
+    public final boolean 师门公告设置(int id, String note) {
+        return ShiTuExt.updateNoteById(id, note);
+    }
+
+    public final boolean 师门名称修改(int id, String name) {
+        return ShiTuExt.updateNameById(id, name);
+    }
+
+    public final List<ShiTuCharacter> 师门成员查询(int id, int state) {
+        return ShiTuExt.selectCharacterByState(id, state);
+    }
+
+    public final void 师门成员喇叭(int id, String message) {
+        ShiTuExt.selectCharacterByShiTuId(id).parallelStream().forEach(aa -> {
+            playerMessage(2, message);
+        });
+    }
+
+    public final void 师门呼叫掌门(int id, String message) {
+        ShiTuExt.selectCharacterByShiTuId(id).parallelStream().filter(a -> a.getState() == 2 || a.getState() == 3).forEach(aa -> {
+            playerMessage(2, message);
+        });
+    }
+
+    public final List<ShiTu> 师门查询排行() {
+        List<ShiTu> shiTus = ShiTuExt.selectAll().parallelStream()
+                .sorted(Comparator.comparingInt(ShiTu::getContribution))
+                .collect(Collectors.toList());
+        Collections.reverse(shiTus);
+        return shiTus;
+    }
+
+    public final List<ShiTuShop> 师门查询商店(int id) {
+        return ShiTuExt.selectShopByShiTuId(id);
+    }
+
+    public final boolean 师门增加商店数量(int id, int itemId, int count, int level, int type, int price) {
+        ShiTuShop sts = ShiTuExt.selectShopByShiTuIdAndItemId(id, itemId);
+        if (sts == null) {
+            return ShiTuExt.insertShop(id, itemId, count, level, type, price);
+        }
+        return ShiTuExt.increaseItemCountById(id, itemId, count);
+    }
+
+    public final boolean 师门减少商店(int id, int itemId, int count) {
+        return ShiTuExt.decreaseItemCountById(id, itemId, count);
+    }
+
+    public final boolean 师门增加贡献(int id, int type, int count) {
+        switch (type) {
+            default:
+            case 1:
+                return ShiTuExt.updateContribution(id, count);
+            case 2:
+                return ShiTuExt.updateCharContribution(id, c.getPlayer().getId(), count);
+            case 3:
+                return ShiTuExt.updateCharMeso(id, c.getPlayer().getId(), count);
+        }
     }
 
 }

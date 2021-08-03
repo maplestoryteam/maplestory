@@ -487,14 +487,34 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
                 return -1;
             }
             final IItem item = MapleInventoryManipulator.addbyId_Gachapon(c, id, (short) quantity);
-
             if (item == null) {
                 return -1;
             }
             if (概率 > 0) {
-                World.Broadcast.broadcastMessage(MaplePacketCreator.getGachaponMega("[" + msg + "] " + c.getPlayer().getName(), " : Lucky winner of Gachapon!", item, (byte) 0, getPlayer().getClient().getChannel()).getBytes());
+                World.Broadcast.broadcastMessage(MaplePacketCreator.getGachaponMega("[" + msg + "] " + c.getPlayer().getName(), " : 恭喜玩家获得稀有物品!", item, (byte) 0, getPlayer().getClient().getChannel()).getBytes());
             }
             return item.getItemId();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
+    private IItem getItem(int itemId, int quantity) {
+        return new Item(itemId, (byte) 0, (short) quantity, (byte) 0, (byte) 0, (byte) 0);
+    }
+
+    public int 绿色喇叭(int itemId, int quantity, final String 头, final String 消息) {
+        try {
+            if (!MapleItemInformationProvider.getInstance().itemExists(itemId)) {
+                return -1;
+            }
+            IItem item = getItem(itemId, quantity);
+            if (item == null) {
+                return -1;
+            }
+            World.Broadcast.broadcastMessage(MaplePacketCreator.getGachaponMega("[" + 头 + "] " + c.getPlayer().getName(), " : " + 消息 + "", item, (byte) 0, getPlayer().getClient().getChannel()).getBytes());
+            return itemId;
         } catch (Exception e) {
             e.printStackTrace();
         }

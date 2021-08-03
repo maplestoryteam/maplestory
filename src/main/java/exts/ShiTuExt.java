@@ -317,6 +317,68 @@ public interface ShiTuExt {
         return false;
     }
 
+    static boolean updateContribution(int shituId, int cont) {
+        if (!exists(shituId)) {
+            return false;
+        }
+
+        PreparedStatement ps;
+        try {
+            ps = ConnExt.getConn().prepareStatement("UPDATE shitu AS s SET s.contribution = s.contribution + ? WHERE s.id = ?");
+            ps.setInt(1, cont);
+            ps.setInt(2, shituId);
+            if (ps.executeUpdate() > 0) {
+                ps.close();
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    static boolean updateCharContribution(int shituId, int charid, int cont) {
+        if (!exists(shituId) || !existsCharacter(shituId, charid)) {
+            return false;
+        }
+
+        PreparedStatement ps;
+        try {
+            ps = ConnExt.getConn().prepareStatement("UPDATE shitu_character AS s SET s.contribution = s.contribution + ? WHERE s.shitu_id = ? and s.character_id = ?");
+            ps.setInt(1, cont);
+            ps.setInt(2, shituId);
+            ps.setInt(3, charid);
+            if (ps.executeUpdate() > 0) {
+                ps.close();
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    static boolean updateCharMeso(int shituId, int charid, int meso) {
+        if (!exists(shituId) || !existsCharacter(shituId, charid)) {
+            return false;
+        }
+
+        PreparedStatement ps;
+        try {
+            ps = ConnExt.getConn().prepareStatement("UPDATE shitu_character AS s SET s.meso = s.meso + ? WHERE s.shitu_id = ? and s.character_id = ?");
+            ps.setInt(1, meso);
+            ps.setInt(2, shituId);
+            ps.setInt(3, charid);
+            if (ps.executeUpdate() > 0) {
+                ps.close();
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     //修改师门公告
     static boolean updateNoteById(int shituId, String note) {
         if (!exists(shituId)) {
@@ -657,7 +719,7 @@ public interface ShiTuExt {
         return false;
     }
 
-    //增加或减少个人师门贡献
+    //增加或减少个人师徒金
     static boolean decreaseCharacterMeso(int shituId, int characterId, int meso) {
         PreparedStatement ps;
         try {

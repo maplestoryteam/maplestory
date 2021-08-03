@@ -2,7 +2,9 @@ package kinms.db;
 
 import client.MapleCharacter;
 import database.DatabaseConnection;
+import exts.PlayerlogExt;
 import handling.channel.ChannelServer;
+import handling.world.World;
 import server.maps.MapleMap;
 import server.maps.MapleMapFactory;
 import tools.MaplePacketCreator;
@@ -134,21 +136,6 @@ public class CherryMSLotteryImpl
         return count;
     }
 
-    /*  public int getbuff() throws SQLException {
-        PreparedStatement ps = null;
-        int a = -1;
-
-        Connection con = DatabaseConnection.getConnection();
-        ps = con.prepareStatement("SELECT count(*) from questmonster WHERE zt = 0");
-
-        a = ps.executeUpdate();
-
-
-        System.out.println(ps.executeUpdate());
-        ps.close();
-
-        return a;
-    }*/
     public int test3() throws SQLException {
         Connection con = DatabaseConnection.getConnection();
         String sql = "SELECT count(*) from questmonster WHERE zt = 0";
@@ -231,6 +218,8 @@ public class CherryMSLotteryImpl
                         zjNames6 = zjNames6 + chr.getName() + ":赢得" + peiNX + "点卷 ";
                         ++zhongcount2;
                         ++zjpeople;
+                        PlayerlogExt.log(chr.getName(), "赌博", "彩票机点券", "赢了", (int) peiNX);
+                        World.Broadcast.broadcastMessage(MaplePacketCreator.serverNotice(6, "[彩票系统]" + chr.getName() + " : " + "在豆豆屋彩票机赢得 " + peiNX + " 点券！").getBytes());
                     } else {
                         chr.dropMessage(1, "本期号码：【" + this.zjNum + "】\r\n对不起您没有中奖，请继续努力");
                     }
@@ -244,6 +233,8 @@ public class CherryMSLotteryImpl
                         chr.dropMessage(1, "本期号码：【" + this.zjNum + "】 \r\n恭喜你获奖了。扣除手续费5%。获得奖金额:" + charZhuNX);
                         peiNX += charZhuNX;
                         zjNames6 = zjNames6 + chr.getName() + ":赢得" + peiNX + "点卷 ";
+                        PlayerlogExt.log(chr.getName(), "赌博", "彩票机点券", "赢了", (int) peiNX);
+                        World.Broadcast.broadcastMessage(MaplePacketCreator.serverNotice(6, "[彩票系统]" + chr.getName() + " : " + "在豆豆屋彩票机赢得 " + peiNX + " 点券！").getBytes());
                         ++zhongcount3;
                         ++zjpeople;
                     } else {
@@ -259,6 +250,8 @@ public class CherryMSLotteryImpl
                         chr.dropMessage(1, "本期号码：【" + this.zjNum + "】 \r\n恭喜你获奖了。扣除手续费5%。获得奖金额:" + charZhuNX);
                         peiNX += charZhuNX;
                         zjNames6 = zjNames6 + chr.getName() + ":赢得" + peiNX + "点卷 ";
+                        PlayerlogExt.log(chr.getName(), "赌博", "彩票机点券", "赢了", (int) peiNX);
+                        World.Broadcast.broadcastMessage(MaplePacketCreator.serverNotice(6, "[彩票系统]" + chr.getName() + " : " + "在豆豆屋彩票机赢得 " + peiNX + " 点券！").getBytes());
                         ++zhongcount6;
                         ++zjpeople;
                     } else {

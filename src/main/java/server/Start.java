@@ -155,6 +155,7 @@ public class Start {
         System.out.println("====================================================-[ 加载商城道具 ]");
         long sctime = System.currentTimeMillis();
         CashItemFactory.getInstance().initialize();
+        CashItemFactory.getInstance().initialize2();
         System.out.println("加载商城道具完成 耗时：" + (System.currentTimeMillis() - sctime) / 1000.0 + "秒");
         System.out.println("====================================================-[ 登录服务器 ]");
         LoginServer.run_startup_configurations();

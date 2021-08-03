@@ -1312,6 +1312,10 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
             if (cs != null) {
                 cs.save();
             }
+
+            if (cs2 != null) {
+                cs2.save();
+            }
             PlayerNPC.updateByCharId(this);
             keylayout.saveKeys(id);
             mount.saveMount(id);
@@ -1651,6 +1655,8 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
                 dropMessage(5, "服务器缺少钓鱼奖励物品。");
             } else {
                 gainItem(fishReward.getItemId(), fishReward.getCount());
+                // +钓鱼积分
+                gainFishingJF(1);
                 map.broadcastMessage(UIPacket.fishingCaught(id));
                 getClient().getSession().write(MaplePacketCreator.getShowItemGain(fishReward.getItemId(), fishReward.getCount(), true));
             }
@@ -5738,6 +5744,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
         ret.lastfametime = lastfametime;
         ret.storage = storage;
         ret.cs = this.cs;
+        ret.cs2 = this.cs2;
         ret.client.setAccountName(client.getAccountName());
         ret.acash = acash;
         ret.lastGainHM = lastGainHM;
