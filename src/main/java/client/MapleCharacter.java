@@ -28,6 +28,7 @@ import database.DatabaseConnection;
 import database.DatabaseException;
 import exts.FishExt;
 import exts.PlayerMapTimeExt;
+import exts.VarsExt;
 import exts.model.FishReward;
 import handling.MaplePacket;
 import handling.channel.ChannelServer;
@@ -3119,7 +3120,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
             } else {
                 this.exp += total;
             }
-            if (this.level < 255 && this.exp >= maxExp) {
+            if (this.level < VarsExt.LEVEL.MAX && this.exp >= maxExp) {
                 levelUp();
             }
             if (total > 0) {

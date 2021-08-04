@@ -1906,6 +1906,12 @@ public abstract class AbstractPlayerInteraction {
         SkillFactory.getSkill(skill).getEffect(level).applyTo(c.getPlayer());
     }
 
+    public final void 控制等级(int level) {
+        if (level >= 30 && level <= 255) {
+            VarsExt.LEVEL.MAX = level;
+        }
+    }
+
     public final void 移动(final int mapid) {
         warp(mapid);
     }
