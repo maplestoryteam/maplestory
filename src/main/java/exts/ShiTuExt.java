@@ -3,6 +3,7 @@ package exts;
 import client.MapleCharacter;
 import exts.model.ShiTu;
 import exts.model.ShiTuCharacter;
+import exts.model.ShiTuRenwu;
 import exts.model.ShiTuShop;
 
 import java.sql.PreparedStatement;
@@ -50,7 +51,7 @@ public interface ShiTuExt {
             return true;
         }
 
-        return updateCharacter(shituId, mc, 1, 0);
+        return updateCharacter(shituId, mc, 2, 1);
     }
 
     //加入师门通过
@@ -63,7 +64,7 @@ public interface ShiTuExt {
             return true;
         }
 
-        return updateCharacterByName(shituId, characterName, 1, 0);
+        return updateCharacterByName(shituId, characterName, 2, 1);
     }
 
     //解散师门
@@ -182,12 +183,13 @@ public interface ShiTuExt {
             ps.setString(1, name);
             ps.setInt(2, mc.getId());
             ps.setString(3, mc.getName());
-            if (ps.executeUpdate() > 0) {
-                ps.close();
-                ResultSet rs = ps.executeQuery();
-                int rid = rs.getInt(1);
+            ps.execute();
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                int id = rs.getInt(1);
                 rs.close();
-                return rid;
+                ps.close();
+                return id;
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -215,7 +217,7 @@ public interface ShiTuExt {
     }
 
     //修改师门成员
-    //类型（0申请中1师门成员2掌门人3副掌门人）
+    //类型（1申请中2师门成员3掌门人4副掌门人）
     static boolean updateCharacter(int shituId, MapleCharacter mc, int state, int oldstate) {
         PreparedStatement ps;
         try {
@@ -258,7 +260,7 @@ public interface ShiTuExt {
         PreparedStatement ps;
         List<ShiTu> cs = new ArrayList<>();
         try {
-            ps = ConnExt.getConn().prepareStatement("SELECT s.*,DATE_FORMAT(s.create_time, '%Y-%m-d %T') as createtime,DATE_FORMAT(s.expire_time, '%Y-%m-d %T') as expiretime FROM shitu AS s order by s.contribution desc");
+            ps = ConnExt.getConn().prepareStatement("SELECT s.*,DATE_FORMAT(s.create_time, '%Y-%m-%d %T') as createTime,unix_timestamp(s.expire_time) as expiretime FROM shitu AS s order by s.contribution desc");
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 cs.add(new ShiTu(rs));
@@ -280,7 +282,7 @@ public interface ShiTuExt {
         PreparedStatement ps;
         List<ShiTu> cs = new ArrayList<>();
         try {
-            ps = ConnExt.getConn().prepareStatement("SELECT s.*,DATE_FORMAT(s.create_time, '%Y-%m-d %T') as createtime,DATE_FORMAT(s.expire_time, '%Y-%m-d %T') as expiretime FROM shitu AS s WHERE s.id = ?");
+            ps = ConnExt.getConn().prepareStatement("SELECT s.*,DATE_FORMAT(s.create_time, '%Y-%m-%d %T') as createTime,unix_timestamp('%Y-%m-d %T') as expiretime FROM shitu AS s WHERE s.id = ?");
             ps.setInt(1, shituId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -446,7 +448,7 @@ public interface ShiTuExt {
         PreparedStatement ps;
         List<ShiTuCharacter> chs = new ArrayList<>();
         try {
-            ps = ConnExt.getConn().prepareStatement("SELECT sc.*,DATE_FORMAT(sc.join_time, '%Y-%m-d %T') as jointime FROM shitu_character AS sc WHERE sc.shitu_id = ? AND sc.state = ?");
+            ps = ConnExt.getConn().prepareStatement("SELECT sc.*,DATE_FORMAT(sc.join_time, '%Y-%m-%d %T') as jointime FROM shitu_character AS sc WHERE sc.shitu_id = ? AND sc.state = ?");
             ps.setInt(1, shituId);
             ps.setInt(2, state);
             ResultSet rs = ps.executeQuery();
@@ -462,22 +464,22 @@ public interface ShiTuExt {
     }
 
     //查询师门成员
-    static List<ShiTuCharacter> selectCharacterByCharacterId(int characterId) {
+    static ShiTuCharacter selectCharacterByCharacterId(int characterId) {
         PreparedStatement ps;
-        List<ShiTuCharacter> chs = new ArrayList<>();
+        ShiTuCharacter sc = null;
         try {
             ps = ConnExt.getConn().prepareStatement("SELECT sc.*,DATE_FORMAT(sc.join_time, '%Y-%m-d %T') as jointime FROM shitu_character AS sc WHERE sc.character_id = ?");
             ps.setInt(1, characterId);
             ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                chs.add(new ShiTuCharacter(rs));
+            if (rs.next()) {
+                sc = new ShiTuCharacter(rs);
             }
             rs.close();
             ps.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return chs;
+        return sc;
     }
 
     //查询师门成员
@@ -737,6 +739,74 @@ public interface ShiTuExt {
             e.printStackTrace();
         }
         return false;
+    }
+
+    static boolean insertShituRenwu(int shituId, int itemId, int shuliang) {
+        PreparedStatement ps;
+        try {
+            ps = ConnExt.getConn().prepareStatement("insert into shitu_renwu(shitu_id, item_id, shuliang, riqi) values (?,?,?,day(now()))");
+            ps.setInt(1, shituId);
+            ps.setInt(2, itemId);
+            ps.setInt(3, shuliang);
+            if (ps.executeUpdate() > 0) {
+                ps.close();
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    static boolean updateShituRenwu(int shituId, int renwuId, int shuliang) {
+        PreparedStatement ps;
+        try {
+            ps = ConnExt.getConn().prepareStatement("update shitu_renwu as t set t.shuliang = t.shuliang + ? where t.shitu_id = ? and t.renwu_id = ?");
+            ps.setInt(1, shuliang);
+            ps.setInt(2, shituId);
+            ps.setInt(3, renwuId);
+            if (ps.executeUpdate() > 0) {
+                ps.close();
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    static boolean deleteShituRenwu(int shituId, int renwuId) {
+        PreparedStatement ps;
+        try {
+            ps = ConnExt.getConn().prepareStatement("delete from shitu_renwu where shitu_id = ? and renwu_id = ?");
+            ps.setInt(1, shituId);
+            ps.setInt(2, renwuId);
+            if (ps.executeUpdate() > 0) {
+                ps.close();
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    static List<ShiTuRenwu> selectShituRenwu(int shituId) {
+        PreparedStatement ps;
+        List<ShiTuRenwu> ss = new ArrayList<>();
+        try {
+            ps = ConnExt.getConn().prepareStatement("select t.* from shitu_renwu as t where t.shitu_id = ?");
+            ps.setInt(1, shituId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                ss.add(new ShiTuRenwu(rs));
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return ss;
     }
 
 }

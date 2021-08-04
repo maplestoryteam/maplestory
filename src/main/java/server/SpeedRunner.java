@@ -1,6 +1,9 @@
 package server;
 
 import database.DatabaseConnection;
+import server.maps.SpeedRunType;
+import tools.Pair;
+import tools.StringUtil;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -9,17 +12,13 @@ import java.util.EnumMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import server.maps.SpeedRunType;
-import tools.Pair;
-import tools.StringUtil;
-
 public class SpeedRunner {
 
     private static final SpeedRunner instance = new SpeedRunner();
     private final Map<SpeedRunType, Pair<String, Map<Integer, String>>> speedRunData;
 
     private SpeedRunner() {
-        speedRunData = new EnumMap<SpeedRunType, Pair<String, Map<Integer, String>>>(SpeedRunType.class);
+        speedRunData = new EnumMap<>(SpeedRunType.class);
     }
 
     public static final SpeedRunner getInstance() {
@@ -31,7 +30,7 @@ public class SpeedRunner {
     }
 
     public final void addSpeedRunData(SpeedRunType type, Pair<StringBuilder, Map<Integer, String>> mib) {
-        speedRunData.put(type, new Pair<String, Map<Integer, String>>(mib.getLeft().toString(), mib.getRight()));
+        speedRunData.put(type, new Pair<>(mib.getLeft().toString(), mib.getRight()));
     }
 
     public final void removeSpeedRunData(SpeedRunType type) {

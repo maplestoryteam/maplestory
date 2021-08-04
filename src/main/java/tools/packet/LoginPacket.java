@@ -37,10 +37,6 @@ public class LoginPacket {
 
     public static final MaplePacket getHello(final short mapleVersion, final byte[] sendIv, final byte[] recvIv) {
         final MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter(16);
-
-        if (ServerConstants.调试输出封包) {
-            System.out.println("getHello--------------------");
-        }
         mplew.writeShort(13); // 13 = MSEA, 14 = GlobalMS, 15 = EMS
         mplew.writeShort(mapleVersion);
         mplew.write(new byte[]{0, 0});

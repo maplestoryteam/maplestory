@@ -541,10 +541,6 @@ public class MaplePacketCreator {
 
     public static MaplePacket spawnNPC(MapleNPC life, boolean show) {
         MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-
-        if (ServerConstants.调试输出封包) {
-            System.out.println("spawnNPC--------------------");
-        }
         mplew.writeShort(SendPacketOpcode.SPAWN_NPC.getValue());
         mplew.writeInt(life.getObjectId());
         mplew.writeInt(life.getId());
@@ -573,10 +569,6 @@ public class MaplePacketCreator {
 
     public static MaplePacket spawnNPCRequestController(MapleNPC life, boolean MiniMap) {
         MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-
-        if (ServerConstants.调试输出封包) {
-            System.out.println("spawnNPCRequestController--------------------");
-        }
         mplew.writeShort(SendPacketOpcode.SPAWN_NPC_REQUEST_CONTROLLER.getValue());
         mplew.write(1);
         mplew.writeInt(life.getObjectId());

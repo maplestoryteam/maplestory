@@ -25,7 +25,6 @@ import client.inventory.*;
 import constants.GameConstants;
 import exts.*;
 import exts.model.*;
-import handling.cashshop.handler.CashShopOperation;
 import handling.channel.ChannelServer;
 import handling.channel.handler.InterServerHandler;
 import handling.world.MapleParty;
@@ -52,7 +51,6 @@ import tools.packet.PetPacket;
 import tools.packet.UIPacket;
 
 import java.awt.*;
-import java.io.ObjectOutputStream;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -2197,6 +2195,11 @@ public abstract class AbstractPlayerInteraction {
         return ShiTuExt.exit(id, playerName);
     }
 
+    public final boolean 师门拒绝加入(int id, String playerName) {
+        return ShiTuExt.deleteCharacterByShiTuIdAndCharacterName(id, playerName);
+    }
+
+
     public final boolean 师门续费(int id) {
         return ShiTuExt.renew(id);
     }
@@ -2214,14 +2217,15 @@ public abstract class AbstractPlayerInteraction {
     }
 
     public final List<ShiTuCharacter> 师门申请查询(int id) {
-        return ShiTuExt.selectCharacterByState(id, 0);
+        return ShiTuExt.selectCharacterByState(id, 1);
     }
 
-    public final ShiTuCharacter 师门个人查询(int id) {
-        return ShiTuExt.selectCharacterByShiTuId(id)
-                .parallelStream()
-                .filter(a -> a.getCharacterId() == c.getPlayer().getId())
-                .findAny().orElse(null);
+    public final ShiTuCharacter 师门个人查询() {
+        ShiTuCharacter sc = ShiTuExt.selectCharacterByCharacterId(c.getPlayer().getId());
+        if (sc != null) {
+            return sc;
+        }
+        return null;
     }
 
     public final ShiTu 师门信息查询(int id) {
@@ -2292,4 +2296,31 @@ public abstract class AbstractPlayerInteraction {
         }
     }
 
+    public final List<ShiTuRenwu> 师门任务查询(int id) {
+        return ShiTuExt.selectShituRenwu(id);
+    }
+
+    public final boolean 师门任务上缴(int id, int renwuId, int shuliang) {
+        return ShiTuExt.updateShituRenwu(id, renwuId, shuliang);
+    }
+
+    public final boolean 师门任务新增(int id, int itemId, int shuliang) {
+        return ShiTuExt.insertShituRenwu(id, itemId, shuliang);
+    }
+
+    public final boolean 师门任务删除(int id, int renwuId) {
+        return ShiTuExt.deleteShituRenwu(id, renwuId);
+    }
+
+    public final boolean 待领取给物品(int charid, int leibie, int shuliang, String beizhu) {
+        return DailingquExt.insert(charid == 0 ? c.getPlayer().getId() : charid, leibie, shuliang, beizhu);
+    }
+
+    public final List<Dailingqu> 待领取查询() {
+        return DailingquExt.select(c.getPlayer().getId());
+    }
+
+    public final boolean 待领取删除(int leibie) {
+        return DailingquExt.delete(c.getPlayer().getId(), leibie);
+    }
 }
