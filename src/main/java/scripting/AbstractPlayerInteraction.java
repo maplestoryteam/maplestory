@@ -1902,6 +1902,10 @@ public abstract class AbstractPlayerInteraction {
         this.c.getPlayer().resetGamePointsPS();
     }
 
+    public final void 调用技能(int skill, int level) {
+        SkillFactory.getSkill(skill).getEffect(level).applyTo(c.getPlayer());
+    }
+
     public final void 移动(final int mapid) {
         warp(mapid);
     }
