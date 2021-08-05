@@ -25,7 +25,7 @@ public interface ShiTuExt {
             return false;
         }
 
-        return insertCharacter(shituId, mc, 2);
+        return insertCharacter(shituId, mc, 3);
     }
 
     //加入师门申请
@@ -38,7 +38,7 @@ public interface ShiTuExt {
             return true;
         }
 
-        return insertCharacter(shituId, mc, 0);
+        return insertCharacter(shituId, mc, 1);
     }
 
     //加入师门通过
@@ -583,25 +583,6 @@ public interface ShiTuExt {
             e.printStackTrace();
         }
         return cs;
-    }
-
-    //查询师门店铺是否存在
-    static boolean existsShopItem(int shituId, int itemId) {
-        PreparedStatement ps;
-        List<ShiTuShop> cs = new ArrayList<>();
-        try {
-            ps = ConnExt.getConn().prepareStatement("SELECT count(*) as c FROM shitu_shop AS s WHERE s.shitu_id = ? AND s.item_id = ?");
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                int ret = rs.getInt("c");
-                rs.close();
-                ps.close();
-                return ret > 0;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
     }
 
     //查询师门店铺
