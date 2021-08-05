@@ -1909,6 +1909,7 @@ public abstract class AbstractPlayerInteraction {
     public final void 控制等级(int level) {
         if (level >= 30 && level <= 255) {
             VarsExt.LEVEL.MAX = level;
+            VarsExt.saveMaxLevel();
         }
     }
 
@@ -2001,8 +2002,12 @@ public abstract class AbstractPlayerInteraction {
         }
     }
 
-    public final void 横幅喇叭(String msg, int itemId, int second) {
-        c.getPlayer().startMapEffect(msg, itemId, second * 1000);
+    public final synchronized void 横幅喇叭(String msg, int itemId, int second) {
+        ChannelServer.getAllInstances().parallelStream().forEach(c -> {
+            c.getPlayerStorage().getAllCharacters().parallelStream().forEach(p -> {
+                p.startMapEffect(msg, itemId, second * 1000);
+            });
+        });
     }
 
     public final int 剩余背包(byte type) {
@@ -2209,7 +2214,6 @@ public abstract class AbstractPlayerInteraction {
         return ShiTuExt.deleteCharacterByShiTuIdAndCharacterName(id, playerName);
     }
 
-
     public final boolean 师门续费(int id) {
         return ShiTuExt.renew(id);
     }
@@ -2222,8 +2226,8 @@ public abstract class AbstractPlayerInteraction {
         return ShiTuExt.existsCharacterByName(id, name);
     }
 
-    public final boolean 师门副掌门(int id) {
-        return ShiTuExt.updateCharacter(id, c.getPlayer(), 3, 1);
+    public final boolean 师门副掌门(int id, String playerName) {
+        return ShiTuExt.updateCharacter(id, playerName, 4, 2);
     }
 
     public final List<ShiTuCharacter> 师门申请查询(int id) {
@@ -2259,15 +2263,30 @@ public abstract class AbstractPlayerInteraction {
     }
 
     public final void 师门成员喇叭(int id, String message) {
-        ShiTuExt.selectCharacterByShiTuId(id).parallelStream().forEach(aa -> {
-            playerMessage(2, message);
-        });
+        for (ShiTuCharacter sc : ShiTuExt.selectCharacterByShiTuId(id)) {
+            for (ChannelServer cs : ChannelServer.getAllInstances()) {
+                MapleCharacter c = cs.getPlayerStorage().getCharacterById(sc.getCharacterId());
+                if (c != null) {
+                    c.getClient().getSession().write(MaplePacketCreator.serverNotice(2, message));
+                    break;
+                }
+            }
+        }
     }
 
     public final void 师门呼叫掌门(int id, String message) {
-        ShiTuExt.selectCharacterByShiTuId(id).parallelStream().filter(a -> a.getState() == 2 || a.getState() == 3).forEach(aa -> {
-            playerMessage(2, message);
-        });
+        for (ShiTuCharacter sc : ShiTuExt.selectCharacterByShiTuId(id)
+                .parallelStream()
+                .filter(a -> a.getState() == 3 || a.getState() == 4)
+                .collect(Collectors.toList())) {
+            for (ChannelServer cs : ChannelServer.getAllInstances()) {
+                MapleCharacter c = cs.getPlayerStorage().getCharacterById(sc.getCharacterId());
+                if (c != null) {
+                    c.getClient().getSession().write(MaplePacketCreator.serverNotice(2, message));
+                    break;
+                }
+            }
+        }
     }
 
     public final List<ShiTu> 师门查询排行() {

@@ -1,5 +1,7 @@
 package exts.model;
 
+import handling.channel.ChannelServer;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -11,6 +13,8 @@ public class ShiTuCharacter {
     private int contribution;
     private int meso;
     private String joinTime;
+    private int level;
+    private int loggin;
 
     public ShiTuCharacter() {
     }
@@ -24,6 +28,13 @@ public class ShiTuCharacter {
             this.contribution = rs.getInt("contribution");
             this.meso = rs.getInt("meso");
             this.joinTime = rs.getString("jointime");
+            this.level = rs.getInt("level");
+            for (ChannelServer cs : ChannelServer.getAllInstances()) {
+                if (cs.getPlayerStorage().getCharacterById(this.characterId) != null) {
+                    this.loggin = 1;
+                    return;
+                }
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -83,5 +94,21 @@ public class ShiTuCharacter {
 
     public void setJoinTime(String joinTime) {
         this.joinTime = joinTime;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public int getLoggin() {
+        return loggin;
+    }
+
+    public void setLoggin(int loggin) {
+        this.loggin = loggin;
     }
 }

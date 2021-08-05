@@ -7,6 +7,7 @@ import database.DatabaseConnection;
 import exts.FishExt;
 import exts.GiveExt;
 import exts.LotteryItemExt;
+import exts.VarsExt;
 import handling.MapleServerHandler;
 import handling.cashshop.CashShopServer;
 import handling.channel.ChannelServer;
@@ -72,6 +73,8 @@ public class Start {
         FishExt.refreshFishRewards();
         // 加载抽奖物品
         LotteryItemExt.refreshLotteryItem();
+        // 初始化最高等级
+        VarsExt.initMaxLevel();
     }
 
     //bat启动。

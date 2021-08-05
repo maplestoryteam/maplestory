@@ -42,19 +42,6 @@ public interface ShiTuExt {
     }
 
     //加入师门通过
-    static boolean joinPass(MapleCharacter mc, int shituId) {
-        if (!exists(shituId)) {
-            return false;
-        }
-
-        if (existsCharacter(shituId, mc.getId())) {
-            return true;
-        }
-
-        return updateCharacter(shituId, mc, 2, 1);
-    }
-
-    //加入师门通过
     static boolean joinPassByCharacterName(int shituId, String characterName) {
         if (!exists(shituId)) {
             return false;
@@ -218,13 +205,13 @@ public interface ShiTuExt {
 
     //修改师门成员
     //类型（1申请中2师门成员3掌门人4副掌门人）
-    static boolean updateCharacter(int shituId, MapleCharacter mc, int state, int oldstate) {
+    static boolean updateCharacter(int shituId, String characterName, int state, int oldstate) {
         PreparedStatement ps;
         try {
-            ps = ConnExt.getConn().prepareStatement("UPDATE shitu_character AS sc SET sc.state = ? WHERE sc.shitu_id = ? AND sc.character_id = ? AND sc.state = ?");
+            ps = ConnExt.getConn().prepareStatement("UPDATE shitu_character AS sc SET sc.state = ? WHERE sc.shitu_id = ? AND sc.character_name = ? AND sc.state = ?");
             ps.setInt(1, state);
             ps.setInt(2, shituId);
-            ps.setInt(3, mc.getId());
+            ps.setString(3, characterName);
             ps.setInt(4, oldstate);
             if (ps.executeUpdate() > 0) {
                 ps.close();
@@ -260,7 +247,7 @@ public interface ShiTuExt {
         PreparedStatement ps;
         List<ShiTu> cs = new ArrayList<>();
         try {
-            ps = ConnExt.getConn().prepareStatement("SELECT s.*,DATE_FORMAT(s.create_time, '%Y-%m-%d %T') as createTime,unix_timestamp(s.expire_time) as expiretime FROM shitu AS s order by s.contribution desc");
+            ps = ConnExt.getConn().prepareStatement("SELECT s.*,DATE_FORMAT(s.create_time, '%Y-%m-%d %T') as createTime,DATE_FORMAT(s.expire_time, '%Y-%m-%d %T') as expiretime FROM shitu AS s order by s.contribution desc");
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 cs.add(new ShiTu(rs));
@@ -282,7 +269,7 @@ public interface ShiTuExt {
         PreparedStatement ps;
         List<ShiTu> cs = new ArrayList<>();
         try {
-            ps = ConnExt.getConn().prepareStatement("SELECT s.*,DATE_FORMAT(s.create_time, '%Y-%m-%d %T') as createTime,unix_timestamp('%Y-%m-d %T') as expiretime FROM shitu AS s WHERE s.id = ?");
+            ps = ConnExt.getConn().prepareStatement("SELECT s.*,DATE_FORMAT(s.create_time, '%Y-%m-%d %T') as createtime,DATE_FORMAT(s.expire_time, '%Y-%m-%d %T') as expiretime FROM shitu AS s WHERE s.id = ?");
             ps.setInt(1, shituId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -431,7 +418,7 @@ public interface ShiTuExt {
 
         PreparedStatement ps;
         try {
-            ps = ConnExt.getConn().prepareStatement("UPDATE shitu AS s SET s.expire_time = ADDDATE(NOW(), 30) WHERE s.id = ?");
+            ps = ConnExt.getConn().prepareStatement("UPDATE shitu AS s SET s.expire_time = ADDDATE(s.expire_time, 30) WHERE s.id = ?");
             ps.setInt(1, shituId);
             if (ps.executeUpdate() > 0) {
                 ps.close();
@@ -448,7 +435,15 @@ public interface ShiTuExt {
         PreparedStatement ps;
         List<ShiTuCharacter> chs = new ArrayList<>();
         try {
-            ps = ConnExt.getConn().prepareStatement("SELECT sc.*,DATE_FORMAT(sc.join_time, '%Y-%m-%d %T') as jointime FROM shitu_character AS sc WHERE sc.shitu_id = ? AND sc.state = ?");
+            ps = ConnExt.getConn().prepareStatement("SELECT sc.*,\n" +
+                    "       DATE_FORMAT(sc.join_time, '%Y-%m-%d %T') as jointime,\n" +
+                    "       c.level\n" +
+                    "FROM shitu_character AS sc,\n" +
+                    "     characters as c\n" +
+                    "WHERE c.id = sc.character_id\n" +
+                    "  AND sc.shitu_id = ?\n" +
+                    "  AND sc.state = ?\n" +
+                    " ");
             ps.setInt(1, shituId);
             ps.setInt(2, state);
             ResultSet rs = ps.executeQuery();
@@ -468,7 +463,12 @@ public interface ShiTuExt {
         PreparedStatement ps;
         ShiTuCharacter sc = null;
         try {
-            ps = ConnExt.getConn().prepareStatement("SELECT sc.*,DATE_FORMAT(sc.join_time, '%Y-%m-d %T') as jointime FROM shitu_character AS sc WHERE sc.character_id = ?");
+            ps = ConnExt.getConn().prepareStatement("SELECT sc.*,\n" +
+                    "       DATE_FORMAT(sc.join_time, '%Y-%m-d %T') as jointime,\n" +
+                    "       c.level\n" +
+                    "FROM shitu_character AS sc,\n" +
+                    "     characters as c\n" +
+                    "WHERE sc.character_id = ?");
             ps.setInt(1, characterId);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -487,7 +487,11 @@ public interface ShiTuExt {
         PreparedStatement ps;
         List<ShiTuCharacter> chs = new ArrayList<>();
         try {
-            ps = ConnExt.getConn().prepareStatement("SELECT sc.*,DATE_FORMAT(sc.join_time, '%Y-%m-d %T') as jointime FROM shitu_character AS sc WHERE sc.shitu_id = ?");
+            ps = ConnExt.getConn().prepareStatement("SELECT sc.*, DATE_FORMAT(sc.join_time, '%Y-%m-d %T') as jointime, c.level\n" +
+                    "FROM shitu_character AS sc,\n" +
+                    "     characters as c\n" +
+                    "WHERE sc.shitu_id = ?\n" +
+                    "  and sc.character_id = c.id");
             ps.setInt(1, shituId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {

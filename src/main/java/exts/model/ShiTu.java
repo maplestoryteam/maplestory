@@ -16,7 +16,7 @@ public class ShiTu {
     private int stock;
     private String note;
     private String createTime;
-    private long expireTime;
+    private String expireTime;
 
     public ShiTu() {
     }
@@ -35,7 +35,7 @@ public class ShiTu {
             this.stock = rs.getInt("stock");
             this.note = rs.getString("note");
             this.createTime = rs.getString("createtime");
-            this.expireTime = rs.getLong("expiretime");
+            this.expireTime = rs.getString("expiretime");
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -137,11 +137,11 @@ public class ShiTu {
         this.createTime = createTime;
     }
 
-    public long getExpireTime() {
+    public String getExpireTime() {
         return expireTime;
     }
 
-    public void setExpireTime(long expireTime) {
+    public void setExpireTime(String expireTime) {
         this.expireTime = expireTime;
     }
 }
