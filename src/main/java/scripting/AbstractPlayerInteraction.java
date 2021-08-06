@@ -2226,8 +2226,12 @@ public abstract class AbstractPlayerInteraction {
         return ShiTuExt.existsCharacterByName(id, name);
     }
 
-    public final boolean 师门副掌门(int id, String playerName) {
-        return ShiTuExt.updateCharacter(id, playerName, 4, 2);
+    public final boolean 师门副掌门(int id, int playerId, String playerName) {
+        boolean succ = ShiTuExt.updateCharacter(id, playerName, 4, 2);
+        if (succ) {
+            return ShiTuExt.updateShituSecond(id, playerId, playerName);
+        }
+        return false;
     }
 
     public final List<ShiTuCharacter> 师门申请查询(int id) {
@@ -2351,5 +2355,45 @@ public abstract class AbstractPlayerInteraction {
 
     public final boolean 待领取删除(int leibie) {
         return DailingquExt.delete(c.getPlayer().getId(), leibie);
+    }
+
+    public final void 推荐人找回() {
+        ChongzhiExt.推荐人找回(c.getAccID(), c.getPlayer().getId(), c.getPlayer().getName());
+    }
+
+    public final Object[] 推荐人查找() {
+        return ChongzhiExt.推荐人查找(c.getPlayer().getId());
+    }
+
+    public final boolean 推荐人填写(String tjcharname) {
+        int id = CharExt.findIdByName(tjcharname);
+        if (id == 0) {
+            return false;
+        }
+        return ChongzhiExt.推荐人填写(c.getPlayer().getId(), id, tjcharname);
+    }
+
+    public final Object[] 充值查询() {
+        return ChongzhiExt.充值查询(c.getPlayer().getId());
+    }
+
+    public final boolean 充值累计(int shuliang, int jifen) {
+        return ChongzhiExt.充值累计(c.getAccID(), c.getPlayer().getId(), c.getPlayer().getName(), shuliang, jifen);
+    }
+
+    public final int 查看被邀请人数() {
+        return ChongzhiExt.查看被邀请人数(c.getPlayer().getId());
+    }
+
+    public final List<Object[]> 查看被邀请人() {
+        return ChongzhiExt.查看被邀请人(c.getPlayer().getId());
+    }
+
+    public final int 名字查ID(String name) {
+        return CharExt.findIdByName(name);
+    }
+
+    public final String ID查名字(int id) {
+        return CharExt.findNameById(id);
     }
 }

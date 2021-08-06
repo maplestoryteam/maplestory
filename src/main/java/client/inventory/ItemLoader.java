@@ -22,22 +22,11 @@
 package client.inventory;
 
 import constants.GameConstants;
-
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.List;
-import java.util.Map;
-
 import database.DatabaseConnection;
+import tools.Pair;
 
 import java.sql.*;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-
-import tools.Pair;
+import java.util.*;
 
 public enum ItemLoader {
 
@@ -124,7 +113,7 @@ public enum ItemLoader {
                         }
                     }
                 }
-                items.put(rs.getInt("inventoryitemid"), new Pair<IItem, MapleInventoryType>(equip.copy(), mit));
+                items.put(rs.getInt("inventoryitemid"), new Pair<>(equip.copy(), mit));
             } else {
                 Item item = new Item(rs.getInt("itemid"), rs.getShort("position"),
                         rs.getShort("quantity"), rs.getByte("flag"), rs.getByte("jiandaoFlag"), rs.getByte("qianghuaFlag"));

@@ -47,10 +47,6 @@ public interface ShiTuExt {
             return false;
         }
 
-        if (existsCharacterByName(shituId, characterName)) {
-            return true;
-        }
-
         return updateCharacterByName(shituId, characterName, 2, 1);
     }
 
@@ -213,6 +209,23 @@ public interface ShiTuExt {
             ps.setInt(2, shituId);
             ps.setString(3, characterName);
             ps.setInt(4, oldstate);
+            if (ps.executeUpdate() > 0) {
+                ps.close();
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    static boolean updateShituSecond(int shituId, int secondId, String secondName) {
+        PreparedStatement ps;
+        try {
+            ps = ConnExt.getConn().prepareStatement("UPDATE shitu AS s SET s.second_id = ?,s.second_name = ? WHERE s.id = ?");
+            ps.setInt(1, secondId);
+            ps.setString(2, secondName);
+            ps.setInt(3, shituId);
             if (ps.executeUpdate() > 0) {
                 ps.close();
                 return true;

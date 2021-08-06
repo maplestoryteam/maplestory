@@ -1,7 +1,5 @@
 package exts;
 
-import database.DatabaseConnection;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -30,6 +28,7 @@ public interface VarsExt {
         try {
             Connection conn = ConnExt.getConn();
             PreparedStatement ps = conn.prepareStatement("update config as c set c.conf = ? where c.name = 'max_level'");
+            ps.setInt(1, LEVEL.MAX);
             if (ps.executeUpdate() > 0) {
                 System.out.println("保存最高等级======>" + LEVEL.MAX);
             }
