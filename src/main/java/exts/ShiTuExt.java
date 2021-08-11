@@ -759,7 +759,7 @@ public interface ShiTuExt {
     static boolean updateShituRenwu(int shituId, int renwuId, int shuliang) {
         PreparedStatement ps;
         try {
-            ps = ConnExt.getConn().prepareStatement("update shitu_renwu as t set t.shuliang = t.shuliang + ? where t.shitu_id = ? and t.renwu_id = ?");
+            ps = ConnExt.getConn().prepareStatement("update shitu_renwu as t set t.leiji = t.leiji + ? where t.shitu_id = ? and t.renwu_id = ?");
             ps.setInt(1, shuliang);
             ps.setInt(2, shituId);
             ps.setInt(3, renwuId);

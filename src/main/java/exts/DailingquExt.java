@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
 public interface DailingquExt {
 
     static boolean insert(int charid, int leibie, int shuliang, String beizhu) {
@@ -27,12 +28,13 @@ public interface DailingquExt {
         return false;
     }
 
-    static boolean delete(int charid, int leibie) {
+    static boolean delete(int charid, int leibie, String beizhu) {
         PreparedStatement ps;
         try {
-            ps = ConnExt.getConn().prepareStatement("delete from dailingqu where charid = ? and leibie = ?");
+            ps = ConnExt.getConn().prepareStatement("delete from dailingqu where charid = ? and leibie = ? and beizhu = ?");
             ps.setInt(1, charid);
             ps.setInt(2, leibie);
+            ps.setString(3, beizhu);
             if (ps.executeUpdate() > 0) {
                 ps.close();
                 return true;

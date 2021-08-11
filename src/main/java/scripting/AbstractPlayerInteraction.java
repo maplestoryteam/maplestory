@@ -2353,8 +2353,8 @@ public abstract class AbstractPlayerInteraction {
         return DailingquExt.select(c.getPlayer().getId());
     }
 
-    public final boolean 待领取删除(int leibie) {
-        return DailingquExt.delete(c.getPlayer().getId(), leibie);
+    public final boolean 待领取删除(int leibie, String remark) {
+        return DailingquExt.delete(c.getPlayer().getId(), leibie, remark);
     }
 
     public final void 推荐人找回() {
