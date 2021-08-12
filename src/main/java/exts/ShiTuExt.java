@@ -759,10 +759,11 @@ public interface ShiTuExt {
     static boolean updateShituRenwu(int shituId, int renwuId, int shuliang) {
         PreparedStatement ps;
         try {
-            ps = ConnExt.getConn().prepareStatement("update shitu_renwu as t set t.leiji = t.leiji + ? where t.shitu_id = ? and t.renwu_id = ?");
+            ps = ConnExt.getConn().prepareStatement("update shitu_renwu as t set t.leiji = t.leiji + ? where t.shitu_id = ? and t.renwu_id = ? and t.shuliang >= t.leiji + ?");
             ps.setInt(1, shuliang);
             ps.setInt(2, shituId);
             ps.setInt(3, renwuId);
+            ps.setInt(4, shuliang);
             if (ps.executeUpdate() > 0) {
                 ps.close();
                 return true;
@@ -805,6 +806,59 @@ public interface ShiTuExt {
             e.printStackTrace();
         }
         return ss;
+    }
+
+    static boolean insertShituRizhiu(int shituId, String charname, String shijian, int gongxiang) {
+        PreparedStatement ps;
+        try {
+            ps = ConnExt.getConn().prepareStatement("insert into shitu_rizhi(shutu_id, charname, shijian, gongxian) values (?,?,?,?)");
+            ps.setInt(1, shituId);
+            ps.setString(2, charname);
+            ps.setString(3, shijian);
+            ps.setInt(4, gongxiang);
+            int re = ps.executeUpdate();
+            ps.close();
+            if (re > 0) {
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    static List<Object[]> selectShituRizhiu(int shituId) {
+        PreparedStatement ps;
+        List<Object[]> ss = new ArrayList<>();
+        try {
+            ps = ConnExt.getConn().prepareStatement("select charname, shijian, gongxian,date_format(time,'%Y-%m-%d %T') as cc from shitu_rizhi where shutu_id = ?");
+            ps.setInt(1, shituId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                ss.add(new Object[]{rs.getString(1), rs.getString(2), rs.getInt(3), rs.getString(4)});
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return ss;
+    }
+
+    static boolean deleteShituRizhiu(int shituId) {
+        PreparedStatement ps;
+        try {
+            ps = ConnExt.getConn().prepareStatement("delete from shitu_rizhi where shutu_id = ?");
+            ps.setInt(1, shituId);
+            int re = ps.executeUpdate();
+            ps.close();
+            if (re > 0) {
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
 }

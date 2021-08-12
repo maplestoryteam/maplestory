@@ -2353,8 +2353,8 @@ public abstract class AbstractPlayerInteraction {
         return DailingquExt.select(c.getPlayer().getId());
     }
 
-    public final boolean 待领取删除(int leibie, String remark) {
-        return DailingquExt.delete(c.getPlayer().getId(), leibie, remark);
+    public final boolean 待领取删除(int leibie, String beizhu) {
+        return DailingquExt.delete(c.getPlayer().getId(), leibie, beizhu);
     }
 
     public final void 推荐人找回() {
@@ -2396,4 +2396,17 @@ public abstract class AbstractPlayerInteraction {
     public final String ID查名字(int id) {
         return CharExt.findNameById(id);
     }
+
+    public final boolean 师门日志增加(int shituId, String charname, String shijian, int gongxiang) {
+        return ShiTuExt.insertShituRizhiu(shituId, charname, shijian, gongxiang);
+    }
+
+    public final List<Object[]> 师门日志查询(int shituId) {
+        return ShiTuExt.selectShituRizhiu(shituId);
+    }
+
+    public final boolean 师门日志删除(int shituId) {
+        return ShiTuExt.deleteShituRizhiu(shituId);
+    }
+
 }
